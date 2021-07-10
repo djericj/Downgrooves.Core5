@@ -1,0 +1,49 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "Downgrooves.Service/1.0.0": {
+        "dependencies": {
+          "Downgrooves.Persistence": "1.0.0"
+        },
+        "runtime": {
+          "Downgrooves.Service.dll": {}
+        }
+      },
+      "Downgrooves.Domain/1.0.0": {
+        "runtime": {
+          "Downgrooves.Domain.dll": {}
+        }
+      },
+      "Downgrooves.Persistence/1.0.0": {
+        "dependencies": {
+          "Downgrooves.Domain": "1.0.0"
+        },
+        "runtime": {
+          "Downgrooves.Persistence.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Downgrooves.Service/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Downgrooves.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Downgrooves.Persistence/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

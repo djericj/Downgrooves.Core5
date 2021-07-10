@@ -1,0 +1,17 @@
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\bin\Debug\net5.0\Downgrooves.Service.deps.json
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\bin\Debug\net5.0\Downgrooves.Service.dll
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\bin\Debug\net5.0\ref\Downgrooves.Service.dll
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\bin\Debug\net5.0\Downgrooves.Service.pdb
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\obj\Debug\net5.0\Downgrooves.Service.csproj.AssemblyReference.cache
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\obj\Debug\net5.0\Downgrooves.Service.GeneratedMSBuildEditorConfig.editorconfig
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\obj\Debug\net5.0\Downgrooves.Service.AssemblyInfoInputs.cache
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\obj\Debug\net5.0\Downgrooves.Service.AssemblyInfo.cs
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\obj\Debug\net5.0\Downgrooves.Service.csproj.CoreCompileInputs.cache
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\obj\Debug\net5.0\Downgrooves.Service.dll
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\obj\Debug\net5.0\ref\Downgrooves.Service.dll
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\obj\Debug\net5.0\Downgrooves.Service.pdb
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\bin\Debug\net5.0\Downgrooves.Domain.dll
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\bin\Debug\net5.0\Downgrooves.Persistence.dll
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\bin\Debug\net5.0\Downgrooves.Persistence.pdb
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\bin\Debug\net5.0\Downgrooves.Domain.pdb
+D:\code\Downgrooves\Downgrooves.Core5\Downgrooves.Service\obj\Debug\net5.0\Downgrooves.Service.csproj.CopyComplete
