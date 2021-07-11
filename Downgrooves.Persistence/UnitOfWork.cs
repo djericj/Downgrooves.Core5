@@ -7,11 +7,13 @@ namespace Downgrooves.Persistence
         private readonly DowngroovesDbContext _context;
 
         public IMixRepository Mixes { get; private set; }
+        public IITunesRepository ITunesTracks { get; private set; }
 
         public UnitOfWork(DowngroovesDbContext context)
         {
             _context = context;
             Mixes = new MixRepository(context);
+            ITunesTracks = new ITunesRepository(context);
         }
 
         public void Complete() => _context.SaveChanges();
