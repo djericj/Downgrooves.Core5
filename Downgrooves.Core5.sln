@@ -3,13 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Downgrooves.Domain", "Downgrooves.Domain\Downgrooves.Domain.csproj", "{1B1857D8-2848-42FB-B46B-87B3FC9ABEB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Downgrooves.Domain", "Downgrooves.Domain\Downgrooves.Domain.csproj", "{1B1857D8-2848-42FB-B46B-87B3FC9ABEB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Downgrooves.Persistence", "Downgrooves.Persistence\Downgrooves.Persistence.csproj", "{4305F677-7CD7-48D4-897D-2B0FD31FB015}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Downgrooves.Persistence", "Downgrooves.Persistence\Downgrooves.Persistence.csproj", "{4305F677-7CD7-48D4-897D-2B0FD31FB015}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Downgrooves.Service", "Downgrooves.Service\Downgrooves.Service.csproj", "{40E55871-765A-457C-B88D-1481A00186AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Downgrooves.Service", "Downgrooves.Service\Downgrooves.Service.csproj", "{40E55871-765A-457C-B88D-1481A00186AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Downgrooves.WebApi", "Downgrooves.WebApi\Downgrooves.WebApi.csproj", "{FA101A6D-96EE-4A33-B4DE-DD0EF386F972}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Downgrooves.WebApi", "Downgrooves.WebApi\Downgrooves.WebApi.csproj", "{FA101A6D-96EE-4A33-B4DE-DD0EF386F972}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{949E788A-D191-4CEE-8567-DB76D36884FA}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,9 +24,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1B1857D8-2848-42FB-B46B-87B3FC9ABEB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -72,5 +74,11 @@ Global
 		{FA101A6D-96EE-4A33-B4DE-DD0EF386F972}.Release|x64.Build.0 = Release|Any CPU
 		{FA101A6D-96EE-4A33-B4DE-DD0EF386F972}.Release|x86.ActiveCfg = Release|Any CPU
 		{FA101A6D-96EE-4A33-B4DE-DD0EF386F972}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BD2E54BF-2214-42DD-8FB7-78B6F5B8CE29}
 	EndGlobalSection
 EndGlobal
