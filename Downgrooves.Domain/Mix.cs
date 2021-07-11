@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Downgrooves.Domain
 {
+    [Table("mixes")]
     public class Mix
     {
         public int MixId { get; set; }
@@ -18,6 +20,5 @@ namespace Downgrooves.Domain
         public int TotalPlays { get; set; }
 
         public IEnumerable<Track> Tracks { get; set; }
-
     }
 }

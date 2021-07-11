@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Downgrooves.Domain
 {
+    [Table("tracks")]
     public class Track
     {
         public int TrackId { get; set; }

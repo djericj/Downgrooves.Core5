@@ -1,21 +1,13 @@
 using Downgrooves.Domain;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Options;
 
 namespace Downgrooves.Persistence
 {
     public class DowngroovesDbContext : DbContext
     {
-        private string _connectionString;
-
-        public DowngroovesDbContext(string connectionString)
+        public DowngroovesDbContext(DbContextOptions<DowngroovesDbContext> options) : base(options)
         {
-            _connectionString = connectionString;
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseMySQL(_connectionString);
         }
 
         public DbSet<Mix> Mixes { get; set; }
