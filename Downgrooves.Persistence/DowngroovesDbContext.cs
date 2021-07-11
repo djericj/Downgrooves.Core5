@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Downgrooves.Persistence
 {
-    public class DowngroovesDbContext
+    public class DowngroovesDbContext : DbContext
     {
         
     }
