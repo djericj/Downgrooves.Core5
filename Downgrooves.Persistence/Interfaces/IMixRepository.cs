@@ -7,6 +7,6 @@ namespace Downgrooves.Persistence.Interfaces
     {
         IEnumerable<Mix> GetMixesByCategory(string category);
 
-        IEnumerable<Mix> GetMixesByGenre(Genre genre);
+        IEnumerable<Mix> GetMixesByGenre(string genre);
     }
 }

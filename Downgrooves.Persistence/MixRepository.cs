@@ -18,9 +18,9 @@ namespace Downgrooves.Persistence
             return DowngroovesDbContext.Mixes.Where(x => x.Category == category);
         }
 
-        public IEnumerable<Mix> GetMixesByGenre(Genre genre)
+        public IEnumerable<Mix> GetMixesByGenre(string genre)
         {
-            return DowngroovesDbContext.Mixes.Where(x => x.GenreId == genre.GenreId);
+            return DowngroovesDbContext.Mixes.Where(x => string.Compare(x.Genre.Name, genre, true) == 0);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Downgrooves.Service
             return _unitOfWork.Mixes.GetMixesByCategory(category);
         }
 
-        public IEnumerable<Mix> GetMixesByGenre(Genre genre)
+        public IEnumerable<Mix> GetMixesByGenre(string genre)
         {
             return _unitOfWork.Mixes.GetMixesByGenre(genre);
         }

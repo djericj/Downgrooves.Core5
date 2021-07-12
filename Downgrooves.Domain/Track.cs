@@ -7,6 +7,10 @@ namespace Downgrooves.Domain
     {
         public int TrackId { get; set; }
         public int MixId { get; set; }
+
+        [InverseProperty("Mix")]
+        public Mix Mix { get; set; }
+
         public int Number { get; set; }
         public string Artist { get; set; }
         public string Title { get; set; }

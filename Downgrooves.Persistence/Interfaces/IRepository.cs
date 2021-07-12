@@ -19,5 +19,7 @@ namespace Downgrooves.Persistence.Interfaces
         IEnumerable<T> GetAll();
 
         IEnumerable<T> Find(Expression<Func<T, bool>> predicate);
+
+        void UpdateState(T entity);
     }
 }

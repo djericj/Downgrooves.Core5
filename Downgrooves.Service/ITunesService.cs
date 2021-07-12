@@ -16,16 +16,18 @@ namespace Downgrooves.Service
             _unitOfWork = unitOfWork;
         }
 
-        public void Add(ITunesTrack track)
+        public ITunesTrack Add(ITunesTrack track)
         {
             _unitOfWork.ITunesTracks.Add(track);
             _unitOfWork.Complete();
+            return track;
         }
 
-        public void AddRange(IEnumerable<ITunesTrack> tracks)
+        public IEnumerable<ITunesTrack> AddRange(IEnumerable<ITunesTrack> tracks)
         {
             _unitOfWork.ITunesTracks.AddRange(tracks);
             _unitOfWork.Complete();
+            return tracks;
         }
 
         public IEnumerable<ITunesTrack> Find(Expression<Func<ITunesTrack, bool>> predicate)
@@ -36,6 +38,13 @@ namespace Downgrooves.Service
         public IEnumerable<ITunesTrack> GetTracks()
         {
             return _unitOfWork.ITunesTracks.GetAll();
+        }
+
+        public ITunesTrack Update(ITunesTrack track)
+        {
+            _unitOfWork.ITunesTracks.UpdateState(track);
+            _unitOfWork.Complete();
+            return track;
         }
 
         public void Remove(ITunesTrack track)

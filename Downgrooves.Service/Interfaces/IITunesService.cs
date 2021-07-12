@@ -9,11 +9,13 @@ namespace Downgrooves.Service.Interfaces
     {
         IEnumerable<ITunesTrack> GetTracks();
 
-        void Add(ITunesTrack track);
+        ITunesTrack Add(ITunesTrack track);
 
-        void AddRange(IEnumerable<ITunesTrack> tracks);
+        IEnumerable<ITunesTrack> AddRange(IEnumerable<ITunesTrack> tracks);
 
         IEnumerable<ITunesTrack> Find(Expression<Func<ITunesTrack, bool>> predicate);
+
+        ITunesTrack Update(ITunesTrack track);
 
         void Remove(ITunesTrack track);
     }

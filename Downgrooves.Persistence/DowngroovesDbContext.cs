@@ -1,6 +1,5 @@
 using Downgrooves.Domain;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace Downgrooves.Persistence
 {
@@ -12,5 +11,11 @@ namespace Downgrooves.Persistence
 
         public DbSet<Mix> Mixes { get; set; }
         public DbSet<ITunesTrack> ITunesTracks { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Mix>().HasOne(x => x.Genre).WithMany(y => y.Mixes);
+            modelBuilder.Entity<Mix>().HasMany(x => x.Tracks).WithOne(y => y.Mix);
+        }
     }
 }
