@@ -2,6 +2,7 @@
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Downgrooves.Service
 {
@@ -17,6 +18,11 @@ namespace Downgrooves.Service
         public IEnumerable<Mix> GetMixes()
         {
             return _unitOfWork.Mixes.GetAll();
+        }
+
+        public async Task<IEnumerable<Mix>> GetMixesAsync()
+        {
+            return await Task.Run(() => GetMixes());
         }
 
         public IEnumerable<Mix> GetMixesByCategory(string category)

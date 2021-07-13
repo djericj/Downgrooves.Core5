@@ -1,4 +1,5 @@
 ﻿using Downgrooves.Persistence.Interfaces;
+using System.Threading.Tasks;
 
 namespace Downgrooves.Persistence
 {
@@ -8,6 +9,7 @@ namespace Downgrooves.Persistence
 
         public IMixRepository Mixes { get; private set; }
         public IITunesRepository ITunesTracks { get; private set; }
+        public IUserRepository Users { get; private set; }
 
         public UnitOfWork(DowngroovesDbContext context)
         {
@@ -17,6 +19,8 @@ namespace Downgrooves.Persistence
         }
 
         public void Complete() => _context.SaveChanges();
+
+        public async void CompleteAsync() => await _context.SaveChangesAsync();
 
         public void Dispose() => _context.Dispose();
     }

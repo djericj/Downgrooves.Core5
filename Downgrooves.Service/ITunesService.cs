@@ -4,6 +4,7 @@ using Downgrooves.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Downgrooves.Service
 {
@@ -38,6 +39,11 @@ namespace Downgrooves.Service
         public IEnumerable<ITunesTrack> GetTracks()
         {
             return _unitOfWork.ITunesTracks.GetAll();
+        }
+
+        public async Task<IEnumerable<ITunesTrack>> GetTracksAsync()
+        {
+            return await Task.Run(() => GetTracks());
         }
 
         public ITunesTrack Update(ITunesTrack track)

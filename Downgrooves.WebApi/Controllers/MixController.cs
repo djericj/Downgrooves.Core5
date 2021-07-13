@@ -1,10 +1,13 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("mixes")]
     public class MixController : ControllerBase
@@ -17,23 +20,23 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Mix> GetMixes()
+        public async Task<IActionResult> GetMixes()
         {
-            return _service.GetMixes();
+            return Ok(await _service.GetMixesAsync());
         }
 
         [HttpGet]
         [Route("category")]
-        public IEnumerable<Mix> GetMixesByCategory(string category)
+        public IActionResult GetMixesByCategory(string category)
         {
-            return _service.GetMixesByCategory(category);
+            return Ok(_service.GetMixesByCategory(category));
         }
 
         [HttpGet]
         [Route("genre")]
-        public IEnumerable<Mix> GetMixesByGenre(string genre)
+        public IActionResult GetMixesByGenre(string genre)
         {
-            return _service.GetMixesByGenre(genre);
+            return Ok(_service.GetMixesByGenre(genre));
         }
     }
 }

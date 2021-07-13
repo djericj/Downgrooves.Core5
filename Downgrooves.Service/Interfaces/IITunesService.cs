@@ -2,12 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Downgrooves.Service.Interfaces
 {
     public interface IITunesService
     {
         IEnumerable<ITunesTrack> GetTracks();
+
+        Task<IEnumerable<ITunesTrack>> GetTracksAsync();
 
         ITunesTrack Add(ITunesTrack track);
 
