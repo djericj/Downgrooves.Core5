@@ -15,9 +15,10 @@ namespace Downgrooves.Persistence
 
         public User Authenticate(string userName, string password)
         {
-            return DowngroovesDbContext.Users
+            var user = DowngroovesDbContext.Users
                 .Where(x => string.Compare(x.UserName, userName, true) == 0 && string.Compare(x.Password, password, true) == 0)
                 .FirstOrDefault();
+            return user;
         }
     }
 }
