@@ -16,6 +16,7 @@ namespace Downgrooves.Persistence
             _context = context;
             Mixes = new MixRepository(context);
             ITunesTracks = new ITunesRepository(context);
+            Users = new UserRepository(context);
         }
 
         public void Complete() => _context.SaveChanges();
