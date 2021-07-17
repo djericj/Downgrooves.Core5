@@ -15,8 +15,14 @@ namespace Downgrooves.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Mix>().HasOne(x => x.Genre).WithMany(y => y.Mixes);
-            modelBuilder.Entity<Mix>().HasMany(x => x.Tracks).WithOne(y => y.Mix);
+            modelBuilder.Entity<Mix>()
+                .HasOne(x => x.Genre)
+                .WithMany(y => y.Mixes)
+                .HasForeignKey(z => z.GenreId);
+
+            modelBuilder.Entity<Mix>()
+                .HasMany(x => x.Tracks)
+                .WithOne(y => y.Mix);
         }
     }
 }

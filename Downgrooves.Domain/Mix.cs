@@ -20,6 +20,6 @@ namespace Downgrooves.Domain
         public string Category { get; set; }
         public int TotalPlays { get; set; }
 
-        public IEnumerable<Track> Tracks { get; set; }
+        public ICollection<Track> Tracks { get; set; }
     }
 }

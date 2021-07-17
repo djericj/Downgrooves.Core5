@@ -36,7 +36,7 @@ namespace Downgrooves.Service
 
         public IEnumerable<Mix> GetMixes()
         {
-            return _unitOfWork.Mixes.GetAll();
+            return _unitOfWork.Mixes.GetMixes();
         }
 
         public async Task<IEnumerable<Mix>> GetMixesAsync()

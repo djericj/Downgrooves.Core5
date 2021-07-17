@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Downgrooves.Domain
 {
@@ -8,7 +9,7 @@ namespace Downgrooves.Domain
         public int TrackId { get; set; }
         public int MixId { get; set; }
 
-        [InverseProperty("Tracks")]
+        [JsonIgnore]
         public Mix Mix { get; set; }
 
         public int Number { get; set; }

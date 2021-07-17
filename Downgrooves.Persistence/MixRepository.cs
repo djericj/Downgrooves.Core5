@@ -1,5 +1,6 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,6 +12,11 @@ namespace Downgrooves.Persistence
 
         public MixRepository(DowngroovesDbContext context) : base(context)
         {
+        }
+
+        public IEnumerable<Mix> GetMixes()
+        {
+            return DowngroovesDbContext.Mixes.Include("Genre").Include("Tracks").ToList();
         }
 
         public IEnumerable<Mix> GetMixesByCategory(string category)
