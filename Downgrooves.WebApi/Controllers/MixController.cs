@@ -38,5 +38,11 @@ namespace Downgrooves.WebApi.Controllers
         {
             return Ok(_service.GetMixesByGenre(genre));
         }
+
+        [HttpPost]
+        public IActionResult Add(Mix mix)
+        {
+            return Ok(_service.Add(mix));
+        }
     }
 }

@@ -6,6 +6,8 @@ namespace Downgrooves.Service.Interfaces
 {
     public interface IMixService
     {
+        Mix Add(Mix mix);
+
         IEnumerable<Mix> GetMixes();
 
         Task<IEnumerable<Mix>> GetMixesAsync();
