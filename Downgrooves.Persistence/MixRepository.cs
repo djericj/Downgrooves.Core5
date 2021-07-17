@@ -16,17 +16,22 @@ namespace Downgrooves.Persistence
 
         public IEnumerable<Mix> GetMixes()
         {
-            return DowngroovesDbContext.Mixes.Include("Genre").Include("Tracks").ToList();
+            return GetDbSet().ToList();
         }
 
         public IEnumerable<Mix> GetMixesByCategory(string category)
         {
-            return DowngroovesDbContext.Mixes.Where(x => x.Category == category);
+            return GetDbSet().Where(x => x.Category == category);
         }
 
         public IEnumerable<Mix> GetMixesByGenre(string genre)
         {
-            return DowngroovesDbContext.Mixes.Where(x => string.Compare(x.Genre.Name, genre, true) == 0);
+            return GetDbSet().Where(x => string.Compare(x.Genre.Name, genre, true) == 0);
+        }
+
+        private IQueryable<Mix> GetDbSet()
+        {
+            return DowngroovesDbContext.Mixes.Include("Genre").Include("Tracks");
         }
     }
 }
