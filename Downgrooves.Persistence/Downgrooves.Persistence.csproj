@@ -1,6 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <None Remove="downgrooves.db" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="downgrooves.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Downgrooves.Domain\Downgrooves.Domain.csproj" />
   </ItemGroup>
 
@@ -10,8 +20,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
-    <PackageReference Include="MySql.EntityFrameworkCore" Version="5.0.3.1" />
   </ItemGroup>
 
   <PropertyGroup>

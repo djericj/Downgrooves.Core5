@@ -41,8 +41,7 @@ namespace Downgrooves.WebApi
 
             services.AddDbContext<DowngroovesDbContext>(options =>
             {
-                options.UseMySQL(AppSettings.ConnectionString,
-                    sqlOptions => sqlOptions.CommandTimeout(120));
+                options.UseSqlite(AppSettings.ConnectionString, sqlOptions => sqlOptions.CommandTimeout(120));
             }
             );
 
