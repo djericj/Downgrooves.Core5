@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Downgrooves.Domain
 {
@@ -7,6 +8,7 @@ namespace Downgrooves.Domain
     public class ITunesTrack
     {
         [Column("iTunesTrackId")]
+        [JsonIgnore]
         public int Id { get; set; }
 
         public string WrapperType { get; set; }

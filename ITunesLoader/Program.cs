@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Net;
 using Downgrooves.Domain;
 using System.Collections.Generic;
@@ -17,6 +18,11 @@ namespace ITunesLoader
     {
         public static IConfigurationRoot Configuration { get; set; }
         public static IConfigurationReader ConfigurationReader { get; set; }
+        public static string ApiUrl { get; set; }
+        public static string UserName { get; set; }
+        public static string Password { get; set; }
+
+        private static int index = 0;
 
         private static void Main(string[] args)
         {
@@ -27,7 +33,9 @@ namespace ITunesLoader
             IJEnumerable<JToken> results = o.SelectTokens("results").Children();
             var tracks = CreateTracks(results);
             var existingTracks = GetExistingTracks();
-            var d = 1;
+            var tracksToAdd = tracks.Where(x => existingTracks.All(y => x.TrackId != y.TrackId));
+            AddNewTracks(tracksToAdd);
+            Console.WriteLine($"{index} tracks added.");
         }
 
         private static string GetItunesJson()
@@ -41,11 +49,33 @@ namespace ITunesLoader
             return data;
         }
 
+        private static void AddNewTracks(IEnumerable<ITunesTrack> tracks)
+        {
+            foreach (var track in tracks)
+                AddNewTrack(track);
+        }
+
+        private static void AddNewTrack(ITunesTrack track)
+        {
+            var client = new RestClient(ApiUrl);
+            client.Authenticator = new HttpBasicAuthenticator(UserName, Password);
+            var request = new RestRequest("itunes");
+            request.AddJsonBody(track);
+            var response = client.Post(request);
+            var description = $"{track.ArtistName} - {track.TrackName} ({track.TrackId})";
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                index++;
+                Console.WriteLine($"Added {description}");
+            }
+            else
+                Console.Error.WriteLine($"Error adding {description}");
+        }
+
         private static IEnumerable<ITunesTrack> GetExistingTracks()
         {
-            var config = ConfigurationReader.GetConfiguration();
-            var client = new RestClient(config?.ApiUrl);
-            client.Authenticator = new HttpBasicAuthenticator(config?.UserName, config?.Password);
+            var client = new RestClient(ApiUrl);
+            client.Authenticator = new HttpBasicAuthenticator(UserName, Password);
             var request = new RestRequest("itunes/tracks");
             var response = client.Get(request);
             var json = response.Content;
@@ -125,6 +155,12 @@ namespace ITunesLoader
             var serviceProvider = services.BuildServiceProvider();
 
             ConfigurationReader = serviceProvider.GetService<IConfigurationReader>();
+
+            var config = ConfigurationReader.GetConfiguration();
+
+            ApiUrl = config?.ApiUrl;
+            UserName = config?.UserName;
+            Password = config?.Password;
         }
     }
 }
