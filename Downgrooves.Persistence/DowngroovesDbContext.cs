@@ -8,14 +8,11 @@ namespace Downgrooves.Persistence
     {
         public DowngroovesDbContext(DbContextOptions<DowngroovesDbContext> options) : base(options)
         {
-            DbPath = $"{AppDomain.CurrentDomain.BaseDirectory}{System.IO.Path.DirectorySeparatorChar}downgrooves.db";
         }
 
         public DbSet<Mix> Mixes { get; set; }
         public DbSet<ITunesTrack> ITunesTracks { get; set; }
         public DbSet<User> Users { get; set; }
-
-        public string DbPath { get; private set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,7 +26,7 @@ namespace Downgrooves.Persistence
                 .WithOne(y => y.Mix);
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite($"Data Source={DbPath}");
+        //protected override void OnConfiguring(DbContextOptionsBuilder options)
+        //    => options.UseSqlite("Data Source=D:\\code\\Downgrooves\\Downgrooves.Core5\\Database\\downgrooves.db");
     }
 }

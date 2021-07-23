@@ -1,16 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <None Remove="downgrooves.db" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="downgrooves.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Downgrooves.Domain\Downgrooves.Domain.csproj" />
   </ItemGroup>
 
