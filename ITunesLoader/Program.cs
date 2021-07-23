@@ -28,12 +28,16 @@ namespace ITunesLoader
         {
             AppConfigurationBuilder();
 
+            IEnumerable<ITunesTrack> tracksToAdd = new List<ITunesTrack>();
             var json = GetItunesJson();
             JObject o = JObject.Parse(json);
             IJEnumerable<JToken> results = o.SelectTokens("results").Children();
             var tracks = CreateTracks(results);
             var existingTracks = GetExistingTracks();
-            var tracksToAdd = tracks.Where(x => existingTracks.All(y => x.TrackId != y.TrackId));
+            if (existingTracks != null)
+                tracksToAdd = tracks.Where(x => existingTracks.All(y => x.TrackId != y.TrackId));
+            else
+                tracksToAdd = tracks;
             AddNewTracks(tracksToAdd);
             Console.WriteLine($"{index} tracks added.");
         }
@@ -59,8 +63,12 @@ namespace ITunesLoader
         {
             var client = new RestClient(ApiUrl);
             client.Authenticator = new HttpBasicAuthenticator(UserName, Password);
-            var request = new RestRequest("itunes");
-            request.AddJsonBody(track);
+            var request = new RestRequest("itunes", Method.POST);
+            var settings = new JsonSerializerSettings();
+            settings.NullValueHandling = NullValueHandling.Ignore;
+            var json = JsonConvert.SerializeObject(track, settings);
+            request.AddParameter("application/json", json, ParameterType.RequestBody);
+            //request.AddJsonBody(track);
             var response = client.Post(request);
             var description = $"{track.ArtistName} - {track.TrackName} ({track.TrackId})";
             if (response.StatusCode == HttpStatusCode.OK)

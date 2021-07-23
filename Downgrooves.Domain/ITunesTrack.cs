@@ -8,8 +8,7 @@ namespace Downgrooves.Domain
     public class ITunesTrack
     {
         [Column("iTunesTrackId")]
-        [JsonIgnore]
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public string WrapperType { get; set; }
         public string Kind { get; set; }
