@@ -19,8 +19,7 @@ namespace ITunesLoader
         public static IConfigurationRoot Configuration { get; set; }
         public static IConfigurationReader ConfigurationReader { get; set; }
         public static string ApiUrl { get; set; }
-        public static string UserName { get; set; }
-        public static string Password { get; set; }
+        public static string Token { get; set; }
 
         private static int index = 0;
 
@@ -47,9 +46,7 @@ namespace ITunesLoader
             string data = null;
             string url = "https://itunes.apple.com/search?term=Downgrooves&limit=200";
             using (var webClient = new WebClient())
-            {
                 data = webClient.DownloadString(url);
-            }
             return data;
         }
 
@@ -62,7 +59,7 @@ namespace ITunesLoader
         private static void AddNewTrack(ITunesTrack track)
         {
             var client = new RestClient(ApiUrl);
-            client.Authenticator = new HttpBasicAuthenticator(UserName, Password);
+            client.Authenticator = new JwtAuthenticator(Token);
             var request = new RestRequest("itunes", Method.POST);
             var settings = new JsonSerializerSettings();
             settings.NullValueHandling = NullValueHandling.Ignore;
@@ -83,7 +80,7 @@ namespace ITunesLoader
         private static IEnumerable<ITunesTrack> GetExistingTracks()
         {
             var client = new RestClient(ApiUrl);
-            client.Authenticator = new HttpBasicAuthenticator(UserName, Password);
+            client.Authenticator = new JwtAuthenticator(Token);
             var request = new RestRequest("itunes/tracks");
             var response = client.Get(request);
             var json = response.Content;
@@ -167,8 +164,7 @@ namespace ITunesLoader
             var config = ConfigurationReader.GetConfiguration();
 
             ApiUrl = config?.ApiUrl;
-            UserName = config?.UserName;
-            Password = config?.Password;
+            Token = config?.Token;
         }
     }
 }

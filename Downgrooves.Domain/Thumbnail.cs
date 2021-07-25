@@ -1,7 +1,9 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Downgrooves.Domain
 {
+    [Table("thumbnails")]
     public class Thumbnail
     {
         public int ThumbnailId { get; set; }

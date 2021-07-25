@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "YoutubeLoader": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
