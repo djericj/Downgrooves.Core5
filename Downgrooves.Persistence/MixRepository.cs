@@ -19,6 +19,11 @@ namespace Downgrooves.Persistence
             return GetDbSet().ToList();
         }
 
+        public IEnumerable<Mix> GetShowMixes()
+        {
+            return GetDbSet().Where(x => x.Show == 1).ToList();
+        }
+
         public IEnumerable<Mix> GetMixesByCategory(string category)
         {
             return GetDbSet().Where(x => x.Category == category);

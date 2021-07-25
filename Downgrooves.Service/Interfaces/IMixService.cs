@@ -12,6 +12,10 @@ namespace Downgrooves.Service.Interfaces
 
         Task<IEnumerable<Mix>> GetMixesAsync();
 
+        IEnumerable<Mix> GetShowMixes();
+
+        Task<IEnumerable<Mix>> GetShowMixesAsync();
+
         IEnumerable<Mix> GetMixesByCategory(string category);
 
         IEnumerable<Mix> GetMixesByGenre(string genre);

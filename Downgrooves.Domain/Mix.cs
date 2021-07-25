@@ -19,6 +19,7 @@ namespace Downgrooves.Domain
         public DateTime CreateDate { get; set; }
         public string Category { get; set; }
         public int TotalPlays { get; set; }
+        public int Show { get; set; }
 
         public ICollection<Track> Tracks { get; set; }
     }

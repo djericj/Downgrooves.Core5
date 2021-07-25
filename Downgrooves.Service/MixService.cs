@@ -44,6 +44,16 @@ namespace Downgrooves.Service
             return await Task.Run(() => GetMixes());
         }
 
+        public IEnumerable<Mix> GetShowMixes()
+        {
+            return _unitOfWork.Mixes.GetShowMixes();
+        }
+
+        public async Task<IEnumerable<Mix>> GetShowMixesAsync()
+        {
+            return await Task.Run(() => _unitOfWork.Mixes.GetShowMixes());
+        }
+
         public IEnumerable<Mix> GetMixesByCategory(string category)
         {
             return _unitOfWork.Mixes.GetMixesByCategory(category);

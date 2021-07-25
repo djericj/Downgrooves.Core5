@@ -22,7 +22,7 @@ namespace Downgrooves.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetMixes()
         {
-            return Ok(await _service.GetMixesAsync());
+            return Ok(await _service.GetShowMixesAsync());
         }
 
         [HttpGet]

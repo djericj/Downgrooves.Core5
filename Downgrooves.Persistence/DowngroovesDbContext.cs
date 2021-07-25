@@ -13,6 +13,7 @@ namespace Downgrooves.Persistence
         public DbSet<Mix> Mixes { get; set; }
         public DbSet<ITunesTrack> ITunesTracks { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Video> Videos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,6 +25,10 @@ namespace Downgrooves.Persistence
             modelBuilder.Entity<Mix>()
                 .HasMany(x => x.Tracks)
                 .WithOne(y => y.Mix);
+
+            modelBuilder.Entity<Video>()
+                .HasMany(x => x.Thumbnails)
+                .WithOne(y => y.Video);
         }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder options)
