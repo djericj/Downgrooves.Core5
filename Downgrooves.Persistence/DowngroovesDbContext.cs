@@ -30,8 +30,5 @@ namespace Downgrooves.Persistence
                 .HasMany(x => x.Thumbnails)
                 .WithOne(y => y.Video);
         }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder options)
-        //    => options.UseSqlite("Data Source=D:\\code\\Downgrooves\\Downgrooves.Core5\\Database\\downgrooves.db");
     }
 }

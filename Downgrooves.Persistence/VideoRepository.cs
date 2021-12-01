@@ -1,5 +1,6 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +16,7 @@ namespace Downgrooves.Persistence
 
         public IEnumerable<Video> GetVideos()
         {
-            return DowngroovesDbContext.Videos.ToList();
+            return DowngroovesDbContext.Videos.Include("Thumbnails").ToList();
         }
     }
 }

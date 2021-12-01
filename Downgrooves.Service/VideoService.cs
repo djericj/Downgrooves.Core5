@@ -57,7 +57,7 @@ namespace Downgrooves.Service
 
         public IEnumerable<Video> GetVideos()
         {
-            return _unitOfWork.Videos.GetAll();
+            return _unitOfWork.Videos.GetVideos();
         }
 
         public async Task<IEnumerable<Video>> GetVideosAsync()
