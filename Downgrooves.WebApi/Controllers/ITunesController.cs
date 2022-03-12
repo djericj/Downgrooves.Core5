@@ -2,7 +2,6 @@
 using Downgrooves.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace Downgrooves.WebApi.Controllers
 {
@@ -23,6 +22,13 @@ namespace Downgrooves.WebApi.Controllers
         public IActionResult GetTracks()
         {
             return Ok(_service.GetTracks());
+        }
+
+        [HttpGet]
+        [Route("tracks/paged")]
+        public IActionResult GetTracks([FromQuery] PagingParameters parameters)
+        {
+            return Ok(_service.GetTracks(parameters));
         }
 
         [HttpPost]

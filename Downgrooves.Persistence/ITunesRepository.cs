@@ -17,5 +17,13 @@ namespace Downgrooves.Persistence
         {
             return DowngroovesDbContext.ITunesTracks.ToList();
         }
+
+        public IEnumerable<ITunesTrack> GetTracks(PagingParameters parameters)
+        {
+            return DowngroovesDbContext.ITunesTracks
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToList();
+        }
     }
 }

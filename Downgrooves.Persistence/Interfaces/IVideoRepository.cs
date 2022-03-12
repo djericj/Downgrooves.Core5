@@ -6,5 +6,7 @@ namespace Downgrooves.Persistence.Interfaces
     public interface IVideoRepository : IRepository<Video>
     {
         IEnumerable<Video> GetVideos();
+
+        IEnumerable<Video> GetVideos(PagingParameters parameters);
     }
 }

@@ -24,6 +24,13 @@ namespace Downgrooves.WebApi.Controllers
             return Ok(await _service.GetVideosAsync());
         }
 
+        [HttpGet]
+        [Route("paged")]
+        public async Task<IActionResult> GetVideos(PagingParameters parameters)
+        {
+            return Ok(await _service.GetVideosAsync(parameters));
+        }
+
         [HttpPost]
         public IActionResult AddVideo(Video video)
         {

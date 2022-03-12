@@ -19,9 +19,26 @@ namespace Downgrooves.Persistence
             return GetDbSet().ToList();
         }
 
+        public IEnumerable<Mix> GetMixes(PagingParameters parameters)
+        {
+            return GetDbSet()
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToList();
+        }
+
         public IEnumerable<Mix> GetShowMixes()
         {
             return GetDbSet().Where(x => x.Show == 1).ToList();
+        }
+
+        public IEnumerable<Mix> GetShowMixes(PagingParameters parameters)
+        {
+            return GetDbSet()
+                .Where(x => x.Show == 1)
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToList();
         }
 
         public IEnumerable<Mix> GetMixesByCategory(string category)

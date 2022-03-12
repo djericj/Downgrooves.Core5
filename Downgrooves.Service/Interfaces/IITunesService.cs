@@ -10,6 +10,8 @@ namespace Downgrooves.Service.Interfaces
     {
         IEnumerable<ITunesTrack> GetTracks();
 
+        IEnumerable<ITunesTrack> GetTracks(PagingParameters parameters);
+
         Task<IEnumerable<ITunesTrack>> GetTracksAsync();
 
         ITunesTrack Add(ITunesTrack track);

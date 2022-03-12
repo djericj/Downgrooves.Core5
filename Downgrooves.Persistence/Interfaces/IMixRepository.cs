@@ -7,7 +7,11 @@ namespace Downgrooves.Persistence.Interfaces
     {
         IEnumerable<Mix> GetMixes();
 
+        IEnumerable<Mix> GetMixes(PagingParameters parameters);
+
         IEnumerable<Mix> GetShowMixes();
+
+        IEnumerable<Mix> GetShowMixes(PagingParameters parameters);
 
         IEnumerable<Mix> GetMixesByCategory(string category);
 

@@ -60,9 +60,19 @@ namespace Downgrooves.Service
             return _unitOfWork.Videos.GetVideos();
         }
 
+        public IEnumerable<Video> GetVideos(PagingParameters parameters)
+        {
+            return _unitOfWork.Videos.GetVideos(parameters);
+        }
+
         public async Task<IEnumerable<Video>> GetVideosAsync()
         {
             return await Task.Run(() => GetVideos());
+        }
+
+        public async Task<IEnumerable<Video>> GetVideosAsync(PagingParameters parameters)
+        {
+            return await Task.Run(() => GetVideos(parameters));
         }
 
         public Video Update(Video video)

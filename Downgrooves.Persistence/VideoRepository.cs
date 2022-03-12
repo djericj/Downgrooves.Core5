@@ -18,5 +18,13 @@ namespace Downgrooves.Persistence
         {
             return DowngroovesDbContext.Videos.Include("Thumbnails").ToList();
         }
+
+        public IEnumerable<Video> GetVideos(PagingParameters parameters)
+        {
+            return DowngroovesDbContext.Videos.Include("Thumbnails")
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToList();
+        }
     }
 }

@@ -26,6 +26,13 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
+        [Route("paged")]
+        public async Task<IActionResult> GetMixes(PagingParameters parameters)
+        {
+            return Ok(await _service.GetShowMixesAsync(parameters));
+        }
+
+        [HttpGet]
         [Route("category")]
         public IActionResult GetMixesByCategory(string category)
         {

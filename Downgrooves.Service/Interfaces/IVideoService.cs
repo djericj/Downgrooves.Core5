@@ -10,7 +10,12 @@ namespace Downgrooves.Service.Interfaces
     {
         IEnumerable<Video> GetVideos();
 
+        IEnumerable<Video> GetVideos(PagingParameters parameters);
+
         Task<IEnumerable<Video>> GetVideosAsync();
+
+
+        Task<IEnumerable<Video>> GetVideosAsync(PagingParameters parameters);
 
         Video Add(Video video);
 

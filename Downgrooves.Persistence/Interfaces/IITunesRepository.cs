@@ -6,5 +6,6 @@ namespace Downgrooves.Persistence.Interfaces
     public interface IITunesRepository : IRepository<ITunesTrack>
     {
         IEnumerable<ITunesTrack> GetTracks();
+        IEnumerable<ITunesTrack> GetTracks(PagingParameters parameters);
     }
 }

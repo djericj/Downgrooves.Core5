@@ -60,6 +60,11 @@ namespace Downgrooves.Service
             return _unitOfWork.ITunesTracks.GetAll();
         }
 
+        public IEnumerable<ITunesTrack> GetTracks(PagingParameters parameters)
+        {
+            return _unitOfWork.ITunesTracks.GetTracks(parameters);
+        }
+
         public async Task<IEnumerable<ITunesTrack>> GetTracksAsync()
         {
             return await Task.Run(() => GetTracks());
