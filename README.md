@@ -4,3 +4,6 @@ The API is consumed by the Downgrooves web site at http://www.downgrooves.com as
 
 Downgrooves.com is my personal music project website.  As a DJ and music producer for over 25 years, I have ammased an extensive collection of original music, dj sets and performance YouTube videos.  
 This site collects all those resources into a single space.
+
+The original source for the Angular web site that consumes this API can be found at my GitHub at github.com/djericj/Downgrooves
+The original source for the Xamarin Forms Mobile app that consumes this API can be found at my GitHub at github.com/djericj/Downgrooves.Mobile
