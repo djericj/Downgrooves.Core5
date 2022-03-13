@@ -27,7 +27,7 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("paged")]
-        public async Task<IActionResult> GetMixes(PagingParameters parameters)
+        public async Task<IActionResult> GetMixes([FromQuery] PagingParameters parameters)
         {
             return Ok(await _service.GetShowMixesAsync(parameters));
         }

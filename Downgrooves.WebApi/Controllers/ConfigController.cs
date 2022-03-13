@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 
 namespace Downgrooves.WebApi.Controllers
 {
