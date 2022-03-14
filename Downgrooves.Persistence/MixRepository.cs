@@ -22,6 +22,7 @@ namespace Downgrooves.Persistence
         public IEnumerable<Mix> GetMixes(PagingParameters parameters)
         {
             return GetDbSet()
+                .OrderBy(x => x.Name)
                 .Skip((parameters.PageNumber - 1) * parameters.PageSize)
                 .Take(parameters.PageSize)
                 .ToList();
@@ -35,6 +36,7 @@ namespace Downgrooves.Persistence
         public IEnumerable<Mix> GetShowMixes(PagingParameters parameters)
         {
             return GetDbSet()
+                .OrderBy(x => x.Name)
                 .Where(x => x.Show == 1)
                 .Skip((parameters.PageNumber - 1) * parameters.PageSize)
                 .Take(parameters.PageSize)
