@@ -20,12 +20,12 @@ namespace Downgrooves.Service
             _logger = logger;
         }
 
-        public ITunesTrack Add(ITunesTrack track)
+        public async Task<ITunesTrack> Add(ITunesTrack track)
         {
             try
             {
                 _unitOfWork.ITunesTracks.Add(track);
-                _unitOfWork.Complete();
+                await _unitOfWork.CompleteAsync();
                 return track;
             }
             catch (Exception ex)
@@ -35,12 +35,12 @@ namespace Downgrooves.Service
             }
         }
 
-        public IEnumerable<ITunesTrack> AddRange(IEnumerable<ITunesTrack> tracks)
+        public async Task<IEnumerable<ITunesTrack>> AddRange(IEnumerable<ITunesTrack> tracks)
         {
             try
             {
                 _unitOfWork.ITunesTracks.AddRange(tracks);
-                _unitOfWork.Complete();
+                await _unitOfWork.CompleteAsync();
                 return tracks;
             }
             catch (Exception ex)
@@ -50,32 +50,27 @@ namespace Downgrooves.Service
             }
         }
 
-        public IEnumerable<ITunesTrack> Find(Expression<Func<ITunesTrack, bool>> predicate)
+        public async Task<IEnumerable<ITunesTrack>> Find(Expression<Func<ITunesTrack, bool>> predicate)
         {
-            return _unitOfWork.ITunesTracks.Find(predicate);
+            return await _unitOfWork.ITunesTracks.FindAsync(predicate);
         }
 
-        public IEnumerable<ITunesTrack> GetTracks()
+        public async Task<IEnumerable<ITunesTrack>> GetTracks()
         {
-            return _unitOfWork.ITunesTracks.GetAll();
+            return await _unitOfWork.ITunesTracks.GetAllAsync();
         }
 
-        public IEnumerable<ITunesTrack> GetTracks(PagingParameters parameters)
+        public async Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters)
         {
-            return _unitOfWork.ITunesTracks.GetTracks(parameters);
+            return await _unitOfWork.ITunesTracks.GetTracks(parameters);
         }
 
-        public async Task<IEnumerable<ITunesTrack>> GetTracksAsync()
-        {
-            return await Task.Run(() => GetTracks());
-        }
-
-        public ITunesTrack Update(ITunesTrack track)
+        public async Task<ITunesTrack> Update(ITunesTrack track)
         {
             try
             {
                 _unitOfWork.ITunesTracks.UpdateState(track);
-                _unitOfWork.Complete();
+                await _unitOfWork.CompleteAsync();
                 return track;
             }
             catch (Exception ex)

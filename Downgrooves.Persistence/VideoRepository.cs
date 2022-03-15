@@ -3,6 +3,7 @@ using Downgrooves.Persistence.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Downgrooves.Persistence
 {
@@ -14,17 +15,17 @@ namespace Downgrooves.Persistence
         {
         }
 
-        public IEnumerable<Video> GetVideos()
+        public async Task<IEnumerable<Video>> GetVideos()
         {
-            return DowngroovesDbContext.Videos.Include("Thumbnails").ToList();
+            return await DowngroovesDbContext.Videos.Include("Thumbnails").ToListAsync();
         }
 
-        public IEnumerable<Video> GetVideos(PagingParameters parameters)
+        public async Task<IEnumerable<Video>> GetVideos(PagingParameters parameters)
         {
-            return DowngroovesDbContext.Videos.Include("Thumbnails")
+            return await DowngroovesDbContext.Videos.Include("Thumbnails")
                 .Skip((parameters.PageNumber - 1) * parameters.PageSize)
                 .Take(parameters.PageSize)
-                .ToList();
+                .ToListAsync();
         }
     }
 }

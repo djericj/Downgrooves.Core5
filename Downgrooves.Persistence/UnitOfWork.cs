@@ -1,4 +1,5 @@
 ﻿using Downgrooves.Persistence.Interfaces;
+using System.Threading.Tasks;
 
 namespace Downgrooves.Persistence
 {
@@ -22,8 +23,10 @@ namespace Downgrooves.Persistence
 
         public void Complete() => _context.SaveChanges();
 
-        public async void CompleteAsync() => await _context.SaveChangesAsync();
+        public async Task CompleteAsync() => await _context.SaveChangesAsync();
 
         public void Dispose() => _context.Dispose();
+
+        public async Task DisposeAsync() => await _context.DisposeAsync();
     }
 }

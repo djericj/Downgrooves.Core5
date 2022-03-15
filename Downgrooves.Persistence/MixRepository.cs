@@ -3,6 +3,7 @@ using Downgrooves.Persistence.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Downgrooves.Persistence
 {
@@ -14,43 +15,43 @@ namespace Downgrooves.Persistence
         {
         }
 
-        public IEnumerable<Mix> GetMixes()
+        public async Task<IEnumerable<Mix>> GetMixes()
         {
-            return GetDbSet().ToList();
+            return await GetDbSet().ToListAsync();
         }
 
-        public IEnumerable<Mix> GetMixes(PagingParameters parameters)
+        public async Task<IEnumerable<Mix>> GetMixes(PagingParameters parameters)
         {
-            return GetDbSet()
+            return await GetDbSet()
                 .OrderBy(x => x.Name)
                 .Skip((parameters.PageNumber - 1) * parameters.PageSize)
                 .Take(parameters.PageSize)
-                .ToList();
+                .ToListAsync();
         }
 
-        public IEnumerable<Mix> GetShowMixes()
+        public async Task<IEnumerable<Mix>> GetShowMixes()
         {
-            return GetDbSet().Where(x => x.Show == 1).ToList();
+            return await GetDbSet().Where(x => x.Show == 1).ToListAsync();
         }
 
-        public IEnumerable<Mix> GetShowMixes(PagingParameters parameters)
+        public async Task<IEnumerable<Mix>> GetShowMixes(PagingParameters parameters)
         {
-            return GetDbSet()
+            return await GetDbSet()
                 .OrderBy(x => x.Name)
                 .Where(x => x.Show == 1)
                 .Skip((parameters.PageNumber - 1) * parameters.PageSize)
                 .Take(parameters.PageSize)
-                .ToList();
+                .ToListAsync();
         }
 
-        public IEnumerable<Mix> GetMixesByCategory(string category)
+        public async Task<IEnumerable<Mix>> GetMixesByCategory(string category)
         {
-            return GetDbSet().Where(x => x.Category == category);
+            return await GetDbSet().Where(x => x.Category == category).ToListAsync();
         }
 
-        public IEnumerable<Mix> GetMixesByGenre(string genre)
+        public async Task<IEnumerable<Mix>> GetMixesByGenre(string genre)
         {
-            return GetDbSet().Where(x => string.Compare(x.Genre.Name, genre, true) == 0);
+            return await GetDbSet().Where(x => string.Compare(x.Genre.Name, genre, true) == 0).ToListAsync();
         }
 
         private IQueryable<Mix> GetDbSet()

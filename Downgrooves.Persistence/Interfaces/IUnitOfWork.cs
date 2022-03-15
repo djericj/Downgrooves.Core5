@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Downgrooves.Persistence.Interfaces
 {
@@ -11,6 +12,6 @@ namespace Downgrooves.Persistence.Interfaces
 
         void Complete();
 
-        void CompleteAsync();
+        Task CompleteAsync();
     }
 }

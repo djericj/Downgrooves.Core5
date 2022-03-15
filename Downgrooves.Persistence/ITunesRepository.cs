@@ -1,7 +1,9 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Downgrooves.Persistence
 {
@@ -13,17 +15,17 @@ namespace Downgrooves.Persistence
         {
         }
 
-        public IEnumerable<ITunesTrack> GetTracks()
+        public async Task<IEnumerable<ITunesTrack>> GetTracks()
         {
-            return DowngroovesDbContext.ITunesTracks.ToList();
+            return await DowngroovesDbContext.ITunesTracks.ToListAsync();
         }
 
-        public IEnumerable<ITunesTrack> GetTracks(PagingParameters parameters)
+        public async Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters)
         {
-            return DowngroovesDbContext.ITunesTracks
+            return await DowngroovesDbContext.ITunesTracks
                 .Skip((parameters.PageNumber - 1) * parameters.PageSize)
                 .Take(parameters.PageSize)
-                .ToList();
+                .ToListAsync();
         }
     }
 }

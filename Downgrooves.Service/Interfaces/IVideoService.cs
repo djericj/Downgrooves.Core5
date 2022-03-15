@@ -8,22 +8,17 @@ namespace Downgrooves.Service.Interfaces
 {
     public interface IVideoService
     {
-        IEnumerable<Video> GetVideos();
+        Task<IEnumerable<Video>> GetVideos();
 
-        IEnumerable<Video> GetVideos(PagingParameters parameters);
+        Task<IEnumerable<Video>> GetVideos(PagingParameters parameters);
 
-        Task<IEnumerable<Video>> GetVideosAsync();
+        Task<Video> Add(Video video);
 
+        Task<IEnumerable<Video>> AddRange(IEnumerable<Video> videos);
 
-        Task<IEnumerable<Video>> GetVideosAsync(PagingParameters parameters);
+        Task<IEnumerable<Video>> Find(Expression<Func<Video, bool>> predicate);
 
-        Video Add(Video video);
-
-        IEnumerable<Video> AddRange(IEnumerable<Video> videos);
-
-        IEnumerable<Video> Find(Expression<Func<Video, bool>> predicate);
-
-        Video Update(Video video);
+        Task<Video> Update(Video video);
 
         void Remove(Video video);
     }

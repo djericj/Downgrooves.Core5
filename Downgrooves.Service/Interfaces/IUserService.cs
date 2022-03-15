@@ -5,8 +5,6 @@ namespace Downgrooves.Service.Interfaces
 {
     public interface IUserService
     {
-        User Authenticate(string userName, string password);
-
-        Task<User> AuthenticateAsync(string userName, string password);
+        Task<User> Authenticate(string userName, string password);
     }
 }

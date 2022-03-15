@@ -2,6 +2,7 @@
 using Downgrooves.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Controllers
 {
@@ -19,28 +20,28 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("tracks")]
-        public IActionResult GetTracks()
+        public async Task<IActionResult> GetTracks()
         {
-            return Ok(_service.GetTracks());
+            return Ok(await _service.GetTracks());
         }
 
         [HttpGet]
         [Route("tracks/paged")]
-        public IActionResult GetTracks([FromQuery] PagingParameters parameters)
+        public async Task<IActionResult> GetTracksAsync([FromQuery] PagingParameters parameters)
         {
-            return Ok(_service.GetTracks(parameters));
+            return Ok(await _service.GetTracks(parameters));
         }
 
         [HttpPost]
-        public IActionResult AddTrack(ITunesTrack track)
+        public async Task<IActionResult> AddTrack(ITunesTrack track)
         {
-            return Ok(_service.Add(track));
+            return Ok(await _service.Add(track));
         }
 
         [HttpPut]
-        public IActionResult UpdateTrack(ITunesTrack track)
+        public async Task<IActionResult> UpdateTrack(ITunesTrack track)
         {
-            return Ok(_service.Update(track));
+            return Ok(await _service.Update(track));
         }
     }
 }

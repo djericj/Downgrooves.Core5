@@ -1,20 +1,21 @@
 ﻿using Downgrooves.Domain;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Downgrooves.Persistence.Interfaces
 {
     public interface IMixRepository : IRepository<Mix>
     {
-        IEnumerable<Mix> GetMixes();
+        Task<IEnumerable<Mix>> GetMixes();
 
-        IEnumerable<Mix> GetMixes(PagingParameters parameters);
+        Task<IEnumerable<Mix>> GetMixes(PagingParameters parameters);
 
-        IEnumerable<Mix> GetShowMixes();
+        Task<IEnumerable<Mix>> GetShowMixes();
 
-        IEnumerable<Mix> GetShowMixes(PagingParameters parameters);
+        Task<IEnumerable<Mix>> GetShowMixes(PagingParameters parameters);
 
-        IEnumerable<Mix> GetMixesByCategory(string category);
+        Task<IEnumerable<Mix>> GetMixesByCategory(string category);
 
-        IEnumerable<Mix> GetMixesByGenre(string genre);
+        Task<IEnumerable<Mix>> GetMixesByGenre(string genre);
     }
 }

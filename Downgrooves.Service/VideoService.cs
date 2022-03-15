@@ -20,12 +20,12 @@ namespace Downgrooves.Service
             _logger = logger;
         }
 
-        public Video Add(Video video)
+        public async Task<Video> Add(Video video)
         {
             try
             {
                 _unitOfWork.Videos.Add(video);
-                _unitOfWork.Complete();
+                await _unitOfWork.CompleteAsync();
                 return video;
             }
             catch (Exception ex)
@@ -35,12 +35,12 @@ namespace Downgrooves.Service
             }
         }
 
-        public IEnumerable<Video> AddRange(IEnumerable<Video> videos)
+        public async Task<IEnumerable<Video>> AddRange(IEnumerable<Video> videos)
         {
             try
             {
                 _unitOfWork.Videos.AddRange(videos);
-                _unitOfWork.Complete();
+                await _unitOfWork.CompleteAsync();
                 return videos;
             }
             catch (Exception ex)
@@ -50,37 +50,27 @@ namespace Downgrooves.Service
             }
         }
 
-        public IEnumerable<Video> Find(Expression<Func<Video, bool>> predicate)
+        public async Task<IEnumerable<Video>> Find(Expression<Func<Video, bool>> predicate)
         {
-            return _unitOfWork.Videos.Find(predicate);
+            return await _unitOfWork.Videos.FindAsync(predicate);
         }
 
-        public IEnumerable<Video> GetVideos()
+        public async Task<IEnumerable<Video>> GetVideos()
         {
-            return _unitOfWork.Videos.GetVideos();
+            return await _unitOfWork.Videos.GetVideos();
         }
 
-        public IEnumerable<Video> GetVideos(PagingParameters parameters)
+        public async Task<IEnumerable<Video>> GetVideos(PagingParameters parameters)
         {
-            return _unitOfWork.Videos.GetVideos(parameters);
+            return await _unitOfWork.Videos.GetVideos(parameters);
         }
 
-        public async Task<IEnumerable<Video>> GetVideosAsync()
-        {
-            return await Task.Run(() => GetVideos());
-        }
-
-        public async Task<IEnumerable<Video>> GetVideosAsync(PagingParameters parameters)
-        {
-            return await Task.Run(() => GetVideos(parameters));
-        }
-
-        public Video Update(Video video)
+        public async Task<Video> Update(Video video)
         {
             try
             {
                 _unitOfWork.Videos.UpdateState(video);
-                _unitOfWork.Complete();
+                await _unitOfWork.CompleteAsync();
                 return video;
             }
             catch (Exception ex)

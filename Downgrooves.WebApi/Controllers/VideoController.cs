@@ -21,14 +21,14 @@ namespace Downgrooves.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetVideos()
         {
-            return Ok(await _service.GetVideosAsync());
+            return Ok(await _service.GetVideos());
         }
 
         [HttpGet]
         [Route("paged")]
         public async Task<IActionResult> GetVideos([FromQuery] PagingParameters parameters)
         {
-            return Ok(await _service.GetVideosAsync(parameters));
+            return Ok(await _service.GetVideos(parameters));
         }
 
         [HttpPost]

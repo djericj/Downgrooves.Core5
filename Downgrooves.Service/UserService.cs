@@ -14,14 +14,9 @@ namespace Downgrooves.Service
             _unitOfWork = unitOfWork;
         }
 
-        public User Authenticate(string userName, string password)
+        public async Task<User> Authenticate(string userName, string password)
         {
-            return _unitOfWork.Users.Authenticate(userName, password);
-        }
-
-        public async Task<User> AuthenticateAsync(string userName, string password)
-        {
-            return await Task.Run(() => Authenticate(userName, password));
+            return await _unitOfWork.Users.Authenticate(userName, password);
         }
     }
 }

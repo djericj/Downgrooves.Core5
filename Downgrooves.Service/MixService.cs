@@ -19,12 +19,12 @@ namespace Downgrooves.Service
             _logger = logger;
         }
 
-        public Mix Add(Mix mix)
+        public async Task<Mix> Add(Mix mix)
         {
             try
             {
                 _unitOfWork.Mixes.Add(mix);
-                _unitOfWork.Complete();
+                await _unitOfWork.CompleteAsync();
                 return mix;
             }
             catch (Exception ex)
@@ -34,54 +34,34 @@ namespace Downgrooves.Service
             }
         }
 
-        public IEnumerable<Mix> GetMixes()
+        public async Task<IEnumerable<Mix>> GetMixes()
         {
-            return _unitOfWork.Mixes.GetMixes();
+            return await _unitOfWork.Mixes.GetMixes();
         }
 
-        public IEnumerable<Mix> GetMixes(PagingParameters parameters)
+        public async Task<IEnumerable<Mix>> GetMixes(PagingParameters parameters)
         {
-            return _unitOfWork.Mixes.GetMixes(parameters);
+            return await _unitOfWork.Mixes.GetMixes(parameters);
         }
 
-        public async Task<IEnumerable<Mix>> GetMixesAsync()
+        public async Task<IEnumerable<Mix>> GetShowMixes()
         {
-            return await Task.Run(() => GetMixes());
+            return await _unitOfWork.Mixes.GetShowMixes();
         }
 
-        public async Task<IEnumerable<Mix>> GetMixesAsync(PagingParameters parameters)
+        public async Task<IEnumerable<Mix>> GetShowMixes(PagingParameters parameters)
         {
-            return await Task.Run(() => GetMixes(parameters));
+            return await _unitOfWork.Mixes.GetShowMixes(parameters);
         }
 
-        public IEnumerable<Mix> GetShowMixes()
+        public async Task<IEnumerable<Mix>> GetMixesByCategory(string category)
         {
-            return _unitOfWork.Mixes.GetShowMixes();
+            return await _unitOfWork.Mixes.GetMixesByCategory(category);
         }
 
-        public IEnumerable<Mix> GetShowMixes(PagingParameters parameters)
+        public async Task<IEnumerable<Mix>> GetMixesByGenre(string genre)
         {
-            return _unitOfWork.Mixes.GetShowMixes(parameters);
-        }
-
-        public async Task<IEnumerable<Mix>> GetShowMixesAsync()
-        {
-            return await Task.Run(() => _unitOfWork.Mixes.GetShowMixes());
-        }
-
-        public async Task<IEnumerable<Mix>> GetShowMixesAsync(PagingParameters parameters)
-        {
-            return await Task.Run(() => _unitOfWork.Mixes.GetShowMixes(parameters));
-        }
-
-        public IEnumerable<Mix> GetMixesByCategory(string category)
-        {
-            return _unitOfWork.Mixes.GetMixesByCategory(category);
-        }
-
-        public IEnumerable<Mix> GetMixesByGenre(string genre)
-        {
-            return _unitOfWork.Mixes.GetMixesByGenre(genre);
+            return await _unitOfWork.Mixes.GetMixesByGenre(genre);
         }
     }
 }

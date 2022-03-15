@@ -1,5 +1,6 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,11 +14,11 @@ namespace Downgrooves.Persistence
         {
         }
 
-        public User Authenticate(string userName, string password)
+        public async Task<User> Authenticate(string userName, string password)
         {
-            var user = DowngroovesDbContext.Users
+            var user = await DowngroovesDbContext.Users
                 .Where(x => x.UserName == userName && x.Password == password)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
             return user;
         }
     }

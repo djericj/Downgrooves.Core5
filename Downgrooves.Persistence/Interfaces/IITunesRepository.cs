@@ -1,11 +1,12 @@
 ﻿using Downgrooves.Domain;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Downgrooves.Persistence.Interfaces
 {
     public interface IITunesRepository : IRepository<ITunesTrack>
     {
-        IEnumerable<ITunesTrack> GetTracks();
-        IEnumerable<ITunesTrack> GetTracks(PagingParameters parameters);
+        Task<IEnumerable<ITunesTrack>> GetTracks();
+        Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters);
     }
 }

@@ -6,26 +6,18 @@ namespace Downgrooves.Service.Interfaces
 {
     public interface IMixService
     {
-        Mix Add(Mix mix);
+        Task<Mix> Add(Mix mix);
 
-        IEnumerable<Mix> GetMixes();
+        Task<IEnumerable<Mix>> GetMixes();
 
-        IEnumerable<Mix> GetMixes(PagingParameters parameters);
+        Task<IEnumerable<Mix>> GetMixes(PagingParameters parameters);
 
-        Task<IEnumerable<Mix>> GetMixesAsync();
+        Task<IEnumerable<Mix>> GetShowMixes();
 
-        Task<IEnumerable<Mix>> GetMixesAsync(PagingParameters parameters);
+        Task<IEnumerable<Mix>> GetShowMixes(PagingParameters parameters);
 
-        IEnumerable<Mix> GetShowMixes();
+        Task<IEnumerable<Mix>> GetMixesByCategory(string category);
 
-        IEnumerable<Mix> GetShowMixes(PagingParameters parameters);
-
-        Task<IEnumerable<Mix>> GetShowMixesAsync();
-
-        Task<IEnumerable<Mix>> GetShowMixesAsync(PagingParameters parameters);
-
-        IEnumerable<Mix> GetMixesByCategory(string category);
-
-        IEnumerable<Mix> GetMixesByGenre(string genre);
+        Task<IEnumerable<Mix>> GetMixesByGenre(string genre);
     }
 }

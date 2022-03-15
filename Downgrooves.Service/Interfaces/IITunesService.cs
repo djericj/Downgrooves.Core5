@@ -8,19 +8,17 @@ namespace Downgrooves.Service.Interfaces
 {
     public interface IITunesService
     {
-        IEnumerable<ITunesTrack> GetTracks();
+        Task<IEnumerable<ITunesTrack>> GetTracks();
 
-        IEnumerable<ITunesTrack> GetTracks(PagingParameters parameters);
+        Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters);
 
-        Task<IEnumerable<ITunesTrack>> GetTracksAsync();
+        Task<ITunesTrack> Add(ITunesTrack track);
 
-        ITunesTrack Add(ITunesTrack track);
+        Task<IEnumerable<ITunesTrack>> AddRange(IEnumerable<ITunesTrack> tracks);
 
-        IEnumerable<ITunesTrack> AddRange(IEnumerable<ITunesTrack> tracks);
+        Task<IEnumerable<ITunesTrack>> Find(Expression<Func<ITunesTrack, bool>> predicate);
 
-        IEnumerable<ITunesTrack> Find(Expression<Func<ITunesTrack, bool>> predicate);
-
-        ITunesTrack Update(ITunesTrack track);
+        Task<ITunesTrack> Update(ITunesTrack track);
 
         void Remove(ITunesTrack track);
     }

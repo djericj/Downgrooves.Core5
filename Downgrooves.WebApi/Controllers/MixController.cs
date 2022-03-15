@@ -22,34 +22,34 @@ namespace Downgrooves.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetMixes()
         {
-            return Ok(await _service.GetShowMixesAsync());
+            return Ok(await _service.GetShowMixes());
         }
 
         [HttpGet]
         [Route("paged")]
         public async Task<IActionResult> GetMixes([FromQuery] PagingParameters parameters)
         {
-            return Ok(await _service.GetShowMixesAsync(parameters));
+            return Ok(await _service.GetShowMixes(parameters));
         }
 
         [HttpGet]
         [Route("category")]
-        public IActionResult GetMixesByCategory(string category)
+        public async Task<IActionResult> GetMixesByCategory(string category)
         {
-            return Ok(_service.GetMixesByCategory(category));
+            return Ok(await _service.GetMixesByCategory(category));
         }
 
         [HttpGet]
         [Route("genre")]
-        public IActionResult GetMixesByGenre(string genre)
+        public async Task<IActionResult> GetMixesByGenre(string genre)
         {
-            return Ok(_service.GetMixesByGenre(genre));
+            return Ok(await _service.GetMixesByGenre(genre));
         }
 
         [HttpPost]
-        public IActionResult Add(Mix mix)
+        public async Task<IActionResult> Add(Mix mix)
         {
-            return Ok(_service.Add(mix));
+            return Ok(await _service.Add(mix));
         }
     }
 }
