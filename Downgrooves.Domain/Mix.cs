@@ -14,7 +14,6 @@ namespace Downgrooves.Domain
         public string Artist { get; set; }
         public string Length { get; set; }
         public string ShortDescription { get; set; }
-
         public string Description { get; set; }
         public string Mp3File { get; set; }
         public string Attachment { get; set; }
