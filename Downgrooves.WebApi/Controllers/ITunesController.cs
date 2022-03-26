@@ -9,7 +9,6 @@ namespace Downgrooves.WebApi.Controllers
     [Authorize]
     [ApiController]
     [Route("itunes")]
-    [ResponseCache(VaryByHeader = "Origin")]
     public class ITunesController : ControllerBase
     {
         private readonly IITunesService _service;
