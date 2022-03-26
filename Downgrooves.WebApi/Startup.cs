@@ -100,11 +100,7 @@ namespace Downgrooves.WebApi
 
             app.Use(async (httpContext, next) =>
             {
-                var apiMode = httpContext.Request.Host.Value.StartsWith("api");
-                if (apiMode)
-                {
-                    httpContext.Request.Headers[HeaderNames.XRequestedWith] = "XMLHttpRequest";
-                }
+                httpContext.Request.Headers[HeaderNames.XRequestedWith] = "XMLHttpRequest";
                 await next();
             });
 
