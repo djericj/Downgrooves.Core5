@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 
 namespace Downgrooves.WebApi
@@ -31,7 +32,18 @@ namespace Downgrooves.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    name: "CORS_POLICY",
+                    builder =>
+                    {
+                        builder.WithOrigins(Configuration["WebAppUrl"].Trim('/', '\\'))
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials();
+                    });
+            });
             services.AddControllers();
             services.AddAuthentication(auth =>
             {
@@ -83,18 +95,26 @@ namespace Downgrooves.WebApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Downgrooves.WebApi v1"));
             }
 
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
-
-            app.UseAuthentication();
             app.UseRouting();
+            app.UseCors("CORS_POLICY");
+
+            app.Use(async (httpContext, next) =>
+            {
+                var apiMode = httpContext.Request.Host.Value.StartsWith("api");
+                if (apiMode)
+                {
+                    httpContext.Request.Headers[HeaderNames.XRequestedWith] = "XMLHttpRequest";
+                }
+                await next();
+            });
+
+            
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers().RequireCors("CORS_POLICY");
             });
         }
 
