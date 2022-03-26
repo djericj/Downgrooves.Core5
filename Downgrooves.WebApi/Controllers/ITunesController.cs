@@ -9,6 +9,7 @@ namespace Downgrooves.WebApi.Controllers
     [Authorize]
     [ApiController]
     [Route("itunes")]
+    [ResponseCache(VaryByHeader = "Origin")]
     public class ITunesController : ControllerBase
     {
         private readonly IITunesService _service;
@@ -19,7 +20,7 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("tracks")]
+        [Route("tracks")]        
         public async Task<IActionResult> GetTracks()
         {
             return Ok(await _service.GetTracks());
