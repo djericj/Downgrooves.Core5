@@ -17,14 +17,15 @@ namespace Downgrooves.Persistence
 
         public async Task<IEnumerable<ITunesTrack>> GetTracks()
         {
-            return await DowngroovesDbContext.ITunesTracks.ToListAsync();
+            return await DowngroovesDbContext.ITunesTracks.OrderByDescending(x => x.ReleaseDate).ToListAsync();
         }
 
         public async Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters)
         {
             return await DowngroovesDbContext.ITunesTracks
+                .OrderByDescending(x => x.ReleaseDate)
                 .Skip((parameters.PageNumber - 1) * parameters.PageSize)
-                .Take(parameters.PageSize)
+                .Take(parameters.PageSize)                
                 .ToListAsync();
         }
     }
