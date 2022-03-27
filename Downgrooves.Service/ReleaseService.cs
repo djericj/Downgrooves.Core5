@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Downgrooves.Service
 {
@@ -45,7 +46,7 @@ namespace Downgrooves.Service
             if (Releases == null)
             {
                 var iTunesTracks = await _iTunesService.GetTracks();
-                var collectionIds = iTunesTracks.GroupBy(x => x.CollectionId).Select(g => g.First());
+                var collectionIds = iTunesTracks.GroupBy(x => x.CollectionId).Select(g => g.First()).OrderByDescending(x => x.ReleaseDate);
                 var collections = iTunesTracks.Where(x => collectionIds.Contains(x));
                 var releases = new List<Release>();
                 foreach (var item in collections)
@@ -54,7 +55,7 @@ namespace Downgrooves.Service
                     release.Tracks = GetTracks(item.CollectionId, iTunesTracks).ToList();
                     releases.Add(release);
                 }
-                Releases = releases;
+                Releases = releases.OrderByDescending(x => x.ReleaseDate);
             }
             return Releases;
         }
