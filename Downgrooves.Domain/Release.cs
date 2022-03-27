@@ -25,6 +25,7 @@ namespace Downgrooves.Domain
         public string Country { get; set; }
         public string Currency { get; set; }
         public string PrimaryGenreName { get; set; }
+        public bool IsOriginal => ArtistName.Contains("Downgrooves", StringComparison.OrdinalIgnoreCase);
         public ICollection<ITunesTrack> Tracks { get; set; }
     }
 }
