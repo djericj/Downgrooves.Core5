@@ -1,7 +1,9 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -13,11 +15,13 @@ namespace Downgrooves.Service
     {
         private IUnitOfWork _unitOfWork;
         private readonly ILogger<ITunesService> _logger;
+        private IConfiguration _configuration;
 
-        public ITunesService(IUnitOfWork unitOfWork, ILogger<ITunesService> logger)
+        public ITunesService(IUnitOfWork unitOfWork, ILogger<ITunesService> logger, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _configuration = configuration;
         }
 
         public async Task<ITunesTrack> Add(ITunesTrack track)
@@ -65,6 +69,20 @@ namespace Downgrooves.Service
             return await _unitOfWork.ITunesTracks.GetTracks(parameters);
         }
 
+        public async Task<IEnumerable<ITunesTrack>> LookupCollection(int collectionId)
+        {
+            var client = new RestClient(_configuration["ITunesLookupUrl"]);
+            var request = new RestRequest();
+            request.RequestFormat = DataFormat.Json;
+
+            request.AddParameter("country", "us", ParameterType.UrlSegment);
+            request.AddParameter("id", collectionId);
+            request.AddParameter("entity", "song");
+            var response = await client.ExecuteAsync<ITunesTrack[]>(request);
+            return response.Data;
+
+        }
+
         public async Task<ITunesTrack> Update(ITunesTrack track)
         {
             try
@@ -84,5 +102,7 @@ namespace Downgrooves.Service
         {
             throw new NotImplementedException();
         }
+
+        
     }
 }

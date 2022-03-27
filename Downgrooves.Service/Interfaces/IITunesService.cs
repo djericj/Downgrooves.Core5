@@ -12,6 +12,8 @@ namespace Downgrooves.Service.Interfaces
 
         Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters);
 
+        Task<IEnumerable<ITunesTrack>> LookupCollection(int collectionId);
+
         Task<ITunesTrack> Add(ITunesTrack track);
 
         Task<IEnumerable<ITunesTrack>> AddRange(IEnumerable<ITunesTrack> tracks);

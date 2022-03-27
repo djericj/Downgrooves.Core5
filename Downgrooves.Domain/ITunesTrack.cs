@@ -41,5 +41,7 @@ namespace Downgrooves.Domain
         public string Currency { get; set; }
         public string PrimaryGenreName { get; set; }
         public string IsStreamable { get; set; }
+        [NotMapped]
+        public bool IsOriginal => TrackCensoredName.Contains("Downgrooves", StringComparison.OrdinalIgnoreCase);
     }
 }

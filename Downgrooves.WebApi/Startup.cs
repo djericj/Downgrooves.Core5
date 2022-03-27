@@ -5,12 +5,15 @@ using Downgrooves.Persistence;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service;
 using Downgrooves.Service.Interfaces;
+using Downgrooves.WebApi.Policies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
@@ -20,9 +23,11 @@ namespace Downgrooves.WebApi
 {
     public class Startup
     {
+        public IWebHostEnvironment WebHostEnvironment { get; set; }
         public Startup(IWebHostEnvironment env)
         {
             Configuration = InitConfiguration(env);
+            WebHostEnvironment = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -30,6 +35,12 @@ namespace Downgrooves.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            if (WebHostEnvironment.IsDevelopment())
+            {
+                // Disable authentication and authorization.
+                services.TryAddSingleton<IPolicyEvaluator, DisableAuthenticationPolicyEvaluator>();
+            }
+
             services.AddCors(options =>
             {
                 options.AddPolicy(
