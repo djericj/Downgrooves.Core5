@@ -5,8 +5,6 @@ using Downgrooves.Persistence;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service;
 using Downgrooves.Service.Interfaces;
-using Downgrooves.WebApi.Handlers;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -80,6 +78,7 @@ namespace Downgrooves.WebApi
 
             services.AddScoped<IMixService, MixService>();
             services.AddScoped<IITunesService, ITunesService>();
+            services.AddScoped<IReleaseService, ReleaseService>();  
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IVideoService, VideoService>();
             services.AddTransient<ITokenService, TokenService>();
