@@ -3,6 +3,7 @@ using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -79,7 +80,13 @@ namespace Downgrooves.Service
             request.AddParameter("id", collectionId);
             request.AddParameter("entity", "song");
             var response = await client.ExecuteAsync<ITunesTrack[]>(request);
-            return response.Data;
+            var content = response.Content;
+            if (!string.IsNullOrEmpty(content))
+            {
+                var lookupResult = JsonConvert.DeserializeObject<ITunesLookupResult>(content);
+                return lookupResult.Results;
+            }
+            return null;
 
         }
 
