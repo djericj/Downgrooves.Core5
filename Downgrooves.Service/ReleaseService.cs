@@ -69,11 +69,13 @@ namespace Downgrooves.Service
         {
             return new Release()
             {
+                ArtistId = track.ArtistId,
                 ArtistName = track.ArtistName,
                 ArtistViewUrl = track.ArtistViewUrl,
                 ArtworkUrl100 = track.ArtworkUrl100,
                 ArtworkUrl30 = track.ArtworkUrl30,
                 ArtworkUrl60 = track.ArtworkUrl60,
+                CollectionId = track.CollectionId,
                 CollectionCensoredName = track.CollectionCensoredName,
                 CollectionName = track.CollectionName,
                 CollectionPrice = track.CollectionPrice,

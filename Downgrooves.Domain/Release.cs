@@ -6,6 +6,9 @@ namespace Downgrooves.Domain
     public class Release
     {
         public int Id { get; set; }
+
+        public int ArtistId { get; set; }
+        public int CollectionId { get; set; }
         public string ArtistName { get; set; }
         public string CollectionName { get; set; }
         public string TrackName { get; set; }
