@@ -10,6 +10,7 @@ namespace Downgrooves.Persistence.ITunes
     public class TrackRepository : Repository<ITunesTrack>, ITrackRepository
     {
         public DowngroovesDbContext DowngroovesDbContext { get => _context as DowngroovesDbContext; }
+        public List<int> Exclusions => DowngroovesDbContext.ITunesExclusions.Select(x => x.TrackId).ToList();
 
         public TrackRepository(DowngroovesDbContext context) : base(context)
         {
@@ -17,7 +18,10 @@ namespace Downgrooves.Persistence.ITunes
 
         public async Task<IEnumerable<ITunesTrack>> GetTracks()
         {
-            return await DowngroovesDbContext.ITunesTracks.OrderByDescending(x => x.ReleaseDate).ToListAsync();
+            return await DowngroovesDbContext.ITunesTracks
+                .Where(x => !Exclusions.Contains(x.TrackId))
+                .OrderByDescending(x => x.ReleaseDate)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters)
@@ -30,6 +34,6 @@ namespace Downgrooves.Persistence.ITunes
                 .ToListAsync();
         }
 
-        public List<int> Exclusions => DowngroovesDbContext.ITunesExclusions.Select(x => x.TrackId).ToList();
+        
     }
 }

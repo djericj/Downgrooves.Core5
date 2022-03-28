@@ -10,6 +10,7 @@ namespace Downgrooves.Persistence.ITunes
     public class CollectionRepository : Repository<ITunesCollection>, ICollectionRepository
     {
         public DowngroovesDbContext DowngroovesDbContext { get => _context as DowngroovesDbContext; }
+        public List<int> Exclusions => DowngroovesDbContext.ITunesExclusions.Select(x => x.CollectionId).ToList();
 
         public CollectionRepository(DowngroovesDbContext context) : base(context)
         {
@@ -17,7 +18,10 @@ namespace Downgrooves.Persistence.ITunes
 
         public async Task<IEnumerable<ITunesCollection>> GetCollections()
         {
-            return await DowngroovesDbContext.ITunesCollections.OrderByDescending(x => x.ReleaseDate).ToListAsync();
+            return await DowngroovesDbContext.ITunesCollections
+                .Where(x => !Exclusions.Contains(x.CollectionId))
+                .OrderByDescending(x => x.ReleaseDate)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<ITunesCollection>> GetCollections(PagingParameters parameters)
@@ -30,6 +34,6 @@ namespace Downgrooves.Persistence.ITunes
                 .ToListAsync();
         }
 
-        public List<int> Exclusions => DowngroovesDbContext.ITunesExclusions.Select(x => x.CollectionId).ToList();
+        
     }
 }
