@@ -10,8 +10,10 @@ namespace Downgrooves.Persistence
         {
         }
 
+        
         public DbSet<Mix> Mixes { get; set; }
         public DbSet<ITunesCollection> ITunesCollections { get; set; }
+        public DbSet<ITunesExclusion> ITunesExclusions { get; set; }
         public DbSet<ITunesTrack> ITunesTracks { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Video> Videos { get; set; }
@@ -30,6 +32,9 @@ namespace Downgrooves.Persistence
             modelBuilder.Entity<Video>()
                 .HasMany(x => x.Thumbnails)
                 .WithOne(y => y.Video);
+
+            modelBuilder.Entity<ITunesExclusion>()
+                .HasNoKey();
         }
     }
 }

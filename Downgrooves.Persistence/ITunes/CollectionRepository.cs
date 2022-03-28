@@ -23,10 +23,13 @@ namespace Downgrooves.Persistence.ITunes
         public async Task<IEnumerable<ITunesCollection>> GetCollections(PagingParameters parameters)
         {
             return await DowngroovesDbContext.ITunesCollections
+                .Where(x => !Exclusions.Contains(x.CollectionId))
                 .OrderByDescending(x => x.ReleaseDate)
                 .Skip((parameters.PageNumber - 1) * parameters.PageSize)
                 .Take(parameters.PageSize)
                 .ToListAsync();
         }
+
+        public List<int> Exclusions => DowngroovesDbContext.ITunesExclusions.Select(x => x.CollectionId).ToList();
     }
 }
