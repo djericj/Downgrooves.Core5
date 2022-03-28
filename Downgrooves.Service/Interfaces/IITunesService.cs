@@ -8,11 +8,31 @@ namespace Downgrooves.Service.Interfaces
 {
     public interface IITunesService
     {
+        #region Collections
+
+        Task<IEnumerable<ITunesCollection>> GetCollections();
+
+        Task<IEnumerable<ITunesCollection>> GetCollections(PagingParameters parameters);
+
+        Task<ITunesCollection> LookupCollection(int collectionId);
+
+        Task<ITunesCollection> Add(ITunesCollection collection);
+
+        Task<IEnumerable<ITunesCollection>> Find(Expression<Func<ITunesCollection, bool>> predicate);
+
+        Task<ITunesCollection> Update(ITunesCollection collection);
+
+        void Remove(ITunesCollection collection);
+
+        #endregion
+
+        #region Tracks
+
         Task<IEnumerable<ITunesTrack>> GetTracks();
 
         Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters);
 
-        Task<IEnumerable<ITunesTrack>> LookupCollection(int collectionId);
+        Task<IEnumerable<ITunesTrack>> LookupTracks(int collectionId);
 
         Task<ITunesTrack> Add(ITunesTrack track);
 
@@ -23,5 +43,7 @@ namespace Downgrooves.Service.Interfaces
         Task<ITunesTrack> Update(ITunesTrack track);
 
         void Remove(ITunesTrack track);
+
+        #endregion
     }
 }

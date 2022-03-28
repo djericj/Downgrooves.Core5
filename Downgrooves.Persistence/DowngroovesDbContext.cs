@@ -11,6 +11,7 @@ namespace Downgrooves.Persistence
         }
 
         public DbSet<Mix> Mixes { get; set; }
+        public DbSet<ITunesCollection> ITunesCollections { get; set; }
         public DbSet<ITunesTrack> ITunesTracks { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Video> Videos { get; set; }

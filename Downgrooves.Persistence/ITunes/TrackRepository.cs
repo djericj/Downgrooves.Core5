@@ -1,17 +1,17 @@
 ﻿using Downgrooves.Domain;
-using Downgrooves.Persistence.Interfaces;
+using Downgrooves.Persistence.ITunes.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Downgrooves.Persistence
+namespace Downgrooves.Persistence.ITunes
 {
-    public class ITunesRepository : Repository<ITunesTrack>, IITunesRepository
+    public class TrackRepository : Repository<ITunesTrack>, ITrackRepository
     {
         public DowngroovesDbContext DowngroovesDbContext { get => _context as DowngroovesDbContext; }
 
-        public ITunesRepository(DowngroovesDbContext context) : base(context)
+        public TrackRepository(DowngroovesDbContext context) : base(context)
         {
         }
 
@@ -25,7 +25,7 @@ namespace Downgrooves.Persistence
             return await DowngroovesDbContext.ITunesTracks
                 .OrderByDescending(x => x.ReleaseDate)
                 .Skip((parameters.PageNumber - 1) * parameters.PageSize)
-                .Take(parameters.PageSize)                
+                .Take(parameters.PageSize)
                 .ToListAsync();
         }
     }

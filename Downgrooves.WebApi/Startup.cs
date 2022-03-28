@@ -6,6 +6,7 @@ using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service;
 using Downgrooves.Service.Interfaces;
 using Downgrooves.WebApi.Policies;
+using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Builder;
@@ -53,6 +54,12 @@ namespace Downgrooves.WebApi
                             .AllowCredentials();
                     });
             });
+
+            services.AddProblemDetails(setup =>
+            {
+                setup.IncludeExceptionDetails = (ctx, env) => WebHostEnvironment.IsDevelopment() || WebHostEnvironment.IsStaging();
+            });
+
             services.AddControllers();
             services.AddAuthentication(auth =>
             {
@@ -104,6 +111,8 @@ namespace Downgrooves.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Downgrooves.WebApi v1"));
             }
+
+            app.UseProblemDetails();
 
             app.UseRouting();
             app.UseCors("CORS_POLICY");

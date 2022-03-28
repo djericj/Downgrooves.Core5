@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ITunesLoader.Interfaces;
 using Newtonsoft.Json;
 using System.IO;
+using ITunesLoader.Services;
 
 namespace ITunesLoader
 {
@@ -21,121 +22,64 @@ namespace ITunesLoader
         public static string ApiUrl { get; set; }
         public static string Token { get; set; }
 
-        private static int index = 0;
+        private static IJEnumerable<JToken> results { get; set; }
 
         private static void Main(string[] args)
         {
             AppConfigurationBuilder();
 
-            IEnumerable<ITunesTrack> tracksToAdd = new List<ITunesTrack>();
+            TrackService.ApiUrl = ApiUrl;
+            TrackService.Token = Token;
+
+            CollectionService.ApiUrl = ApiUrl;  
+            CollectionService.Token = Token;
+
             var json = GetItunesJson();
             JObject o = JObject.Parse(json);
-            IJEnumerable<JToken> results = o.SelectTokens("results").Children();
-            var tracks = CreateTracks(results);
-            var existingTracks = GetExistingTracks();
-            if (existingTracks != null)
+            results = o.SelectTokens("results").Children();
+
+            AddCollections();
+            AddTracks();
+            
+        }
+
+        private static void AddCollections()
+        {
+            IEnumerable<ITunesCollection> collectionsToAdd = new List<ITunesCollection>();
+            var collections = CollectionService.CreateCollections(results);
+            var existingCollections = CollectionService.GetExistingCollections();
+            if (existingCollections != null && existingCollections.Count() > 0)
+                collectionsToAdd = collections.Where(x => existingCollections.All(y => x.CollectionId != y.CollectionId));
+            else
+                collectionsToAdd = collections;
+            var count = CollectionService.AddNewCollections(collectionsToAdd);
+            Console.WriteLine($"{count} collections added.");
+        }
+
+        private static void AddTracks()
+        {
+            IEnumerable<ITunesTrack> tracksToAdd = new List<ITunesTrack>();
+            
+            var tracks = TrackService.CreateTracks(results);
+            var existingTracks =  TrackService.GetExistingTracks();
+            if (existingTracks != null && existingTracks.Count() > 0)
                 tracksToAdd = tracks.Where(x => existingTracks.All(y => x.TrackId != y.TrackId));
             else
                 tracksToAdd = tracks;
-            AddNewTracks(tracksToAdd);
-            Console.WriteLine($"{index} tracks added.");
+            var count = TrackService.AddNewTracks(tracksToAdd);
+            Console.WriteLine($"{count} tracks added.");
         }
 
         private static string GetItunesJson()
         {
             string data = null;
-            string url = "https://itunes.apple.com/search?term=Downgrooves&limit=200";
+            string url = "https://itunes.apple.com/search/?term=Downgrooves&entity=musicArtist,musicTrack,album,mix,song&media=music&limit=200";
             using (var webClient = new WebClient())
                 data = webClient.DownloadString(url);
             return data;
         }
 
-        private static void AddNewTracks(IEnumerable<ITunesTrack> tracks)
-        {
-            foreach (var track in tracks)
-                AddNewTrack(track);
-        }
-
-        private static void AddNewTrack(ITunesTrack track)
-        {
-            var client = new RestClient(ApiUrl);
-            client.Authenticator = new JwtAuthenticator(Token);
-            var request = new RestRequest("itunes", Method.POST);
-            var settings = new JsonSerializerSettings();
-            settings.NullValueHandling = NullValueHandling.Ignore;
-            var json = JsonConvert.SerializeObject(track, settings);
-            request.AddParameter("application/json", json, ParameterType.RequestBody);
-            //request.AddJsonBody(track);
-            var response = client.Post(request);
-            var description = $"{track.ArtistName} - {track.TrackName} ({track.TrackId})";
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                index++;
-                Console.WriteLine($"Added {description}");
-            }
-            else
-                Console.Error.WriteLine($"Error adding {description}");
-        }
-
-        private static IEnumerable<ITunesTrack> GetExistingTracks()
-        {
-            var client = new RestClient(ApiUrl);
-            client.Authenticator = new JwtAuthenticator(Token);
-            var request = new RestRequest("itunes/tracks");
-            var response = client.Get(request);
-            var json = response.Content;
-            var tracks = JsonConvert.DeserializeObject<IEnumerable<ITunesTrack>>(json);
-            return tracks;
-        }
-
-        private static IEnumerable<ITunesTrack> CreateTracks(IJEnumerable<JToken> tokens)
-        {
-            var tracks = new List<ITunesTrack>();
-            foreach (var item in tokens)
-            {
-                var track = CreateTrack(item);
-                tracks.Add(track);
-            }
-            return tracks;
-        }
-
-        private static ITunesTrack CreateTrack(JToken token)
-        {
-            return new ITunesTrack()
-            {
-                ArtistId = Convert.ToInt32(token["artistId"]),
-                ArtistName = token["artistName"].ToString(),
-                ArtistViewUrl = token["artistViewUrl"].ToString(),
-                ArtworkUrl100 = token["artworkUrl100"].ToString(),
-                ArtworkUrl30 = token["artworkUrl30"].ToString(),
-                ArtworkUrl60 = token["artworkUrl60"].ToString(),
-                CollectionCensoredName = token["collectionCensoredName"].ToString(),
-                CollectionExplicitness = token["collectionExplicitness"].ToString(),
-                CollectionId = Convert.ToInt32(token["collectionId"]),
-                CollectionName = token["collectionName"].ToString(),
-                CollectionPrice = Convert.ToDouble(token["collectionPrice"]),
-                CollectionViewUrl = token["collectionViewUrl"].ToString(),
-                Country = token["country"].ToString(),
-                Currency = token["currency"].ToString(),
-                DiscCount = Convert.ToInt32(token["discCount"]),
-                DiscNumber = Convert.ToInt32(token["discNumber"]),
-                ReleaseDate = Convert.ToDateTime(token["releaseDate"]),
-                IsStreamable = token["isStreamable"].ToString(),
-                TrackId = Convert.ToInt32(token["trackId"]),
-                Kind = token["kind"].ToString(),
-                PreviewUrl = token["previewUrl"].ToString(),
-                PrimaryGenreName = token["primaryGenreName"].ToString(),
-                TrackCensoredName = token["trackCensoredName"].ToString(),
-                TrackCount = Convert.ToInt32(token["trackCount"]),
-                TrackExplicitness = token["trackExplicitness"].ToString(),
-                TrackName = token["trackName"].ToString(),
-                TrackNumber = Convert.ToInt32(token["trackNumber"]),
-                TrackPrice = Convert.ToDouble(token["trackPrice"]),
-                TrackTimeMillis = Convert.ToInt32(token["trackTimeMillis"]),
-                TrackViewUrl = token["trackViewUrl"].ToString(),
-                WrapperType = token["wrapperType"].ToString(),
-            };
-        }
+        
 
         private static void AppConfigurationBuilder()
         {
