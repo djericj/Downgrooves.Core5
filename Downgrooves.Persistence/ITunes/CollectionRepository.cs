@@ -10,7 +10,7 @@ namespace Downgrooves.Persistence.ITunes
     public class CollectionRepository : Repository<ITunesCollection>, ICollectionRepository
     {
         public DowngroovesDbContext DowngroovesDbContext { get => _context as DowngroovesDbContext; }
-        public List<int> Exclusions => DowngroovesDbContext.ITunesExclusions.Select(x => x.CollectionId).ToList();
+        public List<int> Exclusions => DowngroovesDbContext.ITunesExclusions.Where(x => x.CollectionId > 0).Select(x => x.CollectionId).ToList();
 
         public CollectionRepository(DowngroovesDbContext context) : base(context)
         {

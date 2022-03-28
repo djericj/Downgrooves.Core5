@@ -64,7 +64,7 @@ namespace Downgrooves.Service
 
         public async Task<IEnumerable<ITunesCollection>> GetCollections()
         {
-            return await _unitOfWork.ITunesCollections.GetAllAsync();
+            return await _unitOfWork.ITunesCollections.GetCollections();
         }
 
         public async Task<IEnumerable<ITunesCollection>> GetCollections(PagingParameters parameters)
@@ -154,7 +154,7 @@ namespace Downgrooves.Service
 
         public async Task<IEnumerable<ITunesTrack>> GetTracks()
         {
-            return await _unitOfWork.ITunesTracks.GetAllAsync();
+            return await _unitOfWork.ITunesTracks.GetTracks();
         }
 
         public async Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters)
