@@ -7,7 +7,7 @@ namespace Downgrooves.Persistence.ITunes.Interfaces
 {
     public interface ITrackRepository : IRepository<ITunesTrack>
     {
-        Task<IEnumerable<ITunesTrack>> GetTracks();
-        Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters);
+        Task<IEnumerable<ITunesTrack>> GetTracks(string artistName = null);
+        Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters, string artistName = null);
     }
 }

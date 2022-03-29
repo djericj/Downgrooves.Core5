@@ -34,13 +34,20 @@ namespace ITunesLoader
             CollectionService.ApiUrl = ApiUrl;  
             CollectionService.Token = Token;
 
-            var json = GetItunesJson();
-            JObject o = JObject.Parse(json);
-            results = o.SelectTokens("results").Children();
+            var artists = new string[] { "Downgrooves","Eric Rylos","Evotone" };
 
-            AddCollections();
-            AddTracks();
-            
+            foreach (var artist in artists)
+            {
+                var json = GetItunesJson(artist);
+                JObject o = JObject.Parse(json);
+                results = o.SelectTokens("results").Children();
+
+                AddCollections();
+                AddTracks();
+
+            }
+
+
         }
 
         private static void AddCollections()
@@ -70,10 +77,10 @@ namespace ITunesLoader
             Console.WriteLine($"{count} tracks added.");
         }
 
-        private static string GetItunesJson()
+        private static string GetItunesJson(string searchTerm)
         {
             string data = null;
-            string url = "https://itunes.apple.com/search/?term=Downgrooves&entity=musicArtist,musicTrack,album,mix,song&media=music&limit=200";
+            string url = $"https://itunes.apple.com/search/?term={searchTerm}&entity=musicArtist,musicTrack,album,mix,song&media=music&limit=200";
             using (var webClient = new WebClient())
                 data = webClient.DownloadString(url);
             return data;

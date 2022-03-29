@@ -62,14 +62,14 @@ namespace Downgrooves.Service
             return await _unitOfWork.ITunesCollections.FindAsync(predicate);
         }
 
-        public async Task<IEnumerable<ITunesCollection>> GetCollections()
+        public async Task<IEnumerable<ITunesCollection>> GetCollections(string artistName = null)
         {
-            return await _unitOfWork.ITunesCollections.GetCollections();
+            return await _unitOfWork.ITunesCollections.GetCollections(artistName);
         }
 
-        public async Task<IEnumerable<ITunesCollection>> GetCollections(PagingParameters parameters)
+        public async Task<IEnumerable<ITunesCollection>> GetCollections(PagingParameters parameters, string artistName = null)
         {
-            return await _unitOfWork.ITunesCollections.GetCollections(parameters);
+            return await _unitOfWork.ITunesCollections.GetCollections(parameters, artistName);
         }
 
         public async Task<ITunesCollection> LookupCollection(int collectionId)
@@ -152,14 +152,14 @@ namespace Downgrooves.Service
             return await _unitOfWork.ITunesTracks.FindAsync(predicate);
         }
 
-        public async Task<IEnumerable<ITunesTrack>> GetTracks()
+        public async Task<IEnumerable<ITunesTrack>> GetTracks(string artistName = null)
         {
-            return await _unitOfWork.ITunesTracks.GetTracks();
+            return await _unitOfWork.ITunesTracks.GetTracks(artistName);
         }
 
-        public async Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters)
+        public async Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters, string artistName = null)
         {
-            return await _unitOfWork.ITunesTracks.GetTracks(parameters);
+            return await _unitOfWork.ITunesTracks.GetTracks(parameters, artistName);
         }
 
         public async Task<IEnumerable<ITunesTrack>> LookupTracks(int collectionId)

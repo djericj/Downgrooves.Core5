@@ -23,16 +23,16 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("collections")]
-        public async Task<IActionResult> GetCollections()
+        public async Task<IActionResult> GetCollections([FromQuery] string artistName = null)
         {
-            return Ok(await _service.GetCollections());
+            return Ok(await _service.GetCollections(artistName));
         }
 
         [HttpGet]
         [Route("collections/paged")]
-        public async Task<IActionResult> GetCollectionsAsync([FromQuery] PagingParameters parameters)
+        public async Task<IActionResult> GetCollectionsAsync([FromQuery] PagingParameters parameters, string artistName = null)
         {
-            return Ok(await _service.GetCollections(parameters));
+            return Ok(await _service.GetCollections(parameters, artistName));
         }
 
         [HttpGet]
@@ -76,16 +76,16 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("tracks")]        
-        public async Task<IActionResult> GetTracks()
+        public async Task<IActionResult> GetTracks([FromQuery] string artistName = null)
         {
-            return Ok(await _service.GetTracks());
+            return Ok(await _service.GetTracks(artistName));
         }
 
         [HttpGet]
         [Route("tracks/paged")]
-        public async Task<IActionResult> GetTracksAsync([FromQuery] PagingParameters parameters)
+        public async Task<IActionResult> GetTracksAsync([FromQuery] PagingParameters parameters, string artistName = null)
         {
-            return Ok(await _service.GetTracks(parameters));
+            return Ok(await _service.GetTracks(parameters, artistName));
         }
 
         [HttpGet]

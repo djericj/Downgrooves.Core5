@@ -10,9 +10,9 @@ namespace Downgrooves.Service.Interfaces
     {
         #region Collections
 
-        Task<IEnumerable<ITunesCollection>> GetCollections();
+        Task<IEnumerable<ITunesCollection>> GetCollections(string artistName = null);
 
-        Task<IEnumerable<ITunesCollection>> GetCollections(PagingParameters parameters);
+        Task<IEnumerable<ITunesCollection>> GetCollections(PagingParameters parameters, string artistName = null);
 
         Task<ITunesCollection> LookupCollection(int collectionId);
 
@@ -28,9 +28,9 @@ namespace Downgrooves.Service.Interfaces
 
         #region Tracks
 
-        Task<IEnumerable<ITunesTrack>> GetTracks();
+        Task<IEnumerable<ITunesTrack>> GetTracks(string artistName = null);
 
-        Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters);
+        Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters, string artistName = null);
 
         Task<IEnumerable<ITunesTrack>> LookupTracks(int collectionId);
 

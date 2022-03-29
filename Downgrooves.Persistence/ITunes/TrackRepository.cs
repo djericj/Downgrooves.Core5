@@ -1,6 +1,7 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.ITunes.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,24 +17,32 @@ namespace Downgrooves.Persistence.ITunes
         {
         }
 
-        public async Task<IEnumerable<ITunesTrack>> GetTracks()
+        public async Task<IEnumerable<ITunesTrack>> GetTracks(string artistName = null)
         {
-            return await DowngroovesDbContext.ITunesTracks
-                .Where(x => !Exclusions.Contains(x.TrackId))
+            var query = from collection in DowngroovesDbContext.ITunesTracks
+                        where (!Exclusions.Contains(collection.TrackId))
+                        select collection;
+            if (artistName != null)
+                query = query.Where(x => EF.Functions.Like(x.ArtistName, $"%{artistName}%"));
+
+            return await query
                 .OrderByDescending(x => x.ReleaseDate)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters)
+        public async Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters, string artistName = null)
         {
-            return await DowngroovesDbContext.ITunesTracks
-                .Where(x => !Exclusions.Contains(x.TrackId))
+            var query = from collection in DowngroovesDbContext.ITunesTracks
+                        where (!Exclusions.Contains(collection.TrackId))
+                        select collection;
+            if (artistName != null)
+                query = query.Where(x => EF.Functions.Like(x.ArtistName, $"%{artistName}%"));
+
+            return await query
                 .OrderByDescending(x => x.ReleaseDate)
                 .Skip((parameters.PageNumber - 1) * parameters.PageSize)
                 .Take(parameters.PageSize)
                 .ToListAsync();
         }
-
-        
     }
 }
