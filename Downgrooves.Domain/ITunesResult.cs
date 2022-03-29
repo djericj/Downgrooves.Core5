@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Downgrooves.Domain
 {
@@ -20,6 +21,7 @@ namespace Downgrooves.Domain
         public string Currency { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string PrimaryGenreName { get; set; }
-        public bool IsOriginal => ArtistName != null ? ArtistName.Contains("Downgrooves", StringComparison.OrdinalIgnoreCase) : false;
+        [NotMapped]
+        public bool IsOriginal => ArtistName?.Contains("Downgrooves", StringComparison.OrdinalIgnoreCase) ?? false;
     }
 }

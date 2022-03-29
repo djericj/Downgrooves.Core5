@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Downgrooves.Domain
@@ -22,5 +23,7 @@ namespace Downgrooves.Domain
         public int TrackNumber { get; set; }
         public int TrackTimeMillis { get; set; }
         public string IsStreamable { get; set; }
+        [NotMapped]
+        public bool IsRemix => TrackCensoredName?.Contains("Downgrooves", StringComparison.OrdinalIgnoreCase) ?? false;
     }
 }
