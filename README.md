@@ -8,4 +8,4 @@ This site collects all those resources into a single space.
 The original source for the Angular web site that consumes this API can be found at my GitHub at github.com/djericj/Downgrooves
 The original source for the Xamarin Forms Mobile app that consumes this API can be found at my GitHub at github.com/djericj/Downgrooves.Mobile
 
-This site and it's companion projects (Downgrooves.Angular, Downgrooves.Mobile) are full participants in the Software Development Lifecycle on Azure DevOps.  Through Azure DevOps, the site is configured with automatic build and deployments to a Development and a Production environment.
+This site and it's companion projects (Downgrooves.Angular, Downgrooves.Mobile) are full participants in the Software Development Lifecycle on Azure DevOps.  Through Azure DevOps, the site is configured with complete build pipelines and releases to a Development and a Production environment.
