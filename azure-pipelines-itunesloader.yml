@@ -26,7 +26,7 @@ steps:
   inputs:
     command: publish
     publishWebProjects: false
-    arguments: '$(project) -c $(buildConfiguration) -r $(runtime) -o $(Build.ArtifactsStagingDirectory)'
+    arguments: '$(project) -c $(buildConfiguration) -r $(runtime) -o ITunesLoader'
     zipAfterPublish: true
     
 - task: PublishBuildArtifacts@1
