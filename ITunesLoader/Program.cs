@@ -1,105 +1,55 @@
 ﻿using System;
-using Downgrooves.Domain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ITunesLoader.Interfaces;
 using System.IO;
 using ITunesLoader.Services;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using System.Reflection;
 using Microsoft.Extensions.Logging;
-using System.Threading;
 
 namespace ITunesLoader
 {
     internal class Program
     {
-        public static IConfiguration Configuration { get; set; }
+        public static IConfigurationRoot Configuration { get; set; }
+        public static string ApiUrl { get; set; }
+        public static string Token { get; set; }
 
-        private static async Task Main(string[] args)
+        private static void Main(string[] args)
         {
-            await Host.CreateDefaultBuilder(args)
-                .UseContentRoot(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
-                .ConfigureLogging(logging =>
+            var builder = new ConfigurationBuilder();
+            builder
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile($"appsettings.json", false, true)
+                .AddUserSecrets<Program>()
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
+
+            //setup our DI
+            var services = new ServiceCollection()
+                .AddLogging(logger =>
                 {
-                    logging.ClearProviders();
-                    logging.AddConsole();
+                    logger.AddConsole();
+                    logger.SetMinimumLevel(LogLevel.Information);
                 })
-                .ConfigureServices((hostContext, services) =>
-                {
-                    Configuration = new ConfigurationBuilder()
-                        .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
-                        .AddJsonFile($"appsettings.json")
-                        .AddUserSecrets<Program>()
-                        .AddEnvironmentVariables()
-                        .Build();
-                    services.AddHostedService<ConsoleHostedService>();
-                    services.AddSingleton<IITunesService, ITunesService>();
-                    services.AddSingleton<ICollectionService, CollectionService>();
-                    services.AddSingleton<ITrackService, TrackService>();
-                    services.AddSingleton<IConfiguration>(Configuration);
-                    services.AddOptions<AppSettings>().Bind(hostContext.Configuration.GetSection("AppConfig"));
-                })
-                
-                .RunConsoleAsync();
-        }
-    }
+                .AddOptions()
+                .AddSingleton<IConfiguration>(Configuration)
+                .AddSingleton<ICollectionService, CollectionService>()
+                .AddSingleton<ITrackService, TrackService>()
+                .AddSingleton<IITunesService, ITunesService>()
+                .BuildServiceProvider();
 
-    internal sealed class ConsoleHostedService : IHostedService
-    {
-        private readonly ILogger _logger;
-        private readonly IHostApplicationLifetime _appLifetime;
-        private readonly ICollectionService _collectionService;
-        private readonly ITrackService _trackService;
+            var collectionService = services.GetService<ICollectionService>();
+            var trackService = services.GetService<ITrackService>();
 
-        public ConsoleHostedService(
-            ILogger<ConsoleHostedService> logger,
-            IHostApplicationLifetime appLifetime,
-            ICollectionService collectionService,
-            ITrackService trackService
-            )
-        {
-            _logger = logger;
-            _appLifetime = appLifetime;
-            _collectionService = collectionService;
-            _trackService = trackService;
-        }
+            var artists = new string[] { "Downgrooves", "Eric Rylos", "Evotone" };
 
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            _logger.LogDebug($"Starting with arguments: {string.Join(" ", Environment.GetCommandLineArgs())}");
-
-            _appLifetime.ApplicationStarted.Register(() =>
+            foreach (var artist in artists)
             {
-                Task.Run(async () =>
-                {
-                    try
-                    {
-                        // start here
-                        var artists = new string[] { "Downgrooves", "Eric Rylos", "Evotone" };
-
-                        foreach (var artist in artists)
-                        {
-                            _collectionService.AddCollections(artist);
-                            _trackService.AddTracks(artist);
-                        }
-                        _appLifetime.StopApplication();
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Unhandled exception!");
-                    }
-                });
-            });
-
-            return Task.CompletedTask;
+                collectionService.AddCollections(artist);
+                trackService.AddTracks(artist);
+            }
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            // stop here
-            return Task.CompletedTask;
-        }
     }
 }
