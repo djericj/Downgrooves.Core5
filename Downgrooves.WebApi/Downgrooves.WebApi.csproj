@@ -4,6 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>88b85228-82be-4b94-97c7-b18068f8e5fc</UserSecretsId>
 	  <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+	  <Configurations>Debug;Release;WebApiOnly</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

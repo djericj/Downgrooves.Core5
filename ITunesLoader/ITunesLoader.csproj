@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>6707032d-83dc-405d-bc9b-a283f1025f6b</UserSecretsId>
+    <Configurations>Debug;Release;WebApiOnly</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
