@@ -74,7 +74,7 @@ namespace ITunesLoader.Services
         private void GetArtwork(ITunesCollection collection)
         {
             var fileName = collection.CollectionId.ToString();
-            var imagePath = $@"{ArtworkBasePath}\tracks\{fileName}.jpg";
+            var imagePath = Path.Combine(ArtworkBasePath, "tracks", $"{fileName}.jpg");
             if (!File.Exists(imagePath))
             {
                 try

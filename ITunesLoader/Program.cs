@@ -28,10 +28,9 @@ namespace ITunesLoader
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    var env = hostContext.HostingEnvironment.EnvironmentName;
                     Configuration = new ConfigurationBuilder()
                         .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
-                        .AddJsonFile($"appsettings.{env}.json")
+                        .AddJsonFile($"appsettings.json")
                         .AddUserSecrets<Program>()
                         .AddEnvironmentVariables()
                         .Build();
