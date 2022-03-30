@@ -1,29 +1,124 @@
 ﻿using Downgrooves.Domain;
+using ITunesLoader.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace ITunesLoader.Services
 {
-    public static  class CollectionService
+    public class CollectionService : ICollectionService
     {
-        private static int index = 0;
-        public static string ApiUrl { get; set; }
-        public static string Token { get; set; }
+        private int index = 0;
+        private readonly IConfiguration _configuration;
+        private readonly IITunesService _iTunesService;
+        private readonly ILogger<CollectionService> _logger;
+        public string ApiUrl { get; }
+        public string Token { get; }
+        public string ArtworkBasePath { get; }
 
-        public static int AddNewCollections(IEnumerable<ITunesCollection> collections)
+        public CollectionService(IConfiguration configuration, IITunesService iTunesService, ILogger<CollectionService> logger)
+        {
+            _configuration = configuration;
+            ApiUrl = _configuration.GetSection("AppConfig:ApiUrl").Value;
+            Token = _configuration.GetSection("AppConfig:Token").Value;
+            ArtworkBasePath = _configuration.GetSection("AppConfig:ArtworkBasePath").Value;
+            _iTunesService = iTunesService;
+            _logger = logger;
+        }
+
+        public void GetArtwork()
+        {
+            try
+            {
+                var client = new RestClient(ApiUrl);
+                client.Authenticator = new JwtAuthenticator(Token);
+                var request = new RestRequest("itunes/collections", Method.GET);
+                var settings = new JsonSerializerSettings();
+                settings.NullValueHandling = NullValueHandling.Ignore;
+                var response = client.Get(request);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var collections = JsonConvert.DeserializeObject<ITunesCollection[]>(response.Content);
+                    if (collections != null)
+                        GetArtwork(collections);
+                }
+                else if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    // do nothing
+                }
+                else
+                    _logger.LogError($"Error adding artwork for collections.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                _logger.LogError(ex.StackTrace);
+
+            }
+        }
+
+        private void GetArtwork(ITunesCollection[] collections)
+        {
+            foreach (var item in collections)
+                GetArtwork(item);
+        }
+
+        private void GetArtwork(ITunesCollection collection)
+        {
+            var fileName = collection.CollectionId.ToString();
+            var imagePath = $@"{ArtworkBasePath}\collections\{fileName}.jpg";
+            if (!File.Exists(imagePath))
+            {
+                using (WebClient client = new WebClient())
+                {
+                    try
+                    {
+                        client.DownloadFile(new Uri(collection.ArtworkUrl100.Replace("100x100", "500x500")), $"{imagePath}");
+                        _logger.LogInformation($"Downloaded artwork {imagePath}");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.Message);
+                        _logger.LogError(ex.StackTrace);
+
+                    }
+                    
+                }
+            }
+        }
+
+        public void AddCollections(string artistName)
+        {
+            IEnumerable<ITunesCollection> collectionsToAdd = new List<ITunesCollection>();
+            var results = _iTunesService.GetItunesJson(artistName);
+            var collections = CreateCollections(results);
+            var existingCollections = GetExistingCollections();
+            if (existingCollections != null && existingCollections.Count() > 0)
+                collectionsToAdd = collections.Where(x => existingCollections.All(y => x.CollectionId != y.CollectionId));
+            else
+                collectionsToAdd = collections;
+            var count = AddNewCollections(collectionsToAdd);
+            if (count > 0)
+                _logger.LogInformation($"{count} collections added.");
+            GetArtwork();
+        }
+
+        public int AddNewCollections(IEnumerable<ITunesCollection> collections)
         {
             foreach (var track in collections)
                 AddNewCollection(track);
             return index;
         }
 
-        private static void AddNewCollection(ITunesCollection collection)
+        private void AddNewCollection(ITunesCollection collection)
         {
             try
             {
@@ -39,21 +134,25 @@ namespace ITunesLoader.Services
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     index++;
-                    Console.WriteLine($"Added {description}");
+                    _logger.LogInformation($"Added {description}");
+                }
+                else if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    // do nothing
                 }
                 else
-                    Console.Error.WriteLine($"Error adding {description}.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
+                    _logger.LogError($"Error adding {description}.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.StackTrace);
+                _logger.LogError(ex.Message);
+                _logger.LogError(ex.StackTrace);
                 
             }
 
         }
 
-        public static IEnumerable<ITunesCollection> GetExistingCollections()
+        public IEnumerable<ITunesCollection> GetExistingCollections()
         {
             IEnumerable<ITunesCollection> collections = null;
             var client = new RestClient(ApiUrl);
@@ -67,12 +166,12 @@ namespace ITunesLoader.Services
             }
             else
             {
-                Console.Error.WriteLine($"Error getting existing collections.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
+                _logger.LogError($"Error getting existing collections.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
             }
             return collections;
         }
 
-        public static IEnumerable<ITunesCollection> CreateCollections(IJEnumerable<JToken> tokens)
+        public IEnumerable<ITunesCollection> CreateCollections(IJEnumerable<JToken> tokens)
         {
             var collections = new List<ITunesCollection>();
             foreach (var item in tokens)
@@ -86,7 +185,7 @@ namespace ITunesLoader.Services
             return collections;
         }
 
-        private static ITunesCollection CreateCollection(JToken token)
+        private ITunesCollection CreateCollection(JToken token)
         {
             return new ITunesCollection()
             {

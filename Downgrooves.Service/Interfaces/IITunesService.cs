@@ -18,7 +18,7 @@ namespace Downgrooves.Service.Interfaces
 
         Task<ITunesCollection> Add(ITunesCollection collection);
 
-        Task<IEnumerable<ITunesCollection>> Find(Expression<Func<ITunesCollection, bool>> predicate);
+        Task<IEnumerable<ITunesCollection>> GetCollection(Expression<Func<ITunesCollection, bool>> predicate);
 
         Task<ITunesCollection> Update(ITunesCollection collection);
 
@@ -38,7 +38,7 @@ namespace Downgrooves.Service.Interfaces
 
         Task<IEnumerable<ITunesTrack>> AddRange(IEnumerable<ITunesTrack> tracks);
 
-        Task<IEnumerable<ITunesTrack>> Find(Expression<Func<ITunesTrack, bool>> predicate);
+        Task<IEnumerable<ITunesTrack>> GetTrack(Expression<Func<ITunesTrack, bool>> predicate);
 
         Task<ITunesTrack> Update(ITunesTrack track);
 

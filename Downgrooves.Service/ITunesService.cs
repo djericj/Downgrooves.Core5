@@ -57,7 +57,7 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<IEnumerable<ITunesCollection>> Find(Expression<Func<ITunesCollection, bool>> predicate)
+        public async Task<IEnumerable<ITunesCollection>> GetCollection(Expression<Func<ITunesCollection, bool>> predicate)
         {
             return await _unitOfWork.ITunesCollections.FindAsync(predicate);
         }
@@ -147,7 +147,7 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<IEnumerable<ITunesTrack>> Find(Expression<Func<ITunesTrack, bool>> predicate)
+        public async Task<IEnumerable<ITunesTrack>> GetTrack(Expression<Func<ITunesTrack, bool>> predicate)
         {
             return await _unitOfWork.ITunesTracks.FindAsync(predicate);
         }

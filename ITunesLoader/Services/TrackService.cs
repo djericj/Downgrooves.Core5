@@ -1,29 +1,124 @@
 ﻿using Downgrooves.Domain;
+using ITunesLoader.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace ITunesLoader.Services
 {
-    internal static class TrackService
+    internal class TrackService : ITrackService
     {
-        private static int index = 0;
-        public static string ApiUrl { get; set; }
-        public static string Token { get; set; }
+        private int index = 0;
+        private readonly IConfiguration _configuration;
+        private readonly IITunesService _iTunesService;
+        private readonly ILogger<TrackService> _logger;
+        public string ApiUrl { get; set; }
+        public string Token { get; set; }
+        public string ArtworkBasePath { get; }
 
-        public static int AddNewTracks(IEnumerable<ITunesTrack> tracks)
+        public TrackService(IConfiguration configuration, IITunesService iTunesService, ILogger<TrackService> logger)
+        {
+            _configuration = configuration;
+            ApiUrl = _configuration.GetSection("AppConfig:ApiUrl").Value;
+            Token = _configuration.GetSection("AppConfig:Token").Value;
+            ArtworkBasePath = _configuration.GetSection("AppConfig:ArtworkBasePath").Value;
+            _iTunesService = iTunesService;
+            _logger = logger;
+        }
+
+        public void GetArtwork()
+        {
+            try
+            {
+                var client = new RestClient(ApiUrl);
+                client.Authenticator = new JwtAuthenticator(Token);
+                var request = new RestRequest("itunes/tracks", Method.GET);
+                var settings = new JsonSerializerSettings();
+                settings.NullValueHandling = NullValueHandling.Ignore;
+                var response = client.Get(request);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var collections = JsonConvert.DeserializeObject<ITunesCollection[]>(response.Content);
+                    if (collections != null)
+                        GetArtwork(collections);
+                }
+                else if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    // do nothing
+                }
+                else
+                    _logger.LogError($"Error adding artwork for collections.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                _logger.LogError(ex.StackTrace);
+
+            }
+        }
+
+        private void GetArtwork(ITunesCollection[] collections)
+        {
+            foreach (var item in collections)
+                GetArtwork(item);
+        }
+
+        private void GetArtwork(ITunesCollection collection)
+        {
+            var fileName = collection.CollectionId.ToString();
+            var imagePath = $@"{ArtworkBasePath}\tracks\{fileName}.jpg";
+            if (!File.Exists(imagePath))
+            {
+                try
+                {
+                    using (WebClient client = new WebClient())
+                    {
+                        client.DownloadFile(new Uri(collection.ArtworkUrl100.Replace("100x100", "500x500")), $"{imagePath}");
+                        _logger.LogInformation($"Downloaded artwork {imagePath}");
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.Message);
+                    _logger.LogError(ex.StackTrace);
+                }
+            }
+        }
+
+        public void AddTracks(string artistName)
+        {
+            IEnumerable<ITunesTrack> tracksToAdd = new List<ITunesTrack>();
+            var results = _iTunesService.GetItunesJson(artistName);
+            var tracks = CreateTracks(results);
+            var existingTracks = GetExistingTracks();
+            if (existingTracks != null && existingTracks.Count() > 0)
+                tracksToAdd = tracks.Where(x => existingTracks.All(y => x.TrackId != y.TrackId));
+            else
+                tracksToAdd = tracks;
+            var count = AddNewTracks(tracksToAdd);
+            if (count > 0)
+                _logger.LogInformation($"{count} tracks added.");
+            GetArtwork();
+        }
+
+        public int AddNewTracks(IEnumerable<ITunesTrack> tracks)
         {
             foreach (var track in tracks)
                 AddNewTrack(track);
             return index;
         }
 
-        private static void AddNewTrack(ITunesTrack track)
+
+        private void AddNewTrack(ITunesTrack track)
         {
             try
             {
@@ -40,20 +135,24 @@ namespace ITunesLoader.Services
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     index++;
-                    Console.WriteLine($"Added {description}");
+                    _logger.LogInformation($"Added {description}");
+                }
+                else if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    // do nothing
                 }
                 else
-                    Console.Error.WriteLine($"Error adding {description}.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
+                    _logger.LogError($"Error adding {description}.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
 
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
-                Console.Error.WriteLine(ex.StackTrace);
+                _logger.LogError(ex.Message);
+                _logger.LogError(ex.StackTrace);
             }
         }
 
-        public static IEnumerable<ITunesTrack> GetExistingTracks()
+        public IEnumerable<ITunesTrack> GetExistingTracks()
         {
             var client = new RestClient(ApiUrl);
             client.Authenticator = new JwtAuthenticator(Token);
@@ -64,7 +163,7 @@ namespace ITunesLoader.Services
             return tracks;
         }
 
-        public static IEnumerable<ITunesTrack> CreateTracks(IJEnumerable<JToken> tokens)
+        public IEnumerable<ITunesTrack> CreateTracks(IJEnumerable<JToken> tokens)
         {
             var tracks = new List<ITunesTrack>();
             foreach (var item in tokens)
@@ -78,7 +177,7 @@ namespace ITunesLoader.Services
             return tracks;
         }
 
-        private static ITunesTrack CreateTrack(JToken token)
+        private ITunesTrack CreateTrack(JToken token)
         {
             return new ITunesTrack()
             {

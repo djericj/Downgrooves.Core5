@@ -1,121 +1,106 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Linq;
-using System.Net;
+﻿using System;
 using Downgrooves.Domain;
-using System.Collections.Generic;
-using RestSharp;
-using RestSharp.Authenticators;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ITunesLoader.Interfaces;
-using Newtonsoft.Json;
 using System.IO;
 using ITunesLoader.Services;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using System.Reflection;
+using Microsoft.Extensions.Logging;
+using System.Threading;
 
 namespace ITunesLoader
 {
     internal class Program
     {
-        public static IConfigurationRoot Configuration { get; set; }
-        public static IConfigurationReader ConfigurationReader { get; set; }
-        public static string ApiUrl { get; set; }
-        public static string Token { get; set; }
+        public static IConfiguration Configuration { get; set; }
 
-        private static IJEnumerable<JToken> results { get; set; }
-
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
-            AppConfigurationBuilder();
+            await Host.CreateDefaultBuilder(args)
+                .UseContentRoot(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.AddConsole();
+                })
+                .ConfigureServices((hostContext, services) =>
+                {
+                    var env = hostContext.HostingEnvironment.EnvironmentName;
+                    Configuration = new ConfigurationBuilder()
+                        .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
+                        .AddJsonFile($"appsettings.{env}.json")
+                        .AddUserSecrets<Program>()
+                        .AddEnvironmentVariables()
+                        .Build();
+                    services.AddHostedService<ConsoleHostedService>();
+                    services.AddSingleton<IITunesService, ITunesService>();
+                    services.AddSingleton<ICollectionService, CollectionService>();
+                    services.AddSingleton<ITrackService, TrackService>();
+                    services.AddSingleton<IConfiguration>(Configuration);
+                    services.AddOptions<AppSettings>().Bind(hostContext.Configuration.GetSection("AppConfig"));
+                })
+                
+                .RunConsoleAsync();
+        }
+    }
 
-            TrackService.ApiUrl = ApiUrl;
-            TrackService.Token = Token;
+    internal sealed class ConsoleHostedService : IHostedService
+    {
+        private readonly ILogger _logger;
+        private readonly IHostApplicationLifetime _appLifetime;
+        private readonly ICollectionService _collectionService;
+        private readonly ITrackService _trackService;
 
-            CollectionService.ApiUrl = ApiUrl;  
-            CollectionService.Token = Token;
+        public ConsoleHostedService(
+            ILogger<ConsoleHostedService> logger,
+            IHostApplicationLifetime appLifetime,
+            ICollectionService collectionService,
+            ITrackService trackService
+            )
+        {
+            _logger = logger;
+            _appLifetime = appLifetime;
+            _collectionService = collectionService;
+            _trackService = trackService;
+        }
 
-            var artists = new string[] { "Downgrooves","Eric Rylos","Evotone" };
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogDebug($"Starting with arguments: {string.Join(" ", Environment.GetCommandLineArgs())}");
 
-            foreach (var artist in artists)
+            _appLifetime.ApplicationStarted.Register(() =>
             {
-                var json = GetItunesJson(artist);
-                JObject o = JObject.Parse(json);
-                results = o.SelectTokens("results").Children();
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        // start here
+                        var artists = new string[] { "Downgrooves", "Eric Rylos", "Evotone" };
 
-                AddCollections();
-                AddTracks();
+                        foreach (var artist in artists)
+                        {
+                            _collectionService.AddCollections(artist);
+                            _trackService.AddTracks(artist);
+                        }
+                        _appLifetime.StopApplication();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Unhandled exception!");
+                    }
+                });
+            });
 
-            }
-
-
+            return Task.CompletedTask;
         }
 
-        private static void AddCollections()
+        public Task StopAsync(CancellationToken cancellationToken)
         {
-            IEnumerable<ITunesCollection> collectionsToAdd = new List<ITunesCollection>();
-            var collections = CollectionService.CreateCollections(results);
-            var existingCollections = CollectionService.GetExistingCollections();
-            if (existingCollections != null && existingCollections.Count() > 0)
-                collectionsToAdd = collections.Where(x => existingCollections.All(y => x.CollectionId != y.CollectionId));
-            else
-                collectionsToAdd = collections;
-            var count = CollectionService.AddNewCollections(collectionsToAdd);
-            Console.WriteLine($"{count} collections added.");
-        }
-
-        private static void AddTracks()
-        {
-            IEnumerable<ITunesTrack> tracksToAdd = new List<ITunesTrack>();
-            
-            var tracks = TrackService.CreateTracks(results);
-            var existingTracks =  TrackService.GetExistingTracks();
-            if (existingTracks != null && existingTracks.Count() > 0)
-                tracksToAdd = tracks.Where(x => existingTracks.All(y => x.TrackId != y.TrackId));
-            else
-                tracksToAdd = tracks;
-            var count = TrackService.AddNewTracks(tracksToAdd);
-            Console.WriteLine($"{count} tracks added.");
-        }
-
-        private static string GetItunesJson(string searchTerm)
-        {
-            string data = null;
-            string url = $"https://itunes.apple.com/search/?term={searchTerm}&entity=musicArtist,musicTrack,album,mix,song&media=music&limit=200";
-            using (var webClient = new WebClient())
-                data = webClient.DownloadString(url);
-            return data;
-        }
-
-        
-
-        private static void AppConfigurationBuilder()
-        {
-            var environment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
-
-            var builder = new ConfigurationBuilder();
-            builder
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile($"appsettings.{environment}.json", false, true)
-                .AddUserSecrets<Program>()
-                .AddEnvironmentVariables();
-
-            Configuration = builder.Build();
-
-            IServiceCollection services = new ServiceCollection();
-
-            services.AddOptions();
-            services.Configure<AppConfig>(Configuration.GetSection(nameof(AppConfig)))
-                .AddSingleton<IConfigurationReader, ConfigurationReader>()
-                .BuildServiceProvider();
-
-            var serviceProvider = services.BuildServiceProvider();
-
-            ConfigurationReader = serviceProvider.GetService<IConfigurationReader>();
-
-            var config = ConfigurationReader.GetConfiguration();
-
-            ApiUrl = config?.ApiUrl;
-            Token = config?.Token;
+            // stop here
+            return Task.CompletedTask;
         }
     }
 }

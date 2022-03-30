@@ -2,6 +2,7 @@
 using Downgrooves.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Controllers
@@ -48,7 +49,10 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.Add(collection));
+                var exists = await _service.GetCollection(x => x.CollectionId == collection.CollectionId);
+                if (!exists.Any())
+                    return Ok(await _service.Add(collection));
+                return new StatusCodeResult(204);
             }
             catch (System.Exception ex)
             {
@@ -101,7 +105,10 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.Add(track));
+                var exists = await _service.GetTrack(x => x.TrackId == track.TrackId);
+                if (!exists.Any())
+                    return Ok(await _service.Add(track));
+                return new StatusCodeResult(204);
             }
             catch (System.Exception ex)
             {
