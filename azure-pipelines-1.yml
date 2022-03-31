@@ -9,9 +9,7 @@ trigger:
     - main
  paths:
   include:
-    - 'Downgrooves.WebApi'
-    - 'Downgrooves.Service'
-    - 'Downgrooves.Persistence'
+    - 'Downgrooves.WorkerService'
     - 'Downgrooves.Domain'
 
 pool:
@@ -22,6 +20,7 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+
 - task: UseDotNet@2
   inputs:
     packageType: sdk
@@ -31,8 +30,8 @@ steps:
   displayName: Build
   inputs:
     command: publish
-    publishWebProjects: true
-    projects: '**/Downgrooves.WebApi/*.csproj'
+    publishWebProjects: false
+    projects: '**/Downgrooves.WorkerService/*.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: true
     workingDirectory: $(Build.SourcesDirectory)
