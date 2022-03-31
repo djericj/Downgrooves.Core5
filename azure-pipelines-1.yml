@@ -28,22 +28,14 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: Build
   inputs:
-    command: build
-    projects: '**/Downgrooves.WorkerService/*.csproj'
+    command: publish
+    projects: '/Downgrooves.WorkerService/*.csproj'
     arguments: ' --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    workingDirectory: $(Build.SourcesDirectory)
-
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
-    quiet: true
+    workingDirectory: '$(Build.SourcesDirectory)/Downgrooves.WorkerService'
+    zipAfterPublish: true
     
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: '$(Build.BuildId)'
+    ArtifactName: 'Downgrooves.WorkerService.$(Build.BuildId)'
 
