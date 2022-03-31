@@ -1,0 +1,35 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  project: 'ITunesLoader/ITunesLoader.csproj'
+  runtime: 'linux-x64'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: sdk
+    version: '5.0.x'
+
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    command: publish
+    publishWebProjects: false
+    arguments: '$(project) -c $(buildConfiguration) -r $(runtime) -o ITunesLoader'
+    zipAfterPublish: true
+    
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactsStagingDirectory)'
+    ArtifactName: '$(Build.BuildId)'
