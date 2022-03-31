@@ -4,13 +4,20 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- main
+ branches:
+  include:
+    - main
+ paths:
+  include:
+    - 'Downgrooves.WebApi'
+    - 'Downgrooves.Service'
+    - 'Downgrooves.Persistence'
+    - 'Downgrooves.Domain'
 
 pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
@@ -25,8 +32,10 @@ steps:
   inputs:
     command: publish
     publishWebProjects: true
+    projects: '**/Downgrooves.WebApi/*.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactsStagingDirectory)'
     zipAfterPublish: true
+    workingDirectory: $(Build.SourcesDirectory)
     
 - task: PublishBuildArtifacts@1
   inputs:
