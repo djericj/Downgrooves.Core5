@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Downgrooves.Domain
+namespace Downgrooves.Domain.ITunes
 {
     [Table("itunestrack")]
     public class ITunesTrack : ITunesResult

@@ -1,4 +1,5 @@
 ﻿using Downgrooves.Domain;
+using Downgrooves.Domain.ITunes;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -72,7 +73,7 @@ namespace Downgrooves.Service
             return await _unitOfWork.ITunesCollections.GetCollections(parameters, artistName);
         }
 
-        public async Task<ITunesCollection> LookupCollection(int collectionId)
+        public async Task<IEnumerable<ITunesCollection>> LookupCollection(int collectionId)
         {
             var client = new RestClient(_configuration["AppConfig:ITunesLookupUrl"]);
             var request = new RestRequest();
@@ -82,12 +83,11 @@ namespace Downgrooves.Service
             request.AddParameter("id", collectionId);
             request.AddParameter("entity", "musicArtist,musicTrack,album,mix,song");
             request.AddParameter("media", "music");
-            var response = await client.ExecuteAsync<ITunesCollection>(request);
-            var content = response.Content;
-            if (!string.IsNullOrEmpty(content))
+            var response = await client.ExecuteAsync<ITunesLookupCollectionResult>(request);
+            if (!string.IsNullOrEmpty(response.Content))
             {
-                var lookupResult = JsonConvert.DeserializeObject<ITunesLookupResult>(content);
-                return lookupResult.Results as ITunesCollection;
+                var lookupResult = JsonConvert.DeserializeObject<ITunesLookupCollectionResult>(response.Content);
+                return lookupResult.Results;
             }
             return null;
 
@@ -162,6 +162,11 @@ namespace Downgrooves.Service
             return await _unitOfWork.ITunesTracks.GetTracks(parameters, artistName);
         }
 
+        public async Task<IEnumerable<ITunesTrack>> GetTracksByCollection(int collectionId)
+        {
+            return await _unitOfWork.ITunesTracks.FindAsync(x => x.CollectionId == collectionId);
+        }
+
         public async Task<IEnumerable<ITunesTrack>> LookupTracks(int collectionId)
         {
             var client = new RestClient(_configuration["AppConfig:ITunesLookupUrl"]);
@@ -171,12 +176,11 @@ namespace Downgrooves.Service
             request.AddParameter("country", "us", ParameterType.UrlSegment);
             request.AddParameter("id", collectionId);
             request.AddParameter("entity", "song");
-            var response = await client.ExecuteAsync<ITunesTrack[]>(request);
-            var content = response.Content;
-            if (!string.IsNullOrEmpty(content))
+            var response = await client.ExecuteAsync<ITunesLookupTrackResult>(request);
+            if (!string.IsNullOrEmpty(response.Content))
             {
-                var lookupResult = JsonConvert.DeserializeObject<ITunesLookupResult>(content);
-                return lookupResult.Results as ITunesTrack[];
+                var lookupResult = JsonConvert.DeserializeObject<ITunesLookupTrackResult>(response.Content);
+                return lookupResult.Results;
             }
             return null;
 

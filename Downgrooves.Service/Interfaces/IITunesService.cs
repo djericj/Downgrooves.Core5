@@ -1,4 +1,5 @@
 ﻿using Downgrooves.Domain;
+using Downgrooves.Domain.ITunes;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -14,7 +15,7 @@ namespace Downgrooves.Service.Interfaces
 
         Task<IEnumerable<ITunesCollection>> GetCollections(PagingParameters parameters, string artistName = null);
 
-        Task<ITunesCollection> LookupCollection(int collectionId);
+        Task<IEnumerable<ITunesCollection>> LookupCollection(int collectionId);
 
         Task<ITunesCollection> Add(ITunesCollection collection);
 
@@ -31,6 +32,8 @@ namespace Downgrooves.Service.Interfaces
         Task<IEnumerable<ITunesTrack>> GetTracks(string artistName = null);
 
         Task<IEnumerable<ITunesTrack>> GetTracks(PagingParameters parameters, string artistName = null);
+
+        Task<IEnumerable<ITunesTrack>> GetTracksByCollection(int collectionId);
 
         Task<IEnumerable<ITunesTrack>> LookupTracks(int collectionId);
 

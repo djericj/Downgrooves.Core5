@@ -1,4 +1,5 @@
 ﻿using Downgrooves.Domain;
+using Downgrooves.Domain.ITunes;
 using Downgrooves.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,12 @@ namespace Downgrooves.WebApi.Controllers
 
         #region Collections
 
+        [HttpGet]
+        [Route("collection/{collectionId}")]
+        public async Task<IActionResult> GetCollection(int collectionId)
+        {
+            return Ok(await _service.GetCollection(x => x.CollectionId == collectionId));
+        }
 
         [HttpGet]
         [Route("collections")]
@@ -79,10 +86,24 @@ namespace Downgrooves.WebApi.Controllers
         #region Tracks
 
         [HttpGet]
+        [Route("track/{trackId}")]
+        public async Task<IActionResult> GetTracks(int trackId)
+        {
+            return Ok(await _service.GetTrack(x => x.TrackId == trackId));
+        }
+
+        [HttpGet]
         [Route("tracks")]        
         public async Task<IActionResult> GetTracks([FromQuery] string artistName = null)
         {
             return Ok(await _service.GetTracks(artistName));
+        }
+
+        [HttpGet]
+        [Route("tracks/collection/{collectionId}")]
+        public async Task<IActionResult> GetTracksByCollection(int collectionId)
+        {
+            return Ok(await _service.GetTracksByCollection(collectionId));
         }
 
         [HttpGet]

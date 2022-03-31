@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Downgrooves.Domain.ITunes;
+using System;
 using System.Collections.Generic;
 
 namespace Downgrooves.Domain

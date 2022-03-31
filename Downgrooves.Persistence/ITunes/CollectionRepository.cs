@@ -1,4 +1,5 @@
 ﻿using Downgrooves.Domain;
+using Downgrooves.Domain.ITunes;
 using Downgrooves.Persistence.ITunes.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;

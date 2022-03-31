@@ -1,4 +1,5 @@
 ﻿using Downgrooves.Domain;
+using Downgrooves.Domain.ITunes;
 using Downgrooves.Persistence.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;

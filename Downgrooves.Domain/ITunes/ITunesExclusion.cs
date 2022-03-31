@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Downgrooves.Domain
+namespace Downgrooves.Domain.ITunes
 {
     [Table("exclusions")]
     public class ITunesExclusion

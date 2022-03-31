@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Downgrooves.Domain
+namespace Downgrooves.Domain.ITunes
 {
     public class ITunesResult
     {
