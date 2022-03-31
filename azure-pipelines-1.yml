@@ -25,17 +25,16 @@ steps:
     packageType: sdk
     version: '5.0.x'
 
-- task: DotNetCoreCLI@2
-  displayName: Build
+- task: VSBuild@1
   inputs:
-    command: publish
-    projects: '/Downgrooves.WorkerService/*.csproj'
-    arguments: ' --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    workingDirectory: '$(Build.SourcesDirectory)/Downgrooves.WorkerService'
-    zipAfterPublish: true
+    solution: '\Downgrooves.WorkerService\Downgrooves.WorkerService.csproj'
+    configuration: 'Release'
+    clean: true
+    restoreNugetPackages: true
+    msbuildArchitecture: 'x64'
     
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'Downgrooves.WorkerService.$(Build.BuildId)'
+    ArtifactName: '$(Build.BuildId)'
 
