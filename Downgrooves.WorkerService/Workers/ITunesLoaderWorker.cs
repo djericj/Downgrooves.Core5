@@ -29,7 +29,7 @@ namespace Downgrooves.WorkerService.Workers
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("ITunesLoaderWorker running at: {time}", DateTimeOffset.Now);
+                _logger.LogInformation("ITunesLoaderWorker ticked at: {time}", DateTimeOffset.Now);
 
                 var artists = new string[] { "Downgrooves", "Eric Rylos", "Evotone" };
 
@@ -39,7 +39,7 @@ namespace Downgrooves.WorkerService.Workers
                     _trackService.AddTracks(artist);
                 }
 
-                await Task.Delay(_appConfig.ITunes.PollInterval);
+                await Task.Delay(_appConfig.ITunes.PollInterval * 1000);
             }
         }
     }

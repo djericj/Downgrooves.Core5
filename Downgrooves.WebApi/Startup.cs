@@ -54,7 +54,7 @@ namespace Downgrooves.WebApi
                     name: "CORS_POLICY",
                     builder =>
                     {
-                        builder.WithOrigins(Configuration["WebAppUrl"].Trim('/', '\\'))
+                        builder.WithOrigins(Configuration["AppConfig:WebAppUrl"].Trim('/', '\\'))
                             .AllowAnyMethod()
                             .AllowAnyHeader()
                             .AllowCredentials();

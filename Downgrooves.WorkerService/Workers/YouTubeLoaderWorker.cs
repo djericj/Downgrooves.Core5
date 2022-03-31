@@ -26,9 +26,9 @@ namespace Downgrooves.WorkerService.Workers
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("YouTubeLoaderWorker running at: {time}", DateTimeOffset.Now);
+                _logger.LogInformation("YouTubeLoaderWorker ticked at: {time}", DateTimeOffset.Now);
                 _youTubeService.AddNewVideos();
-                await Task.Delay(_appConfig.YouTube.PollInterval);
+                await Task.Delay(_appConfig.YouTube.PollInterval * 1000);
             }
         }
     }
