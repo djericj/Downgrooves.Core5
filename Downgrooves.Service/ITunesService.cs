@@ -74,7 +74,7 @@ namespace Downgrooves.Service
 
         public async Task<ITunesCollection> LookupCollection(int collectionId)
         {
-            var client = new RestClient(_configuration["ITunesLookupUrl"]);
+            var client = new RestClient(_configuration["AppConfig:ITunesLookupUrl"]);
             var request = new RestRequest();
             request.RequestFormat = DataFormat.Json;
 
@@ -164,7 +164,7 @@ namespace Downgrooves.Service
 
         public async Task<IEnumerable<ITunesTrack>> LookupTracks(int collectionId)
         {
-            var client = new RestClient(_configuration["ITunesLookupUrl"]);
+            var client = new RestClient(_configuration["AppConfig:ITunesLookupUrl"]);
             var request = new RestRequest();
             request.RequestFormat = DataFormat.Json;
 
