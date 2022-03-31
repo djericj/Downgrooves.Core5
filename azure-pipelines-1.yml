@@ -27,7 +27,7 @@ steps:
 
 - task: VSBuild@1
   inputs:
-    solution: '\Downgrooves.WorkerService\Downgrooves.WorkerService.csproj'
+    solution: 'Downgrooves.WorkerService\Downgrooves.WorkerService.csproj'
     configuration: 'Release'
     clean: true
     restoreNugetPackages: true
