@@ -31,8 +31,16 @@ steps:
     command: build
     projects: '**/Downgrooves.WorkerService/*.csproj'
     arguments: ' --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: true
     workingDirectory: $(Build.SourcesDirectory)
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+    quiet: true
     
 - task: PublishBuildArtifacts@1
   inputs:
