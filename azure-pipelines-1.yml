@@ -30,12 +30,12 @@ steps:
   inputs:
     command: build
     projects: '**/Downgrooves.WorkerService/*.csproj'
-    arguments: ' --configuration $(buildConfiguration) --output $(Build.ArtifactsStagingDirectory)'
+    arguments: ' --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: true
     workingDirectory: $(Build.SourcesDirectory)
     
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactsStagingDirectory)/Downgrooves.WorkerService'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/Downgrooves.WorkerService'
     ArtifactName: '$(Build.BuildId)'
 
