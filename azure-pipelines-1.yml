@@ -31,7 +31,7 @@ steps:
     command: publish
     publishWebProjects: true
     projects: '**/Downgrooves.WorkerService/*.csproj'
-    arguments: '**/Downgrooves.WorkerService/*.csproj --configuration $(buildConfiguration) --output $(Build.ArtifactsStagingDirectory)'
+    arguments: 'Downgrooves.WorkerService/Downgrooves.WorkerService.csproj --configuration $(buildConfiguration) --output $(Build.ArtifactsStagingDirectory)'
     zipAfterPublish: true
     workingDirectory: $(Build.SourcesDirectory)
     
