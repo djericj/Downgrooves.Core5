@@ -20,18 +20,21 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+
 - task: UseDotNet@2
   inputs:
     packageType: sdk
     version: '5.0.x'
 
-- task: VSBuild@1
+- task: DotNetCoreCLI@2
+  displayName: Build
   inputs:
-    solution: 'Downgrooves.WorkerService\Downgrooves.WorkerService.csproj'
-    configuration: 'Release'
-    clean: true
-    restoreNugetPackages: true
-    msbuildArchitecture: 'x64'
+    command: publish
+    publishWebProjects: false
+    projects: '**/Downgrooves.WorkerService/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactsStagingDirectory)'
+    zipAfterPublish: true
+    workingDirectory: $(Build.SourcesDirectory)
     
 - task: PublishBuildArtifacts@1
   inputs:
