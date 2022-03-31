@@ -5,6 +5,7 @@ using Downgrooves.Persistence;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service;
 using Downgrooves.Service.Interfaces;
+using Downgrooves.WebApi.Config;
 using Downgrooves.WebApi.Policies;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -27,7 +28,12 @@ namespace Downgrooves.WebApi
         public IWebHostEnvironment WebHostEnvironment { get; set; }
         public Startup(IWebHostEnvironment env)
         {
-            Configuration = InitConfiguration(env);
+            // Config the app to read values from appsettings base on current environment value.
+            Configuration = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json", false, true)
+                .AddUserSecrets("88b85228-82be-4b94-97c7-b18068f8e5fc")
+                .AddEnvironmentVariables().Build();
             WebHostEnvironment = env;
         }
 
@@ -38,7 +44,7 @@ namespace Downgrooves.WebApi
         {
             if (WebHostEnvironment.IsDevelopment())
             {
-                // Disable authentication and authorization.
+                // Disable authentication and authorization in Development.
                 services.TryAddSingleton<IPolicyEvaluator, DisableAuthenticationPolicyEvaluator>();
             }
 
@@ -57,7 +63,7 @@ namespace Downgrooves.WebApi
 
             services.AddProblemDetails(setup =>
             {
-                setup.IncludeExceptionDetails = (ctx, env) => WebHostEnvironment.IsDevelopment() || WebHostEnvironment.IsStaging();
+                setup.IncludeExceptionDetails = (ctx, env) => WebHostEnvironment.IsDevelopment();
             });
 
             services.AddControllers();
@@ -93,13 +99,14 @@ namespace Downgrooves.WebApi
 
             services.AddScoped<Func<DowngroovesDbContext>>((provider) => () => provider.GetService<DowngroovesDbContext>());
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
             services.AddScoped<IMixService, MixService>();
             services.AddScoped<IITunesService, ITunesService>();
             services.AddScoped<IReleaseService, ReleaseService>();  
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IVideoService, VideoService>();
             services.AddTransient<ITokenService, TokenService>();
+
+            services.Configure<AppConfig>(Configuration.GetSection("AppConfig"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -131,21 +138,6 @@ namespace Downgrooves.WebApi
             {
                 endpoints.MapControllers().RequireCors("CORS_POLICY");
             });
-        }
-
-        private IConfiguration InitConfiguration(IWebHostEnvironment env)
-        {
-            // Config the app to read values from appsettings base on current environment value.
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json", false, true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, true)
-                .AddUserSecrets("88b85228-82be-4b94-97c7-b18068f8e5fc")
-                .AddEnvironmentVariables().Build();
-            //
-            // Map AppSettings section in appsettings.json file value to AppSetting model
-            configuration.GetSection("AppSettings").Get<AppSettings>(options => options.BindNonPublicProperties = true);
-            return configuration;
         }
     }
 }

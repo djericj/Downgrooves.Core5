@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
-namespace ITunesLoader.Interfaces
+namespace Downgrooves.WorkerService.Interfaces
 {
     public interface ICollectionService
     {
@@ -13,6 +13,5 @@ namespace ITunesLoader.Interfaces
         IEnumerable<ITunesCollection> GetExistingCollections();
 
         IEnumerable<ITunesCollection> CreateCollections(IJEnumerable<JToken> tokens);
-
     }
 }

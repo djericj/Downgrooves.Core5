@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
-namespace ITunesLoader.Interfaces
+namespace Downgrooves.WorkerService.Interfaces
 {
     public interface ITrackService
     {
@@ -10,6 +10,5 @@ namespace ITunesLoader.Interfaces
         int AddNewTracks(IEnumerable<ITunesTrack> tracks);
         IEnumerable<ITunesTrack> GetExistingTracks();
         IEnumerable<ITunesTrack> CreateTracks(IJEnumerable<JToken> tokens);
-
     }
 }

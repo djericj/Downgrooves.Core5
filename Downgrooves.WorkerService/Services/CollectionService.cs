@@ -1,7 +1,9 @@
 ﻿using Downgrooves.Domain;
-using ITunesLoader.Interfaces;
+using Downgrooves.WorkerService.Config;
+using Downgrooves.WorkerService.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -12,25 +14,25 @@ using System.IO;
 using System.Linq;
 using System.Net;
 
-namespace ITunesLoader.Services
+namespace Downgrooves.WorkerService.Services
 {
     public class CollectionService : ICollectionService
     {
         private int index = 0;
-        private readonly IConfiguration _configuration;
-        private readonly IITunesService _iTunesService;
+        private readonly AppConfig _appConfig;
+        private readonly IApiClientService _apiClientService;
         private readonly ILogger<CollectionService> _logger;
         public string ApiUrl { get; }
         public string Token { get; }
         public string ArtworkBasePath { get; }
 
-        public CollectionService(IConfiguration configuration, IITunesService iTunesService, ILogger<CollectionService> logger)
+        public CollectionService(IOptions<AppConfig> config, IApiClientService apiClientService, ILogger<CollectionService> logger)
         {
-            _configuration = configuration;
-            ApiUrl = _configuration.GetSection("AppConfig:ApiUrl").Value;
-            Token = _configuration.GetSection("AppConfig:Token").Value;
-            ArtworkBasePath = _configuration.GetSection("AppConfig:ArtworkBasePath").Value;
-            _iTunesService = iTunesService;
+            _appConfig = config.Value;  
+            ApiUrl = _appConfig.ApiUrl;
+            Token = _appConfig.Token;
+            ArtworkBasePath = _appConfig.ArtworkBasePath;
+            _apiClientService = apiClientService;
             _logger = logger;
         }
 
@@ -90,7 +92,7 @@ namespace ITunesLoader.Services
                         _logger.LogError(ex.StackTrace);
 
                     }
-                    
+
                 }
             }
         }
@@ -98,7 +100,7 @@ namespace ITunesLoader.Services
         public void AddCollections(string artistName)
         {
             IEnumerable<ITunesCollection> collectionsToAdd = new List<ITunesCollection>();
-            var results = _iTunesService.GetItunesJson(artistName);
+            var results = _apiClientService.GetItunesJson(artistName);
             var collections = CreateCollections(results);
             var existingCollections = GetExistingCollections();
             if (existingCollections != null && existingCollections.Count() > 0)
@@ -147,7 +149,7 @@ namespace ITunesLoader.Services
             {
                 _logger.LogError(ex.Message);
                 _logger.LogError(ex.StackTrace);
-                
+
             }
 
         }
