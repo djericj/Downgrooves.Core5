@@ -28,10 +28,9 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: Build
   inputs:
-    command: publish
-    publishWebProjects: true
+    command: build
     projects: '**/Downgrooves.WorkerService/*.csproj'
-    arguments: 'Downgrooves.WorkerService/Downgrooves.WorkerService.csproj --configuration $(buildConfiguration) --output $(Build.ArtifactsStagingDirectory)'
+    arguments: ' --configuration $(buildConfiguration) --output $(Build.ArtifactsStagingDirectory)'
     zipAfterPublish: true
     workingDirectory: $(Build.SourcesDirectory)
     
