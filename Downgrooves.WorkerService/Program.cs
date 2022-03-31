@@ -24,7 +24,6 @@ namespace Downgrooves.WorkerService
                 {
                     logging.ClearProviders();
                     logging.AddConsole();
-                    logging.AddEventLog();
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
