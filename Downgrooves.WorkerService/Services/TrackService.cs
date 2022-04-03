@@ -79,7 +79,7 @@ namespace Downgrooves.WorkerService.Services
                     // do nothing
                 }
                 else
-                    _logger.LogError($"Error adding {description}.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
+                    _logger.LogError($"Error adding {description}.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage} {response.ErrorException?.Message} {response.ErrorException?.StackTrace}");
 
             }
             catch (Exception ex)
