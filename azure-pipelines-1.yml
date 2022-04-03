@@ -10,7 +10,7 @@ trigger:
  paths:
   include:
     - 'Downgrooves.WorkerService'
-    - 'Downgrooves.Domain'
+
 
 pool:
   vmImage: 'windows-latest'
