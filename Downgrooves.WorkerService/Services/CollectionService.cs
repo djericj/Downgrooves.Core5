@@ -42,6 +42,7 @@ namespace Downgrooves.WorkerService.Services
                 collectionsToAdd = collections.Where(x => existingCollections.All(y => x.CollectionId != y.CollectionId));
             else
                 collectionsToAdd = collections;
+            collectionsToAdd = collectionsToAdd.Where(x => x.ReleaseDate > Convert.ToDateTime("1970-01-01")); // do not add pre-release
             var count = AddNewCollections(collectionsToAdd);
             if (count > 0)
                 _logger.LogInformation($"{count} collections added.");

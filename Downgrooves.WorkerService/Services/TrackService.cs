@@ -42,6 +42,7 @@ namespace Downgrooves.WorkerService.Services
                 tracksToAdd = tracks.Where(x => existingTracks.All(y => x.TrackId != y.TrackId));
             else
                 tracksToAdd = tracks;
+            tracksToAdd = tracksToAdd.Where(x => x.ReleaseDate > Convert.ToDateTime("1970-01-01")); // do not add pre-release
             var count = AddNewTracks(tracksToAdd);
             if (count > 0)
                 _logger.LogInformation($"{count} tracks added.");
