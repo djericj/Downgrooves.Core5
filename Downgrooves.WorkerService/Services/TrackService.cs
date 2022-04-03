@@ -1,4 +1,4 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Domain.ITunes;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +10,6 @@ using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 
@@ -20,87 +19,24 @@ namespace Downgrooves.WorkerService.Services
     {
         private int index = 0;
         private readonly AppConfig _appConfig;
-        private readonly IApiClientService _apiClientService;
         private readonly ILogger<TrackService> _logger;
         public string ApiUrl { get; set; }
         public string Token { get; set; }
         public string ArtworkBasePath { get; }
 
-        public TrackService(IOptions<AppConfig> config, IApiClientService apiClientService, ILogger<TrackService> logger)
+        public TrackService(IOptions<AppConfig> config, ILogger<TrackService> logger)
         {
             _appConfig = config.Value;
             ApiUrl = _appConfig.ApiUrl;
             Token = _appConfig.Token;
             ArtworkBasePath = _appConfig.ArtworkBasePath;
-            _apiClientService = apiClientService;
             _logger = logger;
         }
 
-        public void GetArtwork()
-        {
-            try
-            {
-                var client = new RestClient(ApiUrl);
-                client.Authenticator = new JwtAuthenticator(Token);
-                var request = new RestRequest("itunes/tracks", Method.GET);
-                var settings = new JsonSerializerSettings();
-                settings.NullValueHandling = NullValueHandling.Ignore;
-                var response = client.Get(request);
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    var collections = JsonConvert.DeserializeObject<ITunesCollection[]>(response.Content);
-                    if (collections != null)
-                        GetArtwork(collections);
-                }
-                else if (response.StatusCode == HttpStatusCode.NoContent)
-                {
-                    // do nothing
-                }
-                else
-                    _logger.LogError($"Error adding artwork for collections.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                _logger.LogError(ex.StackTrace);
-
-            }
-        }
-
-        private void GetArtwork(ITunesCollection[] collections)
-        {
-            foreach (var item in collections)
-                GetArtwork(item);
-        }
-
-        private void GetArtwork(ITunesCollection collection)
-        {
-            var fileName = collection.CollectionId.ToString();
-            var imagePath = Path.Combine(ArtworkBasePath, "tracks", $"{fileName}.jpg");
-            if (!File.Exists(imagePath))
-            {
-                try
-                {
-                    using (WebClient client = new WebClient())
-                    {
-                        client.DownloadFile(new Uri(collection.ArtworkUrl100.Replace("100x100", "500x500")), $"{imagePath}");
-                        _logger.LogInformation($"Downloaded artwork {imagePath}");
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.Message);
-                    _logger.LogError(ex.StackTrace);
-                }
-            }
-        }
-
-        public void AddTracks(string artistName)
+        public void AddTracks(IEnumerable<JToken> tokens)
         {
             IEnumerable<ITunesTrack> tracksToAdd = new List<ITunesTrack>();
-            var results = _apiClientService.GetItunesJson(artistName);
-            var tracks = CreateTracks(results);
+            var tracks = CreateTracks(tokens);
             var existingTracks = GetExistingTracks();
             if (existingTracks != null && existingTracks.Count() > 0)
                 tracksToAdd = tracks.Where(x => existingTracks.All(y => x.TrackId != y.TrackId));
@@ -109,7 +45,6 @@ namespace Downgrooves.WorkerService.Services
             var count = AddNewTracks(tracksToAdd);
             if (count > 0)
                 _logger.LogInformation($"{count} tracks added.");
-            GetArtwork();
         }
 
         public int AddNewTracks(IEnumerable<ITunesTrack> tracks)
@@ -165,7 +100,7 @@ namespace Downgrooves.WorkerService.Services
             return tracks;
         }
 
-        public IEnumerable<ITunesTrack> CreateTracks(IJEnumerable<JToken> tokens)
+        public IEnumerable<ITunesTrack> CreateTracks(IEnumerable<JToken> tokens)
         {
             var tracks = new List<ITunesTrack>();
             foreach (var item in tokens)

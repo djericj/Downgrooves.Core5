@@ -1,4 +1,4 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Domain.ITunes;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +10,6 @@ using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 
@@ -20,88 +19,24 @@ namespace Downgrooves.WorkerService.Services
     {
         private int index = 0;
         private readonly AppConfig _appConfig;
-        private readonly IApiClientService _apiClientService;
         private readonly ILogger<CollectionService> _logger;
         public string ApiUrl { get; }
         public string Token { get; }
         public string ArtworkBasePath { get; }
 
-        public CollectionService(IOptions<AppConfig> config, IApiClientService apiClientService, ILogger<CollectionService> logger)
+        public CollectionService(IOptions<AppConfig> config, ILogger<CollectionService> logger)
         {
             _appConfig = config.Value;  
             ApiUrl = _appConfig.ApiUrl;
             Token = _appConfig.Token;
             ArtworkBasePath = _appConfig.ArtworkBasePath;
-            _apiClientService = apiClientService;
             _logger = logger;
-        }
+        }      
 
-        public void GetArtwork()
-        {
-            try
-            {
-                var client = new RestClient(ApiUrl);
-                client.Authenticator = new JwtAuthenticator(Token);
-                var request = new RestRequest("itunes/collections", Method.GET);
-                var settings = new JsonSerializerSettings();
-                settings.NullValueHandling = NullValueHandling.Ignore;
-                var response = client.Get(request);
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    var collections = JsonConvert.DeserializeObject<ITunesCollection[]>(response.Content);
-                    if (collections != null)
-                        GetArtwork(collections);
-                }
-                else if (response.StatusCode == HttpStatusCode.NoContent)
-                {
-                    // do nothing
-                }
-                else
-                    _logger.LogError($"Error adding artwork for collections.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                _logger.LogError(ex.StackTrace);
-
-            }
-        }
-
-        private void GetArtwork(ITunesCollection[] collections)
-        {
-            foreach (var item in collections)
-                GetArtwork(item);
-        }
-
-        private void GetArtwork(ITunesCollection collection)
-        {
-            var fileName = collection.CollectionId.ToString();
-            var imagePath = Path.Combine(ArtworkBasePath, "collections", $"{fileName}.jpg");
-            if (!File.Exists(imagePath))
-            {
-                using (WebClient client = new WebClient())
-                {
-                    try
-                    {
-                        client.DownloadFile(new Uri(collection.ArtworkUrl100.Replace("100x100", "500x500")), $"{imagePath}");
-                        _logger.LogInformation($"Downloaded artwork {imagePath}");
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex.Message);
-                        _logger.LogError(ex.StackTrace);
-
-                    }
-
-                }
-            }
-        }
-
-        public void AddCollections(string artistName)
+        public void AddCollections(IEnumerable<JToken> tokens)
         {
             IEnumerable<ITunesCollection> collectionsToAdd = new List<ITunesCollection>();
-            var results = _apiClientService.GetItunesJson(artistName);
-            var collections = CreateCollections(results);
+            var collections = CreateCollections(tokens);
             var existingCollections = GetExistingCollections();
             if (existingCollections != null && existingCollections.Count() > 0)
                 collectionsToAdd = collections.Where(x => existingCollections.All(y => x.CollectionId != y.CollectionId));
@@ -110,7 +45,6 @@ namespace Downgrooves.WorkerService.Services
             var count = AddNewCollections(collectionsToAdd);
             if (count > 0)
                 _logger.LogInformation($"{count} collections added.");
-            GetArtwork();
         }
 
         public int AddNewCollections(IEnumerable<ITunesCollection> collections)
@@ -173,7 +107,7 @@ namespace Downgrooves.WorkerService.Services
             return collections;
         }
 
-        public IEnumerable<ITunesCollection> CreateCollections(IJEnumerable<JToken> tokens)
+        public IEnumerable<ITunesCollection> CreateCollections(IEnumerable<JToken> tokens)
         {
             var collections = new List<ITunesCollection>();
             foreach (var item in tokens)

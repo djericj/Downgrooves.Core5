@@ -2,6 +2,7 @@
 using Downgrooves.WorkerService.Interfaces;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Net;
 
 namespace Downgrooves.WorkerService.Services
@@ -14,14 +15,47 @@ namespace Downgrooves.WorkerService.Services
             _appConfig = config.Value;
         }
 
-        public IJEnumerable<JToken> GetItunesJson(string searchTerm)
+        public IEnumerable<JToken> LookupCollectionById(int collectionId)
+        {
+            string data = null;
+            string url = $"https://itunes.apple.com/lookup?id={collectionId}&entity=song";
+            using (var webClient = new WebClient())
+                data = webClient.DownloadString(url);
+            JObject o = JObject.Parse(data);
+            var results = o.SelectTokens("$..results[?(@.wrapperType=='collection')]");
+            return results;
+        }
+
+        public IEnumerable<JToken> LookupTracksCollectionById(int collectionId)
+        {
+            string data = null;
+            string url = $"https://itunes.apple.com/lookup?id={collectionId}&entity=song";
+            using (var webClient = new WebClient())
+                data = webClient.DownloadString(url);
+            JObject o = JObject.Parse(data);
+            var results = o.SelectTokens("$..results[?(@.wrapperType=='track')]");
+            return results;
+        }
+
+        public IEnumerable<JToken> LookupCollections(string searchTerm)
         {
             string data = null;
             string url = $"https://itunes.apple.com/search/?term={searchTerm}&entity=musicArtist,musicTrack,album,mix,song&media=music&limit=200";
             using (var webClient = new WebClient())
                 data = webClient.DownloadString(url);
             JObject o = JObject.Parse(data);
-            var results = o.SelectTokens("results").Children();
+            var results = o.SelectTokens("$..results[?(@.wrapperType=='collection')]");
+            return results;
+        }
+
+        public IEnumerable<JToken> LookupTracks(string searchTerm)
+        {
+            string data = null;
+            string url = $"https://itunes.apple.com/search?term={searchTerm}&entity=song";
+            using (var webClient = new WebClient())
+                data = webClient.DownloadString(url);
+            JObject o = JObject.Parse(data);
+            var results = o.SelectTokens("$..results[?(@.wrapperType=='track')]");
             return results;
         }
 
