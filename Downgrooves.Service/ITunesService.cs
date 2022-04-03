@@ -60,7 +60,15 @@ namespace Downgrooves.Service
 
         public async Task<IEnumerable<ITunesCollection>> GetCollection(Expression<Func<ITunesCollection, bool>> predicate)
         {
-            return await _unitOfWork.ITunesCollections.FindAsync(predicate);
+            var collections = new List<ITunesCollection>();
+            var collection = await _unitOfWork.ITunesCollections.FindAsync(predicate);
+            foreach (var item in collection)
+            {
+                var newCollection = item;
+                newCollection.Tracks = await LookupTracks(item.CollectionId);
+                collections.Add(newCollection);
+            }
+            return collections;
         }
 
         public async Task<IEnumerable<ITunesCollection>> GetCollections(string artistName = null)

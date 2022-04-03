@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Downgrooves.Domain.ITunes
@@ -10,5 +11,7 @@ namespace Downgrooves.Domain.ITunes
         public int CollectionId { get; set; }
         public string CollectionType { get; set; }
         public string Copyright { get; set; }
+        [NotMapped]
+        public IEnumerable<ITunesTrack> Tracks { get; set; }
     }
 }
