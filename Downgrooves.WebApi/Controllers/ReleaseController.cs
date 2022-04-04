@@ -117,7 +117,7 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("paged")]
-        public async Task<IActionResult> GetReleases(PagingParameters parameters, string artistName = null)
+        public async Task<IActionResult> GetReleases([FromQuery] PagingParameters parameters, string artistName = null)
         {
             try
             {

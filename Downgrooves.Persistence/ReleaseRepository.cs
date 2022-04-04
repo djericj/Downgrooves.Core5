@@ -14,9 +14,7 @@ namespace Downgrooves.Persistence
 
         public ReleaseRepository(DowngroovesDbContext context) : base(context)
         {
-            _query = from release in DowngroovesDbContext.Releases
-                         //where (!Exclusions.Where(x => x.CollectionId != null).Select(x => x.CollectionId.Value).Contains(release.CollectionId))
-                         //where (!Exclusions.Where(x => x.TrackId != null).Select(x => x.TrackId.Value).Contains(release.TrackId))
+            _query = from release in context.Releases
                      select release;
         }
 

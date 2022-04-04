@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Downgrooves.Domain
 {
-    [Table("release")]
+    [Table("releases")]
     public class Release
     {
         [Key]
