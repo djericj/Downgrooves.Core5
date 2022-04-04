@@ -1,10 +1,14 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Downgrooves.Domain.ITunes
 {
-    public abstract class ITunesLookupResult
+    public class ITunesLookupResult
     {
         [JsonProperty("resultCount")]
         public int ResultCount { get; set; }
+
+        [JsonProperty("results")]
+        public IEnumerable<Release> Results { get; set; }
     }
 }

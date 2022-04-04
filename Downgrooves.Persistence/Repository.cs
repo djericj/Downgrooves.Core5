@@ -31,11 +31,11 @@ namespace Downgrooves.Persistence
 
         public T Get(int id) => _context.Set<T>().Find(id);
 
-        public async Task<T> GetAsync(int id) => await _context.Set<T>().FindAsync(id);
-
         public IEnumerable<T> GetAll() => _context.Set<T>().ToList();
 
         public async Task<IEnumerable<T>> GetAllAsync() => await _context.Set<T>().ToListAsync();
+
+        public async Task<T> GetAsync(int id) => await _context.Set<T>().FindAsync(id);
 
         public void Remove(T entity) => _context.Set<T>().Remove(entity);
 

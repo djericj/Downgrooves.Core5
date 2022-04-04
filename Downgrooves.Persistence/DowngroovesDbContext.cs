@@ -1,7 +1,6 @@
 using Downgrooves.Domain;
 using Downgrooves.Domain.ITunes;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace Downgrooves.Persistence
 {
@@ -11,11 +10,9 @@ namespace Downgrooves.Persistence
         {
         }
 
-        
-        public DbSet<Mix> Mixes { get; set; }
-        public DbSet<ITunesCollection> ITunesCollections { get; set; }
         public DbSet<ITunesExclusion> ITunesExclusions { get; set; }
-        public DbSet<ITunesTrack> ITunesTracks { get; set; }
+        public DbSet<Mix> Mixes { get; set; }
+        public DbSet<Release> Releases { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Video> Videos { get; set; }
 

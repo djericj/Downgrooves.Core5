@@ -1,14 +1,27 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Downgrooves.Domain;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
 namespace Downgrooves.WorkerService.Interfaces
 {
     public interface IApiClientService
     {
-        IEnumerable<JToken> LookupCollectionById(int collectionId);
-        IEnumerable<JToken> LookupTracksCollectionById(int collectionId);
-        IEnumerable<JToken> LookupCollections(string searchTerm);
-        IEnumerable<JToken> LookupTracks(string searchTerm);
-        IJEnumerable<JToken> GetYouTubeVideosJson();
+        int AddNewReleases(IEnumerable<Release> releases);
+
+        void AddNewRelease(Release release);
+
+        IEnumerable<int> GetExclusions();
+
+        IEnumerable<Release> GetReleases();
+
+        Release LookupCollectionById(int collectionId);
+
+        IEnumerable<Release> LookupTracksCollectionById(int collectionId);
+
+        IEnumerable<Release> LookupCollections(string searchTerm);
+
+        IEnumerable<Release> LookupTracks(string searchTerm);
+
+        IEnumerable<Video> GetYouTubeVideosJson();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Downgrooves.Domain.ITunes;
+﻿using Downgrooves.Domain;
+using Downgrooves.Domain.ITunes;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -35,13 +36,13 @@ namespace Downgrooves.WorkerService.Services
             {
                 var client = new RestClient(ApiUrl);
                 client.Authenticator = new JwtAuthenticator(Token);
-                var request = new RestRequest("itunes/" + type, Method.GET);
+                var request = new RestRequest("releases", Method.GET);
                 var settings = new JsonSerializerSettings();
                 settings.NullValueHandling = NullValueHandling.Ignore;
                 var response = client.Get(request);
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    var collections = JsonConvert.DeserializeObject<ITunesCollection[]>(response.Content);
+                    var collections = JsonConvert.DeserializeObject<Release[]>(response.Content);
                     if (collections != null)
                         GetArtwork(collections, type);
                 }
@@ -56,17 +57,16 @@ namespace Downgrooves.WorkerService.Services
             {
                 _logger.LogError(ex.Message);
                 _logger.LogError(ex.StackTrace);
-
             }
         }
 
-        private void GetArtwork(ITunesCollection[] collections, string type)
+        private void GetArtwork(Release[] collections, string type)
         {
             foreach (var item in collections)
                 GetArtwork(item, type);
         }
 
-        private void GetArtwork(ITunesCollection collection, string type)
+        private void GetArtwork(Release collection, string type)
         {
             var fileName = collection.CollectionId.ToString();
             var imagePath = Path.Combine(ArtworkBasePath, type, $"{fileName}.jpg");
@@ -83,9 +83,7 @@ namespace Downgrooves.WorkerService.Services
                     {
                         _logger.LogError(ex.Message);
                         _logger.LogError(ex.StackTrace);
-
                     }
-
                 }
             }
         }

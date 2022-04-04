@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using Downgrooves.Domain;
 using Downgrooves.Persistence;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service;
@@ -26,6 +25,7 @@ namespace Downgrooves.WebApi
     public class Startup
     {
         public IWebHostEnvironment WebHostEnvironment { get; set; }
+
         public Startup(IWebHostEnvironment env)
         {
             // Config the app to read values from appsettings base on current environment value.
@@ -100,7 +100,9 @@ namespace Downgrooves.WebApi
             services.AddScoped<Func<DowngroovesDbContext>>((provider) => () => provider.GetService<DowngroovesDbContext>());
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IMixService, MixService>();
+
             services.AddScoped<IITunesService, ITunesService>();
+            services.AddScoped<IReleaseService, ReleaseService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IVideoService, VideoService>();
             services.AddTransient<ITokenService, TokenService>();
@@ -129,7 +131,6 @@ namespace Downgrooves.WebApi
                 await next();
             });
 
-            
             app.UseAuthentication();
             app.UseAuthorization();
 

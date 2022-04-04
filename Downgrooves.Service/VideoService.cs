@@ -11,8 +11,8 @@ namespace Downgrooves.Service
 {
     public class VideoService : IVideoService
     {
-        private IUnitOfWork _unitOfWork;
         private readonly ILogger<IVideoService> _logger;
+        private IUnitOfWork _unitOfWork;
 
         public VideoService(IUnitOfWork unitOfWork, ILogger<IVideoService> logger)
         {
@@ -65,6 +65,11 @@ namespace Downgrooves.Service
             return await _unitOfWork.Videos.GetVideos(parameters);
         }
 
+        public void Remove(Video video)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Video> Update(Video video)
         {
             try
@@ -78,11 +83,6 @@ namespace Downgrooves.Service
                 _logger.LogError($"Exception in Downgrooves.Service.VideoService.Update {ex.Message} {ex.StackTrace}");
                 throw;
             }
-        }
-
-        public void Remove(Video video)
-        {
-            throw new NotImplementedException();
         }
     }
 }

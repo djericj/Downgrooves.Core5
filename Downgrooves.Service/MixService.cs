@@ -10,8 +10,8 @@ namespace Downgrooves.Service
 {
     public class MixService : IMixService
     {
-        private IUnitOfWork _unitOfWork;
         private readonly ILogger<IMixService> _logger;
+        private IUnitOfWork _unitOfWork;
 
         public MixService(IUnitOfWork unitOfWork, ILogger<IMixService> logger)
         {
@@ -44,16 +44,6 @@ namespace Downgrooves.Service
             return await _unitOfWork.Mixes.GetMixes(parameters);
         }
 
-        public async Task<IEnumerable<Mix>> GetShowMixes()
-        {
-            return await _unitOfWork.Mixes.GetShowMixes();
-        }
-
-        public async Task<IEnumerable<Mix>> GetShowMixes(PagingParameters parameters)
-        {
-            return await _unitOfWork.Mixes.GetShowMixes(parameters);
-        }
-
         public async Task<IEnumerable<Mix>> GetMixesByCategory(string category)
         {
             return await _unitOfWork.Mixes.GetMixesByCategory(category);
@@ -62,6 +52,16 @@ namespace Downgrooves.Service
         public async Task<IEnumerable<Mix>> GetMixesByGenre(string genre)
         {
             return await _unitOfWork.Mixes.GetMixesByGenre(genre);
+        }
+
+        public async Task<IEnumerable<Mix>> GetShowMixes()
+        {
+            return await _unitOfWork.Mixes.GetShowMixes();
+        }
+
+        public async Task<IEnumerable<Mix>> GetShowMixes(PagingParameters parameters)
+        {
+            return await _unitOfWork.Mixes.GetShowMixes(parameters);
         }
     }
 }

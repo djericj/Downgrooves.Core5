@@ -8,9 +8,10 @@ namespace Downgrooves.Domain
     public class Genre
     {
         public int GenreId { get; set; }
-        public string Name { get; set; }
 
         [JsonIgnore]
         public ICollection<Mix> Mixes { get; set; }
+
+        public string Name { get; set; }
     }
 }

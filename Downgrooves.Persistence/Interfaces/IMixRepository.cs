@@ -10,12 +10,12 @@ namespace Downgrooves.Persistence.Interfaces
 
         Task<IEnumerable<Mix>> GetMixes(PagingParameters parameters);
 
-        Task<IEnumerable<Mix>> GetShowMixes();
-
-        Task<IEnumerable<Mix>> GetShowMixes(PagingParameters parameters);
-
         Task<IEnumerable<Mix>> GetMixesByCategory(string category);
 
         Task<IEnumerable<Mix>> GetMixesByGenre(string genre);
+
+        Task<IEnumerable<Mix>> GetShowMixes();
+
+        Task<IEnumerable<Mix>> GetShowMixes(PagingParameters parameters);
     }
 }

@@ -1,6 +1,4 @@
 ﻿using Downgrooves.Persistence.Interfaces;
-using Downgrooves.Persistence.ITunes;
-using Downgrooves.Persistence.ITunes.Interfaces;
 using System.Threading.Tasks;
 
 namespace Downgrooves.Persistence
@@ -9,21 +7,19 @@ namespace Downgrooves.Persistence
     {
         private readonly DowngroovesDbContext _context;
 
-        public IMixRepository Mixes { get; private set; }
-        public ITrackRepository ITunesTracks { get; private set; }
-        public ICollectionRepository ITunesCollections { get; set; }
-        public IUserRepository Users { get; private set; }
-        public IVideoRepository Videos { get; private set; }
-
         public UnitOfWork(DowngroovesDbContext context)
         {
             _context = context;
             Mixes = new MixRepository(context);
-            ITunesCollections = new CollectionRepository(context);
-            ITunesTracks = new TrackRepository(context);
+            Releases = new ReleaseRepository(context);
             Users = new UserRepository(context);
             Videos = new VideoRepository(context);
         }
+
+        public IMixRepository Mixes { get; private set; }
+        public IReleaseRepository Releases { get; private set; }
+        public IUserRepository Users { get; private set; }
+        public IVideoRepository Videos { get; private set; }
 
         public void Complete() => _context.SaveChanges();
 

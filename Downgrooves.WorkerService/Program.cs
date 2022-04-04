@@ -30,9 +30,8 @@ namespace Downgrooves.WorkerService
                     services.Configure<AppConfig>(hostContext.Configuration.GetSection("AppConfig"));
                     services.AddLogging();
                     services.AddSingleton<IApiClientService, ApiClientService>();
-                    services.AddSingleton<IArtworkService, ArtworkService>();   
-                    services.AddSingleton<ICollectionService, CollectionService>();
-                    services.AddSingleton<ITrackService, TrackService>();
+                    services.AddSingleton<IArtworkService, ArtworkService>();
+                    services.AddSingleton<IReleaseService, ReleaseService>();
                     services.AddSingleton<IYouTubeService, YouTubeService>();
                     services.AddHostedService<ITunesLoaderWorker>();
                     services.AddHostedService<YouTubeLoaderWorker>();

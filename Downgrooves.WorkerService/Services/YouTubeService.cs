@@ -48,8 +48,7 @@ namespace Downgrooves.WorkerService.Services
         public void AddNewVideos()
         {
             IEnumerable<Video> videosToAdd = new List<Video>();
-            var results = _apiClientService.GetYouTubeVideosJson();
-            var videos = CreateVideos(results);
+            var videos = _apiClientService.GetYouTubeVideosJson();
             var existingVideos = GetExistingVideos();
             if (existingVideos != null && existingVideos.Count() > 0)
                 videosToAdd = videos.Where(x => existingVideos.All(y => x.VideoId != y.VideoId));
