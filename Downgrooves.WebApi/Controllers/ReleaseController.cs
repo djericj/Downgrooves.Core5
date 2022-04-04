@@ -33,7 +33,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.Add {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                throw;
             }
         }
 
@@ -48,7 +48,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.AddRange {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                throw;
             }
         }
 
@@ -67,7 +67,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.GetReleases {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                throw;
             }
         }
 
@@ -82,7 +82,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.GetReleases {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                throw;
             }
         }
 
@@ -97,7 +97,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.GetReleases {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                throw;
             }
         }
 
@@ -111,7 +111,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.GetReleases {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                throw;
             }
         }
 
@@ -126,7 +126,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.GetReleases {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                throw;
             }
         }
 
@@ -140,6 +140,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.Remove {ex.Message} {ex.StackTrace}");
+                throw;
             }
         }
 
@@ -153,7 +154,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.Update {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                throw;
             }
         }
     }

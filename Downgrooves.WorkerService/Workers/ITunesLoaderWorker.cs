@@ -46,7 +46,7 @@ namespace Downgrooves.WorkerService.Workers
                     //get all collectons (albums) with the artist name (Downgrooves)
                     var collections = _clientService.LookupCollections(artist);
 
-                    collections = collections.Where(x => exclusions.All(x2 => x2 != x.CollectionId));
+                    collections = collections.Where(x => exclusions.All(x2 => x2.CollectionId != x.CollectionId));
 
                     _releaseService.AddCollections(collections);
 

@@ -31,7 +31,7 @@ namespace Downgrooves.WorkerService.Services
         public void AddCollections(IEnumerable<Release> collections)
         {
             IEnumerable<Release> collectionsToAdd = new List<Release>();
-            var existingCollections = _apiClientService.GetReleases().Where(x => x.WrapperType == "collection");
+            var existingCollections = _apiClientService.GetReleases()?.Where(x => x.WrapperType == "collection");
             if (existingCollections != null && existingCollections.Count() > 0)
                 collectionsToAdd = collections.Where(x => existingCollections.All(y => x.CollectionId != y.CollectionId));
             else

@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Linq;
+using Downgrooves.Domain.ITunes;
 
 namespace Downgrooves.WorkerService.Services
 {
@@ -65,14 +66,14 @@ namespace Downgrooves.WorkerService.Services
             }
         }
 
-        public IEnumerable<int> GetExclusions()
+        public IEnumerable<ITunesExclusion> GetExclusions()
         {
             var client = new RestClient(_appConfig.ApiUrl);
             client.Authenticator = new JwtAuthenticator(_appConfig.Token);
             var request = new RestRequest("releases/exclusions");
             var response = client.Get(request);
             if (response.StatusCode == HttpStatusCode.OK)
-                return JsonConvert.DeserializeObject<IEnumerable<int>>(response.Content);
+                return JsonConvert.DeserializeObject<IEnumerable<ITunesExclusion>>(response.Content);
             else
                 _logger.LogError($"Error getting existing releases.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
             return null;

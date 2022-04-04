@@ -1,5 +1,5 @@
 ﻿using Downgrooves.Domain;
-using Newtonsoft.Json.Linq;
+using Downgrooves.Domain.ITunes;
 using System.Collections.Generic;
 
 namespace Downgrooves.WorkerService.Interfaces
@@ -10,7 +10,7 @@ namespace Downgrooves.WorkerService.Interfaces
 
         void AddNewRelease(Release release);
 
-        IEnumerable<int> GetExclusions();
+        IEnumerable<ITunesExclusion> GetExclusions();
 
         IEnumerable<Release> GetReleases();
 
