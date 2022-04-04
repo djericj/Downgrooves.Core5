@@ -51,7 +51,7 @@ namespace Downgrooves.WorkerService.Services
             var videos = _apiClientService.GetYouTubeVideosJson();
             var existingVideos = GetExistingVideos();
             if (existingVideos != null && existingVideos.Count() > 0)
-                videosToAdd = videos.Where(x => existingVideos.All(y => x.VideoId != y.VideoId));
+                videosToAdd = videos.Where(x => existingVideos.All(y => x.Id != y.Id));
             else
                 videosToAdd = videos;
             var count = AddNewVideos(videosToAdd);
@@ -76,7 +76,7 @@ namespace Downgrooves.WorkerService.Services
             var json = JsonConvert.SerializeObject(video, settings);
             request.AddParameter("application/json", json, ParameterType.RequestBody);
             var response = client.Post(request);
-            var description = $"{video.Title} ({video.VideoId})";
+            var description = $"{video.Title} ({video.Id})";
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 index++;
@@ -84,47 +84,6 @@ namespace Downgrooves.WorkerService.Services
             }
             else
                 Console.Error.WriteLine($"Error adding {description}");
-        }
-
-        private IEnumerable<Video> CreateVideos(IJEnumerable<JToken> videos)
-        {
-            var videoList = new List<Video>();
-            foreach (var item in videos)
-            {
-                var video = CreateVideo(item);
-                videoList.Add(video);
-            }
-            return videoList;
-        }
-
-        private Video CreateVideo(JToken token)
-        {
-            var video = new Video();
-            var snippet = token.SelectToken("snippet");
-            video.Description = snippet.SelectToken("description").ToString();
-            video.ETag = token["etag"].ToString();
-            video.PublishedAt = Convert.ToDateTime(snippet.SelectToken("publishedAt").ToString());
-            video.Thumbnails = GetThumbnails(snippet.SelectToken("thumbnails").Children());
-            video.Title = snippet.SelectToken("title").ToString();
-            video.VideoId = snippet.SelectToken("resourceId").SelectToken("videoId").ToString();
-
-            return video;
-        }
-
-        private ICollection<Thumbnail> GetThumbnails(IEnumerable<JToken> tokens)
-        {
-            var thumbnails = new List<Thumbnail>();
-            foreach (var item in tokens)
-            {
-                var t = new Thumbnail();
-                var child = item.Children().First();
-                t.Type = ((JProperty)child.Parent).Name;
-                t.Height = Convert.ToInt32(child.SelectToken("height").ToString());
-                t.Url = child.SelectToken("url").ToString();
-                t.Width = Convert.ToInt32(child.SelectToken("width").ToString());
-                thumbnails.Add(t);
-            }
-            return thumbnails;
         }
     }
 }

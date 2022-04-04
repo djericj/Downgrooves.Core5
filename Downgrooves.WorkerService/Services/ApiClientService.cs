@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Linq;
 using Downgrooves.Domain.ITunes;
+using Downgrooves.Domain.YouTube;
 
 namespace Downgrooves.WorkerService.Services
 {
@@ -26,6 +27,8 @@ namespace Downgrooves.WorkerService.Services
             _appConfig = config.Value;
             _logger = logger;
         }
+
+        #region Release API
 
         public int AddNewReleases(IEnumerable<Release> releases)
         {
@@ -57,7 +60,7 @@ namespace Downgrooves.WorkerService.Services
                     // do nothing
                 }
                 else
-                    _logger.LogError($"Error adding {description}.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
+                    _logger.LogError($"Error adding {description}.  {response.Content}");
             }
             catch (Exception ex)
             {
@@ -75,7 +78,7 @@ namespace Downgrooves.WorkerService.Services
             if (response.StatusCode == HttpStatusCode.OK)
                 return JsonConvert.DeserializeObject<IEnumerable<ITunesExclusion>>(response.Content);
             else
-                _logger.LogError($"Error getting existing releases.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
+                _logger.LogError($"Error getting exclusions.  {response.Content}");
             return null;
         }
 
@@ -92,9 +95,13 @@ namespace Downgrooves.WorkerService.Services
                 else
                     return null;
             else
-                _logger.LogError($"Error getting existing releases.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
+                _logger.LogError($"Error getting existing releases.  {response.Content}");
             return collections;
         }
+
+        #endregion Release API
+
+        #region iTunes API
 
         public Release LookupCollectionById(int collectionId)
         {
@@ -132,6 +139,10 @@ namespace Downgrooves.WorkerService.Services
             return JObject.Parse(data)?.ToObjects<Release>("results")?.Where(x => x.WrapperType == "track");
         }
 
+        #endregion iTunes API
+
+        #region YouTube API
+
         public IEnumerable<Video> GetYouTubeVideosJson()
         {
             string data = null;
@@ -139,16 +150,67 @@ namespace Downgrooves.WorkerService.Services
             string url = $"https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&maxResults=100&playlistId=PLvrGGNimrTIMSxEt7InO9NK_aUplnK513&key={ApiKey}";
             using (var webClient = new WebClient())
                 data = webClient.DownloadString(url);
-            return JObject.Parse(data)?.ToObjects<Video>("items");
+            var results = JsonConvert.DeserializeObject<YouTubeLookupResult>(data);
+            var videos = results?.Items?.ToVideos();
+            return videos;
         }
+
+        #endregion YouTube API
     }
 
-    public static class JObjectExtensions
+    public static class ApiClientServiceExtensions
     {
         public static IList<T> ToObjects<T>(this JObject obj, string path)
         {
             var jArray = (JArray)obj[path];
             return jArray.ToObject<IList<T>>();
+        }
+
+        public static IList<Video> ToVideos(this IEnumerable<YouTubeVideo> youTubeVideos)
+        {
+            var videoList = new List<Video>();
+            foreach (var youTubeVideo in youTubeVideos)
+                videoList.Add(youTubeVideo.ToVideo());
+            return videoList;
+        }
+
+        public static Video ToVideo(this YouTubeVideo youTubeVideo)
+        {
+            return new Video()
+            {
+                Description = youTubeVideo.Snippet.Description,
+                ETag = youTubeVideo.ETag,
+                Id = youTubeVideo.Id,
+                PublishedAt = youTubeVideo.Snippet.PublishedAt,
+                Thumbnails = youTubeVideo.Snippet.Thumbnails.ToThumbnails(),
+                Title = youTubeVideo.Snippet?.Title,
+            };
+        }
+
+        public static IList<Thumbnail> ToThumbnails(this Thumbnails youTubeThumbnails)
+        {
+            var thumbnails = new List<Thumbnail>();
+
+            thumbnails.Add(youTubeThumbnails.Standard?.ToThumbnail("standard"));
+            thumbnails.Add(youTubeThumbnails.Default?.ToThumbnail("default"));
+            thumbnails.Add(youTubeThumbnails.Medium?.ToThumbnail("medium"));
+            thumbnails.Add(youTubeThumbnails.High?.ToThumbnail("high"));
+            thumbnails.Add(youTubeThumbnails.MaxResolution?.ToThumbnail("maxres"));
+
+            thumbnails = thumbnails.Where(x => x != null).ToList();
+
+            return thumbnails;
+        }
+
+        public static Thumbnail ToThumbnail(this ThumbnailImage youTubeThumbnail, string type)
+        {
+            return new Thumbnail()
+            {
+                Height = youTubeThumbnail.Height,
+                Width = youTubeThumbnail.Width,
+                Url = youTubeThumbnail.Url,
+                Type = type
+            };
         }
     }
 }
