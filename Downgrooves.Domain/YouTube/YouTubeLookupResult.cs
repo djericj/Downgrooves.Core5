@@ -2,6 +2,9 @@
 
 namespace Downgrooves.Domain.YouTube
 {
+    /// <summary>
+    /// The response of a YouTube API request.
+    /// </summary>
     public class YouTubeLookupResult
     {
         public string Kind { get; set; }

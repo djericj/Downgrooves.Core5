@@ -21,20 +21,6 @@ namespace Downgrooves.WebApi.Controllers
             _logger = logger;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Add(Mix mix)
-        {
-            try
-            {
-                return Ok(await _service.Add(mix));
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(MixController)}.Add {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetMixes()
         {

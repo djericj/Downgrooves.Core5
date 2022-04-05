@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Downgrooves.Domain
 {
+    /// <summary>
+    /// A row in the genre table
+    /// </summary>
     [Table("genre")]
     public class Genre
     {

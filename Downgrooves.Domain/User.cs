@@ -2,7 +2,7 @@
 
 namespace Downgrooves.Domain
 {
-    [Table("users")]
+    [Table("user")]
     public class User
     {
         [Column("UserId")]

@@ -75,7 +75,9 @@ namespace Downgrooves.WorkerService.Workers
         {
             var tracks = _clientService.LookupTracks(artistName);
 
-            _releaseService.AddTracks(tracks.ToReleases());
+            tracks = tracks.GroupBy(x => x.CollectionId).Select(x => x.First()).ToList();
+
+            _releaseService.AddCollections(tracks.ToReleases());
         }
 
         private void AddITunesItems()

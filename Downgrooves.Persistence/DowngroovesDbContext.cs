@@ -11,7 +11,8 @@ namespace Downgrooves.Persistence
         }
 
         public DbSet<ITunesExclusion> ITunesExclusions { get; set; }
-        public DbSet<ITunesLookupResultItem> ITunes { get; set; }
+        public DbSet<ITunesCollection> ITunesCollections { get; set; }
+        public DbSet<ITunesTrack> ITunesTracks { get; set; }
         public DbSet<Mix> Mixes { get; set; }
         public DbSet<Release> Releases { get; set; }
         public DbSet<User> Users { get; set; }
@@ -34,6 +35,10 @@ namespace Downgrooves.Persistence
 
             modelBuilder.Entity<ITunesExclusion>()
                 .HasNoKey();
+
+            modelBuilder.Entity<Release>()
+                .HasMany(x => x.Tracks)
+                .WithOne(y => y.Release);
         }
     }
 }

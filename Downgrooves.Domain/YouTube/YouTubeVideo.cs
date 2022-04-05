@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Downgrooves.Domain.YouTube
 {
+    /// <summary>
+    /// An item of the items node in the YouTube API response.
+    /// </summary>
     public class YouTubeVideo
     {
         public string ETag { get; set; }

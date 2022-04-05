@@ -1,14 +1,12 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Downgrooves.Domain.ITunes
 {
-    [Table("itunes")]
+    /// <summary>
+    /// The results node of an iTunes API response.
+    /// </summary>
     public class ITunesLookupResultItem
     {
-        [Column("itunesId")]
-        public int Id { get; set; }
-
         public int ArtistId { get; set; }
         public string ArtistName { get; set; }
         public string ArtistViewUrl { get; set; }

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Downgrooves.Domain.ITunes
 {
+    /// <summary>
+    /// The response of an iTunes API request.
+    /// </summary>
     public class ITunesLookupResult
     {
         [JsonProperty("resultCount")]

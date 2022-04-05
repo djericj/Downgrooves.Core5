@@ -1,5 +1,4 @@
-﻿using Downgrooves.Domain;
-using Downgrooves.Domain.ITunes;
+﻿using Downgrooves.Domain.ITunes;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -24,11 +23,11 @@ namespace Downgrooves.Service
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ITunesLookupResultItem> Add(ITunesLookupResultItem item)
+        public async Task<ITunesCollection> Add(ITunesCollection item)
         {
             try
             {
-                await _unitOfWork.ITunes.AddAsync(item);
+                await _unitOfWork.ITunesCollection.AddAsync(item);
                 await _unitOfWork.CompleteAsync();
                 return item;
             }
@@ -39,11 +38,11 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<IEnumerable<ITunesLookupResultItem>> AddRange(IEnumerable<ITunesLookupResultItem> items)
+        public async Task<IEnumerable<ITunesCollection>> AddRange(IEnumerable<ITunesCollection> items)
         {
             try
             {
-                await _unitOfWork.ITunes.AddRangeAsync(items);
+                await _unitOfWork.ITunesCollection.AddRangeAsync(items);
                 await _unitOfWork.CompleteAsync();
                 return items;
             }
@@ -54,9 +53,44 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<IEnumerable<ITunesLookupResultItem>> GetItems()
+        public async Task<IEnumerable<ITunesCollection>> GetCollections()
         {
-            return await _unitOfWork.ITunes.GetAllAsync();
+            return await _unitOfWork.ITunesCollection.GetAllAsync();
+        }
+
+        public async Task<ITunesTrack> Add(ITunesTrack item)
+        {
+            try
+            {
+                await _unitOfWork.ITunesTrack.AddAsync(item);
+                await _unitOfWork.CompleteAsync();
+                return item;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.Add {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<ITunesTrack>> AddRange(IEnumerable<ITunesTrack> items)
+        {
+            try
+            {
+                await _unitOfWork.ITunesTrack.AddRangeAsync(items);
+                await _unitOfWork.CompleteAsync();
+                return items;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddRange {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<ITunesTrack>> GetTracks()
+        {
+            return await _unitOfWork.ITunesTrack.GetAllAsync();
         }
 
         public async Task<IEnumerable<ITunesLookupResultItem>> Lookup(int Id)

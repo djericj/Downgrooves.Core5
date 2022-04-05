@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Downgrooves.Domain.ITunes;
+using System;
 using System.Threading.Tasks;
 
 namespace Downgrooves.Persistence.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IITunesRepository ITunes { get; }
+        IRepository<ITunesCollection> ITunesCollection { get; }
+        IRepository<ITunesTrack> ITunesTrack { get; }
         IMixRepository Mixes { get; }
         IReleaseRepository Releases { get; }
         IUserRepository Users { get; }

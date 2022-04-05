@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace Downgrooves.Domain
 {
-    [Table("thumbnails")]
+    [Table("thumbnail")]
     public class Thumbnail
     {
         public int ThumbnailId { get; set; }
@@ -22,7 +22,7 @@ namespace Downgrooves.Domain
         public Video Video { get; set; }
     }
 
-    [Table("videos")]
+    [Table("video")]
     public class Video
     {
         public string Description { get; set; }

@@ -42,19 +42,5 @@ namespace Downgrooves.WorkerService.Services
             if (count > 0)
                 _logger.LogInformation($"{count} collections added.");
         }
-
-        public void AddTracks(IEnumerable<Release> tracks)
-        {
-            IEnumerable<Release> tracksToAdd = new List<Release>();
-            var existingTracks = _apiClientService.GetReleases().Where(x => x.WrapperType == "track");
-            if (existingTracks != null && existingTracks.Count() > 0)
-                tracksToAdd = tracks.Where(x => existingTracks.All(y => x.TrackId != y.TrackId));
-            else
-                tracksToAdd = tracks;
-            tracksToAdd = tracksToAdd.Where(x => x.ReleaseDate > Convert.ToDateTime("1970-01-01")); // do not add pre-release
-            var count = _apiClientService.AddNewReleases(tracksToAdd);
-            if (count > 0)
-                _logger.LogInformation($"{count} tracks added.");
-        }
     }
 }
