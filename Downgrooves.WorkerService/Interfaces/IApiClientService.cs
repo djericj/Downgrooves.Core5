@@ -6,22 +6,28 @@ namespace Downgrooves.WorkerService.Interfaces
 {
     public interface IApiClientService
     {
-        int AddNewReleases(IEnumerable<Release> releases);
+        void AddNewITunesItem(ITunesLookupResultItem item);
+
+        void AddNewITunesItems(IEnumerable<ITunesLookupResultItem> items);
 
         void AddNewRelease(Release release);
 
+        int AddNewReleases(IEnumerable<Release> releases);
+
         IEnumerable<ITunesExclusion> GetExclusions();
+
+        IEnumerable<ITunesLookupResultItem> GetITunesLookupResultItems();
 
         IEnumerable<Release> GetReleases();
 
-        Release LookupCollectionById(int collectionId);
-
-        IEnumerable<Release> LookupTracksCollectionById(int collectionId);
-
-        IEnumerable<Release> LookupCollections(string searchTerm);
-
-        IEnumerable<Release> LookupTracks(string searchTerm);
-
         IEnumerable<Video> GetYouTubeVideosJson();
+
+        ITunesLookupResultItem LookupCollectionById(int collectionId);
+
+        IEnumerable<ITunesLookupResultItem> LookupCollections(string searchTerm);
+
+        IEnumerable<ITunesLookupResultItem> LookupTracks(string searchTerm);
+
+        IEnumerable<ITunesLookupResultItem> LookupTracksCollectionById(int collectionId);
     }
 }

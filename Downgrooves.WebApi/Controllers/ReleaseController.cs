@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Controllers
@@ -48,6 +49,42 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.AddRange {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpGet]
+        [Route("collections")]
+        public async Task<IActionResult> GetCollections([FromQuery] string artistName = null)
+        {
+            try
+            {
+                var releases = await _releaseService.GetReleases(artistName);
+                return Ok(releases.Where(x => x.WrapperType == "collection"));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ReleaseController)}.GetCollections {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpGet]
+        [Route("collections/paged")]
+        public async Task<IActionResult> GetCollections([FromQuery] PagingParameters parameters, string artistName = null)
+        {
+            try
+            {
+                var releases = await _releaseService.GetReleases(artistName);
+                releases = releases.OrderByDescending(x => x.ReleaseDate)
+                    .Where(x => x.WrapperType == "collection")
+                    .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                    .Take(parameters.PageSize);
+                return Ok(releases.ToList());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ReleaseController)}.GetCollections {ex.Message} {ex.StackTrace}");
                 throw;
             }
         }
@@ -126,6 +163,44 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.GetReleases {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpGet]
+        [Route("tracks")]
+        public async Task<IActionResult> GetTracks([FromQuery] string artistName = null)
+        {
+            try
+            {
+                var releases = await _releaseService.GetReleases(x => x.WrapperType == "track");
+                if (artistName != null)
+                    releases = releases.Where(x => x.TrackName.Contains(artistName));
+                return Ok(releases.ToList());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ReleaseController)}.GetTracks {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpGet]
+        [Route("tracks/paged")]
+        public async Task<IActionResult> GetTracks([FromQuery] PagingParameters parameters, string artistName = null)
+        {
+            try
+            {
+                var releases = await _releaseService.GetReleases(artistName);
+                releases = releases.OrderByDescending(x => x.ReleaseDate)
+                    .Where(x => x.WrapperType == "track")
+                    .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                    .Take(parameters.PageSize);
+                return Ok(releases.ToList());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ReleaseController)}.GetTracks {ex.Message} {ex.StackTrace}");
                 throw;
             }
         }

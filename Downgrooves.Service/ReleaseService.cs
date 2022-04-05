@@ -60,13 +60,13 @@ namespace Downgrooves.Service
         {
             var releases = new List<Release>();
             var release = await _unitOfWork.Releases.FindAsync(predicate);
-            foreach (var item in release)
-            {
-                var newRelease = item;
-                newRelease.Tracks = await _iTunesService.Lookup(item.CollectionId);
-                releases.Add(newRelease);
-            }
-            return releases;
+            //foreach (var item in release)
+            //{
+            //    var newRelease = item;
+            //    newRelease.Tracks = await _iTunesService.Lookup(item.CollectionId);
+            //    releases.Add(newRelease);
+            //}
+            return release;
         }
 
         public async Task<IEnumerable<Release>> GetReleases(string artistName = null)

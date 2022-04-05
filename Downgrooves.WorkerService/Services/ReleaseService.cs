@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Downgrooves.WorkerService.Config;
 using Microsoft.Extensions.Logging;
 using Downgrooves.WorkerService.Interfaces;
+using Downgrooves.Domain.ITunes;
 
 namespace Downgrooves.WorkerService.Services
 {

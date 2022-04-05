@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Downgrooves.Domain.ITunes;
+using System.Linq.Expressions;
+using System;
 
 namespace Downgrooves.Persistence
 {
@@ -20,6 +22,11 @@ namespace Downgrooves.Persistence
 
         public DowngroovesDbContext DowngroovesDbContext { get => _context as DowngroovesDbContext; }
         public List<ITunesExclusion> Exclusions => DowngroovesDbContext.ITunesExclusions.ToList();
+
+        public override async Task<IEnumerable<Release>> FindAsync(Expression<Func<Release, bool>> predicate)
+        {
+            return await _context.Set<Release>().Where(predicate).ToListAsync();
+        }
 
         public async Task<IEnumerable<Release>> GetReleases(string artistName = null)
         {

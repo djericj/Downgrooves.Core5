@@ -9,6 +9,6 @@ namespace Downgrooves.Domain.ITunes
         public int ResultCount { get; set; }
 
         [JsonProperty("results")]
-        public IEnumerable<Release> Results { get; set; }
+        public IEnumerable<ITunesLookupResultItem> Results { get; set; }
     }
 }

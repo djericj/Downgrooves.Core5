@@ -11,6 +11,7 @@ namespace Downgrooves.Persistence
         }
 
         public DbSet<ITunesExclusion> ITunesExclusions { get; set; }
+        public DbSet<ITunesLookupResultItem> ITunes { get; set; }
         public DbSet<Mix> Mixes { get; set; }
         public DbSet<Release> Releases { get; set; }
         public DbSet<User> Users { get; set; }

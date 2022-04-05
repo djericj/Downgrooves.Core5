@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Downgrooves.Domain.ITunes;
 
-namespace Downgrooves.Domain
+namespace Downgrooves.Domain.ITunes
 {
-    [Table("releases")]
-    public class Release
+    [Table("itunes")]
+    public class ITunesLookupResultItem
     {
-        [Key]
-        [Column("releaseId")]
+        [Column("itunesId")]
         public int Id { get; set; }
 
         public int ArtistId { get; set; }
@@ -46,14 +42,5 @@ namespace Downgrooves.Domain
         public int TrackTimeMillis { get; set; }
         public string TrackViewUrl { get; set; }
         public string WrapperType { get; set; }
-
-        [NotMapped]
-        public bool IsOriginal => ArtistName?.Contains("Downgrooves", StringComparison.OrdinalIgnoreCase) ?? false;
-
-        [NotMapped]
-        public bool IsRemix => TrackCensoredName?.Contains("Downgrooves", StringComparison.OrdinalIgnoreCase) ?? false;
-
-        [NotMapped]
-        public IEnumerable<ITunesLookupResultItem> Tracks { get; set; }
     }
 }

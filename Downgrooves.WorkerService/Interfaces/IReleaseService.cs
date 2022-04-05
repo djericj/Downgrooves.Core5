@@ -1,4 +1,5 @@
 ﻿using Downgrooves.Domain;
+using Downgrooves.Domain.ITunes;
 using System.Collections.Generic;
 
 namespace Downgrooves.WorkerService.Interfaces

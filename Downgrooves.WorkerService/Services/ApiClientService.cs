@@ -28,7 +28,7 @@ namespace Downgrooves.WorkerService.Services
             _logger = logger;
         }
 
-        #region Release API
+        #region Downgrooves Release API
 
         public int AddNewReleases(IEnumerable<Release> releases)
         {
@@ -41,15 +41,8 @@ namespace Downgrooves.WorkerService.Services
         {
             try
             {
-                var client = new RestClient(_appConfig.ApiUrl);
-                client.Authenticator = new JwtAuthenticator(_appConfig.Token);
-                var request = new RestRequest("releases", Method.POST);
-                var settings = new JsonSerializerSettings();
-                settings.NullValueHandling = NullValueHandling.Ignore;
-                var json = JsonConvert.SerializeObject(release, settings);
-                request.AddParameter("application/json", json, ParameterType.RequestBody);
                 var description = $"{release.ArtistName} - {release.CollectionName} ({release.CollectionId})";
-                var response = client.Post(request);
+                var response = ApiPost("releases", release);
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     index++;
@@ -71,10 +64,7 @@ namespace Downgrooves.WorkerService.Services
 
         public IEnumerable<ITunesExclusion> GetExclusions()
         {
-            var client = new RestClient(_appConfig.ApiUrl);
-            client.Authenticator = new JwtAuthenticator(_appConfig.Token);
-            var request = new RestRequest("releases/exclusions");
-            var response = client.Get(request);
+            var response = ApiGet("releases/exclusions");
             if (response.StatusCode == HttpStatusCode.OK)
                 return JsonConvert.DeserializeObject<IEnumerable<ITunesExclusion>>(response.Content);
             else
@@ -84,78 +74,160 @@ namespace Downgrooves.WorkerService.Services
 
         public IEnumerable<Release> GetReleases()
         {
-            IEnumerable<Release> collections = null;
-            var client = new RestClient(_appConfig.ApiUrl);
-            client.Authenticator = new JwtAuthenticator(_appConfig.Token);
-            var request = new RestRequest("releases");
-            var response = client.Get(request);
+            var response = ApiGet("releases");
             if (response.StatusCode == HttpStatusCode.OK)
+            {
                 if (response.Content != null && response.Content != "[]")
+                {
                     return JsonConvert.DeserializeObject<Release[]>(response.Content);
-                else
-                    return null;
+                }
+            }
             else
                 _logger.LogError($"Error getting existing releases.  {response.Content}");
-            return collections;
+            return null;
         }
 
-        #endregion Release API
+        #endregion Downgrooves Release API
 
-        #region iTunes API
+        #region Downgrooves iTunes API
 
-        public Release LookupCollectionById(int collectionId)
+        public void AddNewITunesItems(IEnumerable<ITunesLookupResultItem> items)
         {
-            string data = null;
+            try
+            {
+                var response = ApiPost("itunes/range", items);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    index++;
+                    _logger.LogInformation($"Added {items.Count()} items.");
+                }
+                else if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    // do nothing
+                }
+                else
+                    _logger.LogError($"Error adding {items.Count()} items.  {response.Content}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                _logger.LogError(ex.StackTrace);
+            }
+        }
+
+        public void AddNewITunesItem(ITunesLookupResultItem item)
+        {
+            try
+            {
+                var description = $"{item.ArtistName} - {item.CollectionName} ({item.CollectionId})";
+                var response = ApiPost("itunes", item);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    index++;
+                    _logger.LogInformation($"Added {description}");
+                }
+                else if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    // do nothing
+                }
+                else
+                    _logger.LogError($"Error adding {description}.  {response.Content}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                _logger.LogError(ex.StackTrace);
+            }
+        }
+
+        public IEnumerable<ITunesLookupResultItem> GetITunesLookupResultItems()
+        {
+            var response = ApiGet("itunes");
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                if (response.Content != null && response.Content != "[]")
+                {
+                    return JsonConvert.DeserializeObject<ITunesLookupResultItem[]>(response.Content);
+                }
+            }
+            else
+                _logger.LogError($"Error getting existing itunes items.  {response.Content}");
+            return null;
+        }
+
+        #endregion Downgrooves iTunes API
+
+        #region Apple iTunes API
+
+        public ITunesLookupResultItem LookupCollectionById(int collectionId)
+        {
             string url = $"https://itunes.apple.com/lookup?id={collectionId}&entity=song";
-            using (var webClient = new WebClient())
-                data = webClient.DownloadString(url);
-            return JObject.Parse(data).ToObjects<Release>("results").FirstOrDefault();
+            var data = GetString(url);
+            return JObject.Parse(data).ToObjects<ITunesLookupResultItem>("results").FirstOrDefault();
         }
 
-        public IEnumerable<Release> LookupTracksCollectionById(int collectionId)
+        public IEnumerable<ITunesLookupResultItem> LookupTracksCollectionById(int collectionId)
         {
-            string data = null;
             string url = $"https://itunes.apple.com/lookup?id={collectionId}&entity=song";
-            using (var webClient = new WebClient())
-                data = webClient.DownloadString(url);
-            return JObject.Parse(data)?.ToObjects<Release>("results")?.Where(x => x.WrapperType == "track");
+            var data = GetString(url);
+            return JObject.Parse(data)?.ToObjects<ITunesLookupResultItem>("results")?.Where(x => x.WrapperType == "track");
         }
 
-        public IEnumerable<Release> LookupCollections(string searchTerm)
+        public IEnumerable<ITunesLookupResultItem> LookupCollections(string searchTerm)
         {
-            string data = null;
             string url = $"https://itunes.apple.com/search/?term={searchTerm}&entity=musicArtist,musicTrack,album,mix,song&media=music&limit=200";
-            using (var webClient = new WebClient())
-                data = webClient.DownloadString(url);
-            return JObject.Parse(data)?.ToObjects<Release>("results")?.Where(x => x.WrapperType == "collection");
+            var data = GetString(url);
+            return JObject.Parse(data)?.ToObjects<ITunesLookupResultItem>("results")?.Where(x => x.WrapperType == "collection");
         }
 
-        public IEnumerable<Release> LookupTracks(string searchTerm)
+        public IEnumerable<ITunesLookupResultItem> LookupTracks(string searchTerm)
         {
-            string data = null;
             string url = $"https://itunes.apple.com/search?term={searchTerm}&entity=song";
-            using (var webClient = new WebClient())
-                data = webClient.DownloadString(url);
-            return JObject.Parse(data)?.ToObjects<Release>("results")?.Where(x => x.WrapperType == "track");
+            var data = GetString(url);
+            return JObject.Parse(data)?.ToObjects<ITunesLookupResultItem>("results")?.Where(x => x.WrapperType == "track");
         }
 
-        #endregion iTunes API
+        #endregion Apple iTunes API
 
         #region YouTube API
 
         public IEnumerable<Video> GetYouTubeVideosJson()
         {
-            string data = null;
             var ApiKey = _appConfig.YouTube.ApiKey;
             string url = $"https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&maxResults=100&playlistId=PLvrGGNimrTIMSxEt7InO9NK_aUplnK513&key={ApiKey}";
-            using (var webClient = new WebClient())
-                data = webClient.DownloadString(url);
+            var data = GetString(url);
             var results = JsonConvert.DeserializeObject<YouTubeLookupResult>(data);
             var videos = results?.Items?.ToVideos();
             return videos;
         }
 
         #endregion YouTube API
+
+        private string GetString(string resource)
+        {
+            using (var webClient = new WebClient())
+                return webClient.DownloadString(resource);
+        }
+
+        private IRestResponse ApiGet(string resource)
+        {
+            var client = new RestClient(_appConfig.ApiUrl);
+            client.Authenticator = new JwtAuthenticator(_appConfig.Token);
+            var request = new RestRequest(resource);
+            return client.Get(request);
+        }
+
+        private IRestResponse ApiPost(string resource, object value)
+        {
+            var client = new RestClient(_appConfig.ApiUrl);
+            client.Authenticator = new JwtAuthenticator(_appConfig.Token);
+            var request = new RestRequest(resource, Method.POST);
+            var settings = new JsonSerializerSettings();
+            settings.NullValueHandling = NullValueHandling.Ignore;
+            var json = JsonConvert.SerializeObject(value, settings);
+            request.AddParameter("application/json", json, ParameterType.RequestBody);
+            return client.Post(request);
+        }
     }
 
     public static class ApiClientServiceExtensions
