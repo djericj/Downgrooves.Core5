@@ -25,7 +25,10 @@ namespace Downgrooves.Persistence
 
         public override async Task<IEnumerable<Release>> FindAsync(Expression<Func<Release, bool>> predicate)
         {
-            return await DowngroovesDbContext.Releases.Include(x => x.Tracks).Where(predicate).ToListAsync();
+            return await DowngroovesDbContext.Releases
+                .Include(x => x.Tracks.OrderBy(t => t.TrackNumber))
+                .Where(predicate)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Release>> GetReleases(string artistName = null)
