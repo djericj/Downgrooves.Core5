@@ -66,7 +66,9 @@ namespace Downgrooves.WebApi
                 setup.IncludeExceptionDetails = (ctx, env) => WebHostEnvironment.IsDevelopment();
             });
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddAuthentication(auth =>
             {
                 auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

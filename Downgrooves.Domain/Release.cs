@@ -38,7 +38,7 @@ namespace Downgrooves.Domain
         public DateTime ReleaseDate { get; set; }
         public string Title { get; set; }
 
-        [JsonIgnore]
+        [InverseProperty("Release")]
         public ICollection<ReleaseTrack> Tracks { get; set; }
 
         public int VendorId { get; set; }

@@ -36,9 +36,13 @@ namespace Downgrooves.Persistence
             modelBuilder.Entity<ITunesExclusion>()
                 .HasNoKey();
 
+            modelBuilder.Entity<ReleaseTrack>()
+                .ToTable("releaseTrack");
+
             modelBuilder.Entity<Release>()
                 .HasMany(x => x.Tracks)
-                .WithOne(y => y.Release);
+                .WithOne(y => y.Release)
+                .IsRequired();
         }
     }
 }

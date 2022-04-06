@@ -19,7 +19,7 @@ namespace Downgrooves.Domain
         [JsonIgnore]
         public Release Release { get; set; }
 
-        [JsonIgnore]
+        [ForeignKey("Release")]
         public int ReleaseId { get; set; }
 
         public int SourceSystemId { get; set; }
