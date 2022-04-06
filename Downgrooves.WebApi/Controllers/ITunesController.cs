@@ -67,6 +67,21 @@ namespace Downgrooves.WebApi.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("exclusions")]
+        public async Task<IActionResult> GetExclusions()
+        {
+            try
+            {
+                return Ok(await _service.GetExclusions());
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.GetExclusions {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
         [HttpPost]
         [Route("track")]
         public async Task<IActionResult> AddTrack(ITunesTrack item)
@@ -84,7 +99,7 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("tracks")]
-        public async Task<IActionResult> AddTracks(IEnumerable<ITunesCollection> items)
+        public async Task<IActionResult> AddTracks(IEnumerable<ITunesTrack> items)
         {
             try
             {

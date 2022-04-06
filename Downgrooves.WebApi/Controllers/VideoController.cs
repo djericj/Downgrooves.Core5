@@ -3,6 +3,7 @@ using Downgrooves.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Controllers
@@ -19,6 +20,21 @@ namespace Downgrooves.WebApi.Controllers
         {
             _service = service;
             _logger = logger;
+        }
+
+        [HttpGet]
+        [Route("/video/{id}")]
+        public async Task<IActionResult> GetVideo(string id)
+        {
+            try
+            {
+                return Ok(await _service.Find(x => x.Id == id));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(VideoController)}.GetVideos {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
         }
 
         [HttpGet]
@@ -51,6 +67,7 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPost]
+        [Route("/video")]
         public IActionResult Add(Video video)
         {
             try
@@ -60,6 +77,20 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.Add {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult AddRange(IEnumerable<Video> videos)
+        {
+            try
+            {
+                return Ok(_service.AddRange(videos));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(VideoController)}.AddRange {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }

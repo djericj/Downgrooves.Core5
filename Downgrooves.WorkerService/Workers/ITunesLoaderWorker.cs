@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Downgrooves.WorkerService.Extensions;
 
 namespace Downgrooves.WorkerService.Workers
 {
@@ -19,19 +20,16 @@ namespace Downgrooves.WorkerService.Workers
         private readonly AppConfig _appConfig;
         private readonly IApiClientService _clientService;
         private readonly IArtworkService _artworkService;
-        private readonly IReleaseService _releaseService;
 
         public ITunesLoaderWorker(ILogger<ITunesLoaderWorker> logger,
             IOptions<AppConfig> config,
             IApiClientService clientService,
-            IReleaseService releaseService,
             IArtworkService artworkService)
         {
             _logger = logger;
             _appConfig = config.Value;
             _clientService = clientService;
             _artworkService = artworkService;
-            _releaseService = releaseService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -44,102 +42,106 @@ namespace Downgrooves.WorkerService.Workers
 
                 foreach (var artist in artists)
                 {
-                    AddNewCollections(artist);
-
-                    AddNewTracks(artist);
+                    await AddNewCollections(artist);
+                    await AddNewCollectionsForRemixes(artist);
                 }
 
-                AddITunesItems();
+                await AddNewTracks();
+                await AddNewReleases();
 
-                // get artwork for everything
-                _artworkService.GetArtwork("collections");
-                _artworkService.GetArtwork("tracks");
+                await _artworkService.GetArtwork("collections");
+                await _artworkService.GetArtwork("tracks");
+
+                _logger.LogInformation("Finished.");
 
                 await Task.Delay(_appConfig.ITunes.PollInterval * 1000);
             }
         }
 
-        private void AddNewCollections(string artistName)
+        private async Task AddNewCollections(string artistName)
         {
-            var exclusions = _clientService.GetExclusions();
+            var exclusions = await _clientService.GetExclusions();
 
-            var collections = _clientService.LookupCollections(artistName);
+            var collections = await _clientService.LookupCollections(artistName);
+
+            var existingCollections = await _clientService.GetCollections();
 
             collections = collections.Where(x => exclusions.All(x2 => x2.CollectionId != x.CollectionId));
 
-            if (collections != null)
-                _releaseService.AddCollections(collections.ToReleases());
-        }
+            if (existingCollections != null)
+                collections = collections.Where(x => existingCollections.All(x2 => x2.CollectionId != x.CollectionId));
 
-        private void AddNewTracks(string artistName)
-        {
-            var tracks = _clientService.LookupTracks(artistName);
+            collections = collections.GroupBy(x => x.CollectionId).Select(x => x.First()).ToList();
 
-            tracks = tracks.GroupBy(x => x.CollectionId).Select(x => x.First()).ToList();
-
-            _releaseService.AddCollections(tracks.ToReleases());
-        }
-
-        private void AddITunesItems()
-        {
-            var releases = _clientService.GetReleases();
-            var existingItems = _clientService.GetITunesLookupResultItems();
-            if (existingItems != null)
-                releases = releases.Where(x => existingItems.All(x2 => x2.CollectionId != x.CollectionId));
-            foreach (var release in releases)
+            if (collections != null && collections.Count() > 0)
             {
-                var items = new List<ITunesLookupResultItem>();
-                var tracks = _clientService.LookupTracksCollectionById(release.CollectionId);
-                _clientService.AddNewITunesItems(tracks);
+                _logger.LogInformation($"Adding {collections.Count()} collections.");
+                await _clientService.AddNewCollections(collections.ToITunesCollections());
             }
         }
-    }
 
-    public static class ITunesLoaderWorkerExtensions
-    {
-        public static IList<Release> ToReleases(this IEnumerable<ITunesLookupResultItem> items)
+        private async Task AddNewCollectionsForRemixes(string artistName)
         {
-            var releases = new List<Release>();
-            foreach (var item in items)
+            var tracks = await _clientService.LookupTracks(artistName);
+
+            var collections = await _clientService.GetCollections();
+
+            tracks = tracks
+                .Where(x => x.WrapperType == "track")
+                .GroupBy(x => x.CollectionId)
+                .Select(x => x.First())
+                .ToList();
+
+            tracks = tracks.Where(x => collections.All(x2 => x2.CollectionId != x.CollectionId));
+
+            if (tracks.Count() > 0)
             {
-                releases.Add(new Release()
-                {
-                    ArtistId = item.ArtistId,
-                    ArtistName = item.ArtistName,
-                    ArtistViewUrl = item.ArtistViewUrl,
-                    ArtworkUrl100 = item.ArtworkUrl100,
-                    ArtworkUrl30 = item.ArtworkUrl30,
-                    ArtworkUrl60 = item.ArtworkUrl60,
-                    CollectionCensoredName = item.CollectionCensoredName,
-                    CollectionExplicitness = item.CollectionExplicitness,
-                    CollectionId = item.CollectionId,
-                    CollectionName = item.CollectionName,
-                    CollectionPrice = item.CollectionPrice,
-                    CollectionType = item.CollectionType,
-                    CollectionViewUrl = item.CollectionViewUrl,
-                    Copyright = item.Copyright,
-                    Country = item.Country,
-                    Currency = item.Currency,
-                    DiscCount = item.DiscCount,
-                    DiscNumber = item.DiscNumber,
-                    IsStreamable = item.IsStreamable,
-                    Kind = item.Kind,
-                    PreviewUrl = item.PreviewUrl,
-                    PrimaryGenreName = item.PrimaryGenreName,
-                    ReleaseDate = item.ReleaseDate,
-                    TrackCensoredName = item.TrackCensoredName,
-                    TrackCount = item.TrackCount,
-                    TrackExplicitness = item.TrackExplicitness,
-                    TrackId = item.TrackId,
-                    TrackName = item.TrackName,
-                    TrackNumber = item.TrackNumber,
-                    TrackPrice = item.TrackPrice,
-                    TrackTimeMillis = item.TrackTimeMillis,
-                    TrackViewUrl = item.TrackViewUrl,
-                    WrapperType = item.WrapperType
-                });
+                _logger.LogInformation($"Adding {tracks.Count()} tracks.");
+                await _clientService.AddNewCollections(tracks.ToITunesCollections());
             }
-            return releases;
+        }
+
+        private async Task AddNewTracks()
+        {
+            var collections = await _clientService.GetCollections();
+            var tracks = await _clientService.GetTracks();
+            var items = new List<ITunesLookupResultItem>();
+            foreach (var item in collections)
+                items.AddRange(await _clientService.LookupTracksCollectionById(item.CollectionId));
+            if (tracks != null)
+                items = items.Where(x => tracks.All(x2 => x2.TrackId != x.TrackId)).ToList();
+
+            if (items.Count() > 0)
+            {
+                _logger.LogInformation($"Adding {items.Count()} tracks for collections.");
+                await _clientService.AddNewTracks(items.ToITunesTracks());
+            }
+        }
+
+        private async Task AddNewReleases()
+        {
+            var releases = await _clientService.GetReleases();
+            var collections = await _clientService.GetCollections();
+            var tracks = await _clientService.GetTracks();
+            var newReleases = new List<Release>();
+            if (releases != null)
+                collections = collections.Where(x => releases.All(x2 => x2.SourceSystemId != x.CollectionId)).ToList();
+            foreach (var collection in collections)
+            {
+                var release = collection.ToRelease();
+                release = await _clientService.AddNewRelease(release);
+                release.Tracks = tracks.Where(x => x.CollectionId == collection.CollectionId).ToReleaseTracks(release.Id) as ICollection<ReleaseTrack>;
+                await AddNewReleaseTracks(release.Tracks);
+            }
+            if (newReleases != null)
+                await _clientService.AddNewReleases(newReleases);
+        }
+
+        private async Task AddNewReleaseTracks(IEnumerable<ReleaseTrack> releaseTracks)
+        {
+            var count = await _clientService.AddNewReleaseTracks(releaseTracks);
+            if (count > 0)
+                _logger.LogInformation($"Adding {count} tracks for collection.");
         }
     }
 }

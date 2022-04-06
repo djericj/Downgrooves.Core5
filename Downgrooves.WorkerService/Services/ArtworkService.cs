@@ -1,50 +1,43 @@
-﻿using Downgrooves.Domain;
-using Downgrooves.Domain.ITunes;
+﻿using Downgrooves.Domain.ITunes;
+using Downgrooves.WorkerService.Base;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Authenticators;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Downgrooves.WorkerService.Services
 {
-    public class ArtworkService : IArtworkService
+    public class ArtworkService : ApiBase, IArtworkService
     {
-        private readonly AppConfig _appConfig;
         private readonly ILogger<ArtworkService> _logger;
         public string ApiUrl { get; }
         public string Token { get; }
         public string ArtworkBasePath { get; }
 
-        public ArtworkService(IOptions<AppConfig> config, ILogger<ArtworkService> logger)
+        public ArtworkService(IOptions<AppConfig> config, ILogger<ArtworkService> logger) : base(config)
         {
-            _appConfig = config.Value;
-            ApiUrl = _appConfig.ApiUrl;
-            Token = _appConfig.Token;
-            ArtworkBasePath = _appConfig.ArtworkBasePath;
+            ApiUrl = config.Value.ApiUrl;
+            Token = config.Value.Token;
+            ArtworkBasePath = config.Value.ArtworkBasePath;
             _logger = logger;
         }
 
-        public void GetArtwork(string type)
+        public async Task GetArtwork(string type)
         {
             try
             {
-                var client = new RestClient(ApiUrl);
-                client.Authenticator = new JwtAuthenticator(Token);
-                var request = new RestRequest("releases", Method.GET);
-                var settings = new JsonSerializerSettings();
-                settings.NullValueHandling = NullValueHandling.Ignore;
-                var response = client.Get(request);
+                var response = await ApiGet($"itunes/{type}");
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    var collections = JsonConvert.DeserializeObject<Release[]>(response.Content);
+                    var collections = JsonConvert.DeserializeObject<ITunesCollection[]>(response.Content);
                     if (collections != null)
-                        GetArtwork(collections, type);
+                        await GetArtwork(collections, type);
                 }
                 else if (response.StatusCode == HttpStatusCode.NoContent)
                 {
@@ -60,13 +53,13 @@ namespace Downgrooves.WorkerService.Services
             }
         }
 
-        private void GetArtwork(Release[] collections, string type)
+        private async Task GetArtwork(IEnumerable<ITunesCollection> collections, string type)
         {
             foreach (var item in collections)
-                GetArtwork(item, type);
+                await GetArtwork(item, type);
         }
 
-        private void GetArtwork(Release collection, string type)
+        private async Task GetArtwork(ITunesCollection collection, string type)
         {
             var fileName = collection.CollectionId.ToString();
             var imagePath = Path.Combine(ArtworkBasePath, type, $"{fileName}.jpg");
@@ -76,7 +69,7 @@ namespace Downgrooves.WorkerService.Services
                 {
                     try
                     {
-                        client.DownloadFile(new Uri(collection.ArtworkUrl100.Replace("100x100", "500x500")), $"{imagePath}");
+                        await client.DownloadFileTaskAsync(new Uri(collection.ArtworkUrl100.Replace("100x100", "500x500")), $"{imagePath}");
                         _logger.LogInformation($"Downloaded artwork {imagePath}");
                     }
                     catch (Exception ex)

@@ -17,7 +17,7 @@ namespace Downgrooves.WorkerService.Workers
 
         public YouTubeLoaderWorker(IOptions<AppConfig> config, ILogger<YouTubeLoaderWorker> logger, IYouTubeService youTubeService)
         {
-            _appConfig = config.Value;  
+            _appConfig = config.Value;
             _logger = logger;
             _youTubeService = youTubeService;
         }
@@ -27,7 +27,7 @@ namespace Downgrooves.WorkerService.Workers
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("YouTubeLoaderWorker ticked at: {time}", DateTimeOffset.Now);
-                _youTubeService.AddNewVideos();
+                await _youTubeService.AddNewVideos();
                 await Task.Delay(_appConfig.YouTube.PollInterval * 1000);
             }
         }

@@ -1,7 +1,9 @@
-﻿namespace Downgrooves.WorkerService.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace Downgrooves.WorkerService.Interfaces
 {
     public interface IArtworkService
     {
-        void GetArtwork(string type);
+        Task GetArtwork(string type);
     }
 }

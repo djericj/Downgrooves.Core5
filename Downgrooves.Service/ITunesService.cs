@@ -93,6 +93,11 @@ namespace Downgrooves.Service
             return await _unitOfWork.ITunesTrack.GetAllAsync();
         }
 
+        public async Task<IEnumerable<ITunesExclusion>> GetExclusions()
+        {
+            return await _unitOfWork.ITunesExclusion.GetAllAsync();
+        }
+
         public async Task<IEnumerable<ITunesLookupResultItem>> Lookup(int Id)
         {
             try

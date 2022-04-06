@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Downgrooves.Domain.ITunes;
+using Newtonsoft.Json;
 
 namespace Downgrooves.Domain
 {
@@ -12,6 +13,7 @@ namespace Downgrooves.Domain
     [Table("release")]
     public class Release
     {
+        public int SourceSystemId { get; set; }
         public string ArtistName { get; set; }
         public string ArtistViewUrl { get; set; }
         public string BuyUrl { get; set; }
@@ -36,7 +38,9 @@ namespace Downgrooves.Domain
         public DateTime ReleaseDate { get; set; }
         public string Title { get; set; }
 
-        [NotMapped]
-        public IEnumerable<ReleaseTrack> Tracks { get; set; }
+        [JsonIgnore]
+        public ICollection<ReleaseTrack> Tracks { get; set; }
+
+        public int VendorId { get; set; }
     }
 }

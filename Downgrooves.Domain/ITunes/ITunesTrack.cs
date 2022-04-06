@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Downgrooves.Domain.ITunes
 {
     /// <summary>
     /// A row in the iTunesTrack table.
     /// </summary>
+    [Table("iTunesTrack")]
     public class ITunesTrack : ITunesItem
     {
         [Key]

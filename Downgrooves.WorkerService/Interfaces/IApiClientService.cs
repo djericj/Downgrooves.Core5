@@ -1,33 +1,44 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Domain.ITunes;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Downgrooves.WorkerService.Interfaces
 {
     public interface IApiClientService
     {
-        void AddNewITunesItem(ITunesLookupResultItem item);
+        Task<ITunesCollection> AddNewCollection(ITunesCollection item);
 
-        void AddNewITunesItems(IEnumerable<ITunesLookupResultItem> items);
+        Task<IEnumerable<ITunesCollection>> AddNewCollections(IEnumerable<ITunesCollection> items);
 
-        void AddNewRelease(Release release);
+        Task<ITunesTrack> AddNewTrack(ITunesTrack item);
 
-        int AddNewReleases(IEnumerable<Release> releases);
+        Task<IEnumerable<ITunesTrack>> AddNewTracks(IEnumerable<ITunesTrack> items);
 
-        IEnumerable<ITunesExclusion> GetExclusions();
+        Task<Release> AddNewRelease(Release release);
 
-        IEnumerable<ITunesLookupResultItem> GetITunesLookupResultItems();
+        Task<ReleaseTrack> AddNewReleaseTrack(ReleaseTrack releaseTrack);
 
-        IEnumerable<Release> GetReleases();
+        Task<int> AddNewReleases(IEnumerable<Release> releases);
 
-        IEnumerable<Video> GetYouTubeVideosJson();
+        Task<int> AddNewReleaseTracks(IEnumerable<ReleaseTrack> releaseTracks);
 
-        ITunesLookupResultItem LookupCollectionById(int collectionId);
+        Task<IEnumerable<ITunesExclusion>> GetExclusions();
 
-        IEnumerable<ITunesLookupResultItem> LookupCollections(string searchTerm);
+        Task<IEnumerable<ITunesCollection>> GetCollections();
 
-        IEnumerable<ITunesLookupResultItem> LookupTracks(string searchTerm);
+        Task<IEnumerable<ITunesTrack>> GetTracks();
 
-        IEnumerable<ITunesLookupResultItem> LookupTracksCollectionById(int collectionId);
+        Task<IEnumerable<Release>> GetReleases();
+
+        Task<IEnumerable<Video>> GetYouTubeVideosJson();
+
+        Task<ITunesLookupResultItem> LookupCollectionById(int collectionId);
+
+        Task<IEnumerable<ITunesLookupResultItem>> LookupCollections(string searchTerm);
+
+        Task<IEnumerable<ITunesLookupResultItem>> LookupTracks(string searchTerm);
+
+        Task<IEnumerable<ITunesLookupResultItem>> LookupTracksCollectionById(int collectionId);
     }
 }

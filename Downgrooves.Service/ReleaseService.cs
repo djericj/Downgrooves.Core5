@@ -13,15 +13,13 @@ namespace Downgrooves.Service
 {
     public class ReleaseService : IReleaseService
     {
-        private readonly IITunesService _iTunesService;
         private readonly ILogger<IReleaseService> _logger;
         private IUnitOfWork _unitOfWork;
 
-        public ReleaseService(IUnitOfWork unitOfWork, ILogger<ReleaseService> logger, IITunesService iTunesService)
+        public ReleaseService(IUnitOfWork unitOfWork, ILogger<ReleaseService> logger)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
-            _iTunesService = iTunesService;
         }
 
         public async Task<Release> Add(Release release)
@@ -54,19 +52,41 @@ namespace Downgrooves.Service
             }
         }
 
+        public async Task<ReleaseTrack> Add(ReleaseTrack releaseTrack)
+        {
+            try
+            {
+                _unitOfWork.ReleaseTracks.Add(releaseTrack);
+                await _unitOfWork.CompleteAsync();
+                return releaseTrack;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.Add {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<ReleaseTrack>> AddRange(IEnumerable<ReleaseTrack> releaseTracks)
+        {
+            try
+            {
+                _unitOfWork.ReleaseTracks.AddRange(releaseTracks);
+                await _unitOfWork.CompleteAsync();
+                return releaseTracks;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.AddRange {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
         public List<ITunesExclusion> GetExclusions() => _unitOfWork.Releases.Exclusions;
 
         public async Task<IEnumerable<Release>> GetReleases(Expression<Func<Release, bool>> predicate)
         {
-            var releases = new List<Release>();
-            var release = await _unitOfWork.Releases.FindAsync(predicate);
-            //foreach (var item in release)
-            //{
-            //    var newRelease = item;
-            //    newRelease.Tracks = await _iTunesService.Lookup(item.CollectionId);
-            //    releases.Add(newRelease);
-            //}
-            return release;
+            return await _unitOfWork.Releases.FindAsync(predicate);
         }
 
         public async Task<IEnumerable<Release>> GetReleases(string artistName = null)

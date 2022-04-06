@@ -13,6 +13,10 @@ namespace Downgrooves.Service.Interfaces
 
         Task<IEnumerable<Release>> AddRange(IEnumerable<Release> releases);
 
+        Task<ReleaseTrack> Add(ReleaseTrack releaseTrack);
+
+        Task<IEnumerable<ReleaseTrack>> AddRange(IEnumerable<ReleaseTrack> releaseTracks);
+
         List<ITunesExclusion> GetExclusions();
 
         Task<IEnumerable<Release>> GetReleases(Expression<Func<Release, bool>> predicate);

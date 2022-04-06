@@ -19,8 +19,14 @@ namespace Downgrooves.Domain
         [JsonIgnore]
         public Release Release { get; set; }
 
+        [JsonIgnore]
+        public int ReleaseId { get; set; }
+
+        public int SourceSystemId { get; set; }
         public string Title { get; set; }
         public int TrackNumber { get; set; }
+
+        [Column("trackTimeInMillis")]
         public int TrackTimeInMilliseconds { get; set; }
     }
 }

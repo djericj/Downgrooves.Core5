@@ -18,6 +18,8 @@ namespace Downgrooves.Service.Interfaces
 
         Task<IEnumerable<ITunesTrack>> GetTracks();
 
+        Task<IEnumerable<ITunesExclusion>> GetExclusions();
+
         Task<IEnumerable<ITunesLookupResultItem>> Lookup(int Id);
     }
 }
