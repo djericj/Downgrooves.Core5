@@ -12,6 +12,7 @@ namespace Downgrooves.WorkerService.Extensions
             {
                 ArtistName = item.ArtistName,
                 ArtistViewUrl = item.ArtistViewUrl,
+                ArtworkUrl = item.CollectionId + ".jpg",
                 Copyright = item.Copyright,
                 Country = item.Country,
                 ReleaseDate = item.ReleaseDate,
@@ -29,6 +30,7 @@ namespace Downgrooves.WorkerService.Extensions
             {
                 ArtistName = item.ArtistName,
                 ArtistViewUrl = item.ArtistViewUrl,
+                ArtworkUrl = item.CollectionId + ".jpg",
                 Copyright = item.Copyright,
                 Country = item.Country,
                 DiscCount = item.DiscCount,

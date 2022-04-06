@@ -16,6 +16,7 @@ namespace Downgrooves.Domain
         public int SourceSystemId { get; set; }
         public string ArtistName { get; set; }
         public string ArtistViewUrl { get; set; }
+        public string ArtworkUrl { get; set; }
         public string BuyUrl { get; set; }
         public string Copyright { get; set; }
         public string Country { get; set; }
