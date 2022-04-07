@@ -30,7 +30,7 @@ namespace Downgrooves.WorkerService.Services
             _logger = logger;
         }
 
-        private async Task<IEnumerable<Video>> GetExistingVideos()
+        public async Task<IEnumerable<Video>> GetExistingVideos()
         {
             var response = await ApiGet("videos");
             var json = response.Content;
@@ -38,21 +38,7 @@ namespace Downgrooves.WorkerService.Services
             return videos;
         }
 
-        public async Task AddNewVideos()
-        {
-            IEnumerable<Video> videosToAdd = new List<Video>();
-            var videos = await GetYouTubeVideosJson();
-            var existingVideos = await GetExistingVideos();
-            if (existingVideos != null && existingVideos.Count() > 0)
-                videosToAdd = videos.Where(x => existingVideos.All(y => x.Id != y.Id));
-            else
-                videosToAdd = videos;
-            var count = await AddNewVideos(videosToAdd);
-            if (count > 0)
-                _logger.LogInformation($"{count} videos added.");
-        }
-
-        private async Task<int> AddNewVideos(IEnumerable<Video> videos)
+        public async Task<int> AddNewVideos(IEnumerable<Video> videos)
         {
             foreach (var video in videos)
                 await AddNewVideo(video);
@@ -66,10 +52,10 @@ namespace Downgrooves.WorkerService.Services
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 index++;
-                Console.WriteLine($"Added {description}");
+                _logger.LogInformation($"Added {description}");
             }
             else
-                Console.Error.WriteLine($"Error adding {description}");
+                _logger.LogError($"Error adding {description}");
         }
 
         #region YouTube API

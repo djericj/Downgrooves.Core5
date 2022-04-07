@@ -62,12 +62,11 @@ namespace Downgrooves.WorkerService.Extensions
             };
         }
 
-        public static Release ToRelease(this ITunesCollection item, Artist artist)
+        public static Release ToRelease(this ITunesCollection item)
         {
             return new Release()
             {
-                ArtistId = artist.ArtistId,
-                //Artist = artist,
+                ArtistId = item.ArtistId,
                 ArtistName = item.ArtistName,
                 ArtistViewUrl = item.ArtistViewUrl,
                 ArtworkUrl = item.CollectionId + ".jpg",
@@ -106,6 +105,14 @@ namespace Downgrooves.WorkerService.Extensions
                 Title = item.CollectionCensoredName,
                 VendorId = 1
             };
+        }
+
+        public static IList<Release> ToReleases(this IEnumerable<ITunesCollection> items)
+        {
+            var releases = new List<Release>();
+            foreach (var item in items)
+                releases.Add(item.ToRelease());
+            return releases;
         }
 
         public static IList<Release> ToReleases(this IEnumerable<ITunesLookupResultItem> items)
@@ -194,14 +201,13 @@ namespace Downgrooves.WorkerService.Extensions
             return collections;
         }
 
-        public static IList<ITunesTrack> ToITunesTracks(this IEnumerable<ITunesLookupResultItem> items, Artist artist)
+        public static IList<ITunesTrack> ToITunesTracks(this IEnumerable<ITunesLookupResultItem> items)
         {
             var tracks = new List<ITunesTrack>();
             foreach (var item in items)
             {
                 tracks.Add(new ITunesTrack()
                 {
-                    ArtistId = artist.ArtistId,
                     ArtistName = item.ArtistName,
                     ArtistViewUrl = item.ArtistViewUrl,
                     ArtworkUrl100 = item.ArtworkUrl100,

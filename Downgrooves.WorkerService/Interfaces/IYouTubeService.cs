@@ -6,8 +6,10 @@ namespace Downgrooves.WorkerService.Interfaces
 {
     public interface IYouTubeService
     {
-        Task AddNewVideos();
+        Task<IEnumerable<Video>> GetExistingVideos();
 
         Task<IEnumerable<Video>> GetYouTubeVideosJson();
+
+        Task<int> AddNewVideos(IEnumerable<Video> videos);
     }
 }

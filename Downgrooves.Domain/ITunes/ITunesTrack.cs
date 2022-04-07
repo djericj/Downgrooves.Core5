@@ -10,6 +10,9 @@ namespace Downgrooves.Domain.ITunes
     public class ITunesTrack : ITunesItem
     {
         [Key]
+        [Column("iTunesTrackId")]
+        public int Id { get; set; }
+
         public int TrackId { get; set; }
 
         public string Kind { get; set; }

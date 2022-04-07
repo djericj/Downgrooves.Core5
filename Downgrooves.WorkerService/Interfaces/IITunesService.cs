@@ -19,6 +19,6 @@ namespace Downgrooves.WorkerService.Interfaces
 
         Task<IEnumerable<ITunesCollection>> GetCollections(Artist artist = null);
 
-        Task<IEnumerable<ITunesTrack>> GetTracks(Artist artist);
+        Task<IEnumerable<ITunesTrack>> GetTracks(Artist artist = null);
     }
 }

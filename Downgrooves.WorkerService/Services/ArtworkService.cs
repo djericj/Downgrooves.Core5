@@ -4,7 +4,6 @@ using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,23 +27,12 @@ namespace Downgrooves.WorkerService.Services
             _logger = logger;
         }
 
-        public async Task GetArtwork(string type)
+        public async Task GetArtwork(IEnumerable<ITunesTrack> tracks)
         {
             try
             {
-                var response = await ApiGet($"itunes/{type}");
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    var collections = JsonConvert.DeserializeObject<ITunesCollection[]>(response.Content);
-                    if (collections != null)
-                        await GetArtwork(collections, type);
-                }
-                else if (response.StatusCode == HttpStatusCode.NoContent)
-                {
-                    // do nothing
-                }
-                else
-                    _logger.LogError($"Error adding artwork for collections.  Status:  {response.StatusCode}.  Error: {response.ErrorMessage}");
+                foreach (var item in tracks)
+                    await GetArtwork(item);
             }
             catch (Exception ex)
             {
@@ -53,16 +41,46 @@ namespace Downgrooves.WorkerService.Services
             }
         }
 
-        private async Task GetArtwork(IEnumerable<ITunesCollection> collections, string type)
+        public async Task GetArtwork(IEnumerable<ITunesCollection> collections)
         {
-            foreach (var item in collections)
-                await GetArtwork(item, type);
+            try
+            {
+                foreach (var item in collections)
+                    await GetArtwork(item);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                _logger.LogError(ex.StackTrace);
+            }
         }
 
-        private async Task GetArtwork(ITunesCollection collection, string type)
+        private async Task GetArtwork(ITunesTrack track)
+        {
+            var fileName = track.TrackId.ToString();
+            var imagePath = Path.Combine(ArtworkBasePath, "tracks", $"{fileName}.jpg");
+            if (!File.Exists(imagePath))
+            {
+                using (WebClient client = new WebClient())
+                {
+                    try
+                    {
+                        await client.DownloadFileTaskAsync(new Uri(track.ArtworkUrl100.Replace("100x100", "500x500")), $"{imagePath}");
+                        _logger.LogInformation($"Downloaded track artwork {imagePath}");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.Message);
+                        _logger.LogError(ex.StackTrace);
+                    }
+                }
+            }
+        }
+
+        private async Task GetArtwork(ITunesCollection collection)
         {
             var fileName = collection.CollectionId.ToString();
-            var imagePath = Path.Combine(ArtworkBasePath, type, $"{fileName}.jpg");
+            var imagePath = Path.Combine(ArtworkBasePath, "collections", $"{fileName}.jpg");
             if (!File.Exists(imagePath))
             {
                 using (WebClient client = new WebClient())
@@ -70,7 +88,7 @@ namespace Downgrooves.WorkerService.Services
                     try
                     {
                         await client.DownloadFileTaskAsync(new Uri(collection.ArtworkUrl100.Replace("100x100", "500x500")), $"{imagePath}");
-                        _logger.LogInformation($"Downloaded artwork {imagePath}");
+                        _logger.LogInformation($"Downloaded collection artwork {imagePath}");
                     }
                     catch (Exception ex)
                     {

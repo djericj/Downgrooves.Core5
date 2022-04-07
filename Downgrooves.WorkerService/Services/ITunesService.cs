@@ -160,9 +160,12 @@ namespace Downgrooves.WorkerService.Services
             }
         }
 
-        public async Task<IEnumerable<ITunesTrack>> GetTracks(Artist artist)
+        public async Task<IEnumerable<ITunesTrack>> GetTracks(Artist artist = null)
         {
-            var response = await ApiGet($"itunes/tracks?artistName={artist.Name}");
+            var resource = "itunes/tracks";
+            if (artist != null)
+                resource += $"?artistName={artist.Name}";
+            var response = await ApiGet(resource);
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 if (response.Content != null && response.Content != "[]")
