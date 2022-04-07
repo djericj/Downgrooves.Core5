@@ -10,6 +10,7 @@ namespace Downgrooves.Persistence
         {
         }
 
+        public DbSet<Artist> Artists { get; set; }
         public DbSet<ITunesExclusion> ITunesExclusions { get; set; }
         public DbSet<ITunesCollection> ITunesCollections { get; set; }
         public DbSet<ITunesTrack> ITunesTracks { get; set; }
@@ -27,22 +28,26 @@ namespace Downgrooves.Persistence
 
             modelBuilder.Entity<Mix>()
                 .HasMany(x => x.Tracks)
-                .WithOne(y => y.Mix);
+                .WithOne(y => y.Mix)
+                .HasForeignKey(z => z.TrackId);
 
             modelBuilder.Entity<Video>()
                 .HasMany(x => x.Thumbnails)
-                .WithOne(y => y.Video);
+                .WithOne(y => y.Video)
+                .HasForeignKey(z => z.VideoId);
 
             modelBuilder.Entity<ITunesExclusion>()
                 .HasNoKey();
-
-            modelBuilder.Entity<ReleaseTrack>()
-                .ToTable("releaseTrack");
 
             modelBuilder.Entity<Release>()
                 .HasMany(x => x.Tracks)
                 .WithOne(y => y.Release)
                 .IsRequired();
+
+            //modelBuilder.Entity<Release>()
+            //    .HasOne(x => x.Artist)
+            //    .WithMany(y => y.Releases)
+            //    .IsRequired();
         }
     }
 }

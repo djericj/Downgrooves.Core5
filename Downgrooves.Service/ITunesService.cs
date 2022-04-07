@@ -53,9 +53,12 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<IEnumerable<ITunesCollection>> GetCollections()
+        public async Task<IEnumerable<ITunesCollection>> GetCollections(string artistName = null)
         {
-            return await _unitOfWork.ITunesCollection.GetAllAsync();
+            if (artistName != null)
+                return await _unitOfWork.ITunesCollection.FindAsync(x => x.ArtistName.Contains(artistName));
+            else
+                return await _unitOfWork.ITunesCollection.GetAllAsync();
         }
 
         public async Task<ITunesTrack> Add(ITunesTrack item)
@@ -88,9 +91,12 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<IEnumerable<ITunesTrack>> GetTracks()
+        public async Task<IEnumerable<ITunesTrack>> GetTracks(string artistName = null)
         {
-            return await _unitOfWork.ITunesTrack.GetAllAsync();
+            if (artistName != null)
+                return await _unitOfWork.ITunesTrack.FindAsync(x => x.TrackCensoredName.Contains(artistName));
+            else
+                return await _unitOfWork.ITunesTrack.GetAllAsync();
         }
 
         public async Task<IEnumerable<ITunesExclusion>> GetExclusions()

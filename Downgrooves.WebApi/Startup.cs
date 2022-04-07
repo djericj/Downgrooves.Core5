@@ -102,7 +102,7 @@ namespace Downgrooves.WebApi
             services.AddScoped<Func<DowngroovesDbContext>>((provider) => () => provider.GetService<DowngroovesDbContext>());
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IMixService, MixService>();
-
+            services.AddScoped<IArtistService, ArtistService>();
             services.AddScoped<IITunesService, ITunesService>();
             services.AddScoped<IReleaseService, ReleaseService>();
             services.AddScoped<IUserService, UserService>();

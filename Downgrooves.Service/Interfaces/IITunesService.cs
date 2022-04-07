@@ -10,13 +10,13 @@ namespace Downgrooves.Service.Interfaces
 
         Task<IEnumerable<ITunesCollection>> AddRange(IEnumerable<ITunesCollection> items);
 
-        Task<IEnumerable<ITunesCollection>> GetCollections();
+        Task<IEnumerable<ITunesCollection>> GetCollections(string artistName = null);
 
         Task<ITunesTrack> Add(ITunesTrack item);
 
         Task<IEnumerable<ITunesTrack>> AddRange(IEnumerable<ITunesTrack> items);
 
-        Task<IEnumerable<ITunesTrack>> GetTracks();
+        Task<IEnumerable<ITunesTrack>> GetTracks(string artistName = null);
 
         Task<IEnumerable<ITunesExclusion>> GetExclusions();
 

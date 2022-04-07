@@ -20,6 +20,8 @@ namespace Downgrooves.Domain
 
         [JsonIgnore]
         public Video Video { get; set; }
+
+        public int VideoId { get; set; }
     }
 
     [Table("video")]
@@ -30,9 +32,11 @@ namespace Downgrooves.Domain
         public string ETag { get; set; }
 
         [Column("videoId")]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public DateTime PublishedAt { get; set; }
+
+        public string SourceSystemId { get; set; }
 
         public IList<Thumbnail> Thumbnails { get; set; }
         public string Title { get; set; }

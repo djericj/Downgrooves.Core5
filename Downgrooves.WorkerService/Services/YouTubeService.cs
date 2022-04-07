@@ -1,6 +1,8 @@
 ﻿using Downgrooves.Domain;
+using Downgrooves.Domain.YouTube;
 using Downgrooves.WorkerService.Base;
 using Downgrooves.WorkerService.Config;
+using Downgrooves.WorkerService.Extensions;
 using Downgrooves.WorkerService.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -16,17 +18,15 @@ namespace Downgrooves.WorkerService.Services
     public class YouTubeService : ApiBase, IYouTubeService
     {
         private int index = 0;
-        private readonly IApiClientService _apiClientService;
         private readonly ILogger<YouTubeService> _logger;
 
         public string ApiUrl { get; }
         public string Token { get; }
 
-        public YouTubeService(IOptions<AppConfig> config, IApiClientService apiClientService, ILogger<YouTubeService> logger) : base(config)
+        public YouTubeService(IOptions<AppConfig> config, ILogger<YouTubeService> logger) : base(config)
         {
             ApiUrl = config.Value.ApiUrl;
             Token = config.Value.Token;
-            _apiClientService = apiClientService;
             _logger = logger;
         }
 
@@ -41,7 +41,7 @@ namespace Downgrooves.WorkerService.Services
         public async Task AddNewVideos()
         {
             IEnumerable<Video> videosToAdd = new List<Video>();
-            var videos = await _apiClientService.GetYouTubeVideosJson();
+            var videos = await GetYouTubeVideosJson();
             var existingVideos = await GetExistingVideos();
             if (existingVideos != null && existingVideos.Count() > 0)
                 videosToAdd = videos.Where(x => existingVideos.All(y => x.Id != y.Id));
@@ -71,5 +71,19 @@ namespace Downgrooves.WorkerService.Services
             else
                 Console.Error.WriteLine($"Error adding {description}");
         }
+
+        #region YouTube API
+
+        public async Task<IEnumerable<Video>> GetYouTubeVideosJson()
+        {
+            var ApiKey = _appConfig.YouTube.ApiKey;
+            string url = $"https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&maxResults=100&playlistId=PLvrGGNimrTIMSxEt7InO9NK_aUplnK513&key={ApiKey}";
+            var data = await GetString(url);
+            var results = JsonConvert.DeserializeObject<YouTubeLookupResult>(data);
+            var videos = results?.Items?.ToVideos();
+            return videos;
+        }
+
+        #endregion YouTube API
     }
 }

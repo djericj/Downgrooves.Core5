@@ -24,7 +24,7 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("/video/{id}")]
-        public async Task<IActionResult> GetVideo(string id)
+        public async Task<IActionResult> GetVideo(int id)
         {
             try
             {

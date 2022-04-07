@@ -54,11 +54,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("collections")]
-        public async Task<IActionResult> GetCollections()
+        public async Task<IActionResult> GetCollections([FromQuery] string artistName = null)
         {
             try
             {
-                return Ok(await _service.GetCollections());
+                return Ok(await _service.GetCollections(artistName));
             }
             catch (System.Exception ex)
             {
@@ -114,11 +114,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("tracks")]
-        public async Task<IActionResult> GetTracks()
+        public async Task<IActionResult> GetTracks([FromQuery] string artistName = null)
         {
             try
             {
-                return Ok(await _service.GetTracks());
+                return Ok(await _service.GetTracks(artistName));
             }
             catch (System.Exception ex)
             {

@@ -17,13 +17,13 @@ namespace Downgrooves.Persistence
             _context = context;
         }
 
-        public void Add(T entity) => _context.Set<T>().Add(entity);
+        public virtual void Add(T entity) => _context.Set<T>().Add(entity);
 
-        public async Task AddAsync(T entity) => await _context.Set<T>().AddAsync(entity);
+        public virtual async Task AddAsync(T entity) => await _context.Set<T>().AddAsync(entity);
 
-        public void AddRange(IEnumerable<T> entities) => _context.Set<T>().AddRange(entities);
+        public virtual void AddRange(IEnumerable<T> entities) => _context.Set<T>().AddRange(entities);
 
-        public async Task AddRangeAsync(IEnumerable<T> entities) => await _context.Set<T>().AddRangeAsync(entities);
+        public virtual async Task AddRangeAsync(IEnumerable<T> entities) => await _context.Set<T>().AddRangeAsync(entities);
 
         public IEnumerable<T> Find(Expression<Func<T, bool>> predicate) => _context.Set<T>().Where(predicate);
 

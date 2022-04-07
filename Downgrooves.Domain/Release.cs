@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Downgrooves.Domain.ITunes;
-using Newtonsoft.Json;
+using System.Linq;
 
 namespace Downgrooves.Domain
 {
@@ -14,6 +13,12 @@ namespace Downgrooves.Domain
     public class Release
     {
         public int SourceSystemId { get; set; }
+
+        public Artist Artist { get; set; }
+
+        [ForeignKey("Artist")]
+        public int ArtistId { get; set; }
+
         public string ArtistName { get; set; }
         public string ArtistViewUrl { get; set; }
         public string ArtworkUrl { get; set; }
@@ -28,12 +33,8 @@ namespace Downgrooves.Domain
         [Column("releaseId")]
         public int Id { get; set; }
 
-        [NotMapped]
-        public bool IsOriginal => ArtistName?.Contains("Downgrooves", StringComparison.OrdinalIgnoreCase) ?? false;
-
-        [NotMapped]
-        public bool IsRemix => Title?.Contains("Downgrooves", StringComparison.OrdinalIgnoreCase) ?? false;
-
+        public bool IsOriginal { get; set; }
+        public bool IsRemix { get; set; }
         public string PreviewUrl { get; set; }
         public double Price { get; set; }
         public DateTime ReleaseDate { get; set; }

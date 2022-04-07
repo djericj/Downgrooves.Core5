@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 
 namespace Downgrooves.WorkerService.Interfaces
 {
-    public interface IYouTubeService
+    public interface IArtistService
     {
-        Task AddNewVideos();
-
-        Task<IEnumerable<Video>> GetYouTubeVideosJson();
+        Task<IEnumerable<Artist>> GetArtists();
     }
 }
