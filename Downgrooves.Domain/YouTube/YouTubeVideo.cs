@@ -20,6 +20,7 @@ namespace Downgrooves.Domain.YouTube
     {
         public string Description { get; set; }
         public DateTime PublishedAt { get; set; }
+        public Resource ResourceId { get; set; }
 
         [JsonProperty("thumbnails")]
         public Thumbnails Thumbnails { get; set; }
@@ -46,5 +47,11 @@ namespace Downgrooves.Domain.YouTube
         public int Height { get; set; }
         public string Url { get; set; }
         public int Width { get; set; }
+    }
+
+    public class Resource
+    {
+        public string Kind { get; set; }
+        public string VideoId { get; set; }
     }
 }

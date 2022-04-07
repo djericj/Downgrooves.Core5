@@ -36,7 +36,7 @@ namespace Downgrooves.Service
 
         public async Task<IEnumerable<Mix>> GetMixes()
         {
-            return await _unitOfWork.Mixes.GetMixes();
+            return await _unitOfWork.Mixes.GetAllAsync();
         }
 
         public async Task<IEnumerable<Mix>> GetMixes(PagingParameters parameters)
@@ -46,22 +46,17 @@ namespace Downgrooves.Service
 
         public async Task<IEnumerable<Mix>> GetMixesByCategory(string category)
         {
-            return await _unitOfWork.Mixes.GetMixesByCategory(category);
+            return await _unitOfWork.Mixes.FindAsync(x => x.Category == category);
         }
 
         public async Task<IEnumerable<Mix>> GetMixesByGenre(string genre)
         {
-            return await _unitOfWork.Mixes.GetMixesByGenre(genre);
+            return await _unitOfWork.Mixes.FindAsync(x => x.Genre.Name == genre);
         }
 
-        public async Task<IEnumerable<Mix>> GetShowMixes()
+        public async Task<Mix> GetMix(int id)
         {
-            return await _unitOfWork.Mixes.GetShowMixes();
-        }
-
-        public async Task<IEnumerable<Mix>> GetShowMixes(PagingParameters parameters)
-        {
-            return await _unitOfWork.Mixes.GetShowMixes(parameters);
+            return await _unitOfWork.Mixes.GetMix(id);
         }
     }
 }

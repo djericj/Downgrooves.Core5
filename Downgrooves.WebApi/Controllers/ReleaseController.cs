@@ -130,5 +130,20 @@ namespace Downgrooves.WebApi.Controllers
                 throw;
             }
         }
+
+        [HttpGet]
+        [Route("/release/collection/{collectionId}")]
+        public async Task<IActionResult> GetCollection(int collectionId)
+        {
+            try
+            {
+                return Ok(await _releaseService.GetReleases(x => x.CollectionId == collectionId));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ReleaseController)}.GetReleases {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
     }
 }

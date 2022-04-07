@@ -16,9 +16,11 @@ namespace Downgrooves.Domain
         [JsonIgnore]
         public Mix Mix { get; set; }
 
+        public int MixId { get; set; }
+
         [Key]
         [Column("trackId")]
-        public int Id { get; set; }
+        public int MixTrackId { get; set; }
 
         public int Number { get; set; }
         public string Remix { get; set; }

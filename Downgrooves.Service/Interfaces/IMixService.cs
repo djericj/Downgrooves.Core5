@@ -16,8 +16,6 @@ namespace Downgrooves.Service.Interfaces
 
         Task<IEnumerable<Mix>> GetMixesByGenre(string genre);
 
-        Task<IEnumerable<Mix>> GetShowMixes();
-
-        Task<IEnumerable<Mix>> GetShowMixes(PagingParameters parameters);
+        Task<Mix> GetMix(int id);
     }
 }

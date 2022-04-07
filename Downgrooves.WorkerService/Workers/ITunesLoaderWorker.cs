@@ -29,6 +29,7 @@ namespace Downgrooves.WorkerService.Workers
         private IEnumerable<ITunesTrack> _tracks;
 
         private List<ITunesCollection> _existingCollections;
+        private IEnumerable<Release> _existingReleases;
 
         public ITunesLoaderWorker(ILogger<ITunesLoaderWorker> logger,
             IOptions<AppConfig> config,
@@ -64,6 +65,7 @@ namespace Downgrooves.WorkerService.Workers
                     _tracks = new List<ITunesTrack>();
 
                     _existingCollections = new List<ITunesCollection>();
+                    _existingReleases = await _releaseService.GetReleases();
 
                     foreach (var artist in artists)
                     {
@@ -80,20 +82,39 @@ namespace Downgrooves.WorkerService.Workers
                         _logger.LogInformation($"{artist.Name} finished.");
                     }
 
-                    _tracks = await GetTracks(_collections);
+                    _existingCollections = new List<ITunesCollection>(await _iTunesService.GetCollections());
 
-                    _tracks = _tracks.GroupBy(x => x.TrackId).Select(x => x.First());
+                    _collections = _collections.Where(x => _existingCollections.All(x2 => x2.CollectionId != x.CollectionId)).ToList();
 
-                    await _iTunesService.AddNewCollections(_collections);
-                    await _iTunesService.AddNewTracks(_tracks);
+                    if (_collections.Any())
+                    {
+                        _tracks = await GetTracks(_collections);
+                        _tracks = _tracks.GroupBy(x => x.TrackId).Select(x => x.First());
 
-                    await _artworkService.GetArtwork(_collections);
-                    await _artworkService.GetArtwork(_tracks);
+                        await _iTunesService.AddNewCollections(_collections);
+                        await _iTunesService.AddNewTracks(_tracks);
 
-                    var releases = _collections.ToReleases();
-                    releases = await GetTracks(releases);
+                        await _artworkService.GetArtwork(_collections);
+                        await _artworkService.GetArtwork(_tracks);
 
-                    await _releaseService.AddNewReleases(releases);
+                        var releases = _collections.ToReleases();
+
+                        releases = releases.Where(x => _existingReleases.All(x2 => x2.CollectionId != x.CollectionId)).ToList();
+
+                        if (releases.Any())
+                        {
+                            releases = await GetTracks(releases);
+                            await _releaseService.AddNewReleases(releases);
+                        }
+                        else
+                        {
+                            _logger.LogInformation("No new releases.");
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogInformation("No new collections.");
+                    }
 
                     _logger.LogInformation("Finished.");
 
@@ -118,7 +139,11 @@ namespace Downgrooves.WorkerService.Workers
 
             var collections = await _lookupService.LookupCollections(artist.Name);
 
+            // remove duplicate collection ids
             collections = collections.Where(x => exclusions.All(x2 => x2.CollectionId != x.CollectionId));
+
+            //remove pre-release items
+            collections = collections.Where(x => x.ReleaseDate > Convert.ToDateTime("2000-01-01"));
 
             if (collections != null && collections.Count() > 0)
             {
@@ -134,6 +159,7 @@ namespace Downgrooves.WorkerService.Workers
 
             tracks = tracks
                 .Where(x => x.WrapperType == "track")
+                .Where(x => x.ReleaseDate > Convert.ToDateTime("2000-01-01")) // ignore pre-release
                 .GroupBy(x => x.CollectionId)
                 .Select(x => x.First())
                 .ToList();
@@ -165,7 +191,7 @@ namespace Downgrooves.WorkerService.Workers
             await Task.Run(() =>
             {
                 foreach (var release in releases)
-                    release.Tracks = _tracks.Where(x => x.CollectionId == release.SourceSystemId).ToReleaseTracks(release) as ICollection<ReleaseTrack>;
+                    release.Tracks = _tracks.Where(x => x.CollectionId == release.CollectionId).ToReleaseTracks(release) as ICollection<ReleaseTrack>;
             });
             return releases.ToList();
         }

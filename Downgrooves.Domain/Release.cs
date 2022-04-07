@@ -11,7 +11,7 @@ namespace Downgrooves.Domain
     [Table("release")]
     public class Release
     {
-        public int SourceSystemId { get; set; }
+        public int CollectionId { get; set; }
 
         public Artist Artist { get; set; }
 

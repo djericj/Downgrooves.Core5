@@ -50,14 +50,14 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<IEnumerable<Video>> Find(Expression<Func<Video, bool>> predicate)
+        public async Task<Video> GetVideo(string id)
         {
-            return await _unitOfWork.Videos.FindAsync(predicate);
+            return await _unitOfWork.Videos.GetVideo(id);
         }
 
         public async Task<IEnumerable<Video>> GetVideos()
         {
-            return await _unitOfWork.Videos.GetVideos();
+            return await _unitOfWork.Videos.GetAllAsync();
         }
 
         public async Task<IEnumerable<Video>> GetVideos(PagingParameters parameters)

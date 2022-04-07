@@ -29,7 +29,7 @@ namespace Downgrooves.WorkerService.Extensions
             {
                 Description = youTubeVideo.Snippet.Description,
                 ETag = youTubeVideo.ETag,
-                SourceSystemId = youTubeVideo.Id,
+                SourceSystemId = youTubeVideo.Snippet.ResourceId.VideoId,
                 PublishedAt = youTubeVideo.Snippet.PublishedAt,
                 Thumbnails = youTubeVideo.Snippet.Thumbnails.ToThumbnails(),
                 Title = youTubeVideo.Snippet?.Title,
@@ -71,13 +71,13 @@ namespace Downgrooves.WorkerService.Extensions
                 ArtistViewUrl = item.ArtistViewUrl,
                 ArtworkUrl = item.CollectionId + ".jpg",
                 BuyUrl = item.CollectionViewUrl,
+                CollectionId = item.CollectionId,
                 Copyright = item.Copyright,
                 Country = item.Country,
                 Genre = item.PrimaryGenreName,
                 IsOriginal = item.WrapperType == "collection",
                 IsRemix = item.WrapperType == "track",
                 ReleaseDate = item.ReleaseDate,
-                SourceSystemId = item.CollectionId,
                 Price = item.CollectionPrice,
                 Title = item.CollectionCensoredName,
             };
@@ -91,6 +91,7 @@ namespace Downgrooves.WorkerService.Extensions
                 ArtistViewUrl = item.ArtistViewUrl,
                 ArtworkUrl = item.CollectionId + ".jpg",
                 BuyUrl = item.CollectionViewUrl,
+                CollectionId = item.CollectionId,
                 Copyright = item.Copyright,
                 Country = item.Country,
                 DiscCount = item.DiscCount,
@@ -100,7 +101,6 @@ namespace Downgrooves.WorkerService.Extensions
                 IsRemix = item.WrapperType == "track",
                 PreviewUrl = item.PreviewUrl,
                 ReleaseDate = item.ReleaseDate,
-                SourceSystemId = item.CollectionId,
                 Price = item.CollectionPrice,
                 Title = item.CollectionCensoredName,
                 VendorId = 1
@@ -131,10 +131,10 @@ namespace Downgrooves.WorkerService.Extensions
                 Price = item.TrackPrice,
                 Title = item.TrackCensoredName,
                 PreviewUrl = item.PreviewUrl,
+                ReleaseId = release.Id,
                 TrackNumber = item.TrackNumber,
                 TrackTimeInMilliseconds = item.TrackTimeMillis,
-                SourceSystemId = item.TrackId,
-                ReleaseId = release.Id
+                TrackId = item.TrackId,
             };
         }
 
@@ -154,10 +154,10 @@ namespace Downgrooves.WorkerService.Extensions
                 Price = item.TrackPrice,
                 Title = item.TrackCensoredName,
                 PreviewUrl = item.PreviewUrl,
+                ReleaseId = release.Id,
                 TrackNumber = item.TrackNumber,
                 TrackTimeInMilliseconds = item.TrackTimeMillis,
-                SourceSystemId = item.TrackId,
-                ReleaseId = release.Id
+                TrackId = item.TrackId,
             };
         }
 

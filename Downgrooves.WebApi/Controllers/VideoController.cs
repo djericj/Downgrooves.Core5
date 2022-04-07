@@ -24,11 +24,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("/video/{id}")]
-        public async Task<IActionResult> GetVideo(int id)
+        public async Task<IActionResult> GetVideo(string id)
         {
             try
             {
-                return Ok(await _service.Find(x => x.Id == id));
+                return Ok(await _service.GetVideo(id));
             }
             catch (System.Exception ex)
             {

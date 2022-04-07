@@ -1,7 +1,5 @@
 ﻿using Downgrooves.Domain;
-using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Downgrooves.Service.Interfaces
@@ -12,7 +10,7 @@ namespace Downgrooves.Service.Interfaces
 
         Task<IEnumerable<Video>> AddRange(IEnumerable<Video> videos);
 
-        Task<IEnumerable<Video>> Find(Expression<Func<Video, bool>> predicate);
+        Task<Video> GetVideo(string id);
 
         Task<IEnumerable<Video>> GetVideos();
 

@@ -13,7 +13,7 @@ namespace Downgrooves.Domain
         public string ArtistName { get; set; }
 
         [Key]
-        [Column("trackId")]
+        [Column("releaseTrackId")]
         public int Id { get; set; }
 
         public string PreviewUrl { get; set; }
@@ -25,8 +25,8 @@ namespace Downgrooves.Domain
         [ForeignKey("Release")]
         public int ReleaseId { get; set; }
 
-        public int SourceSystemId { get; set; }
         public string Title { get; set; }
+        public int TrackId { get; set; }
         public int TrackNumber { get; set; }
 
         [Column("trackTimeInMillis")]

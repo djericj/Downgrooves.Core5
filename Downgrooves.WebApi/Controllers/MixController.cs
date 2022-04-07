@@ -26,7 +26,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.GetShowMixes());
+                return Ok(await _service.GetMixes());
             }
             catch (System.Exception ex)
             {
@@ -41,7 +41,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.GetShowMixes(parameters));
+                return Ok(await _service.GetMixes(parameters));
             }
             catch (System.Exception ex)
             {
@@ -76,6 +76,21 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(MixController)}.GetMixesByGenre {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpGet]
+        [Route("/mix/{id}")]
+        public async Task<IActionResult> GetMix(int id)
+        {
+            try
+            {
+                return Ok(await _service.GetMix(id));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(MixController)}.GetMixes {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }

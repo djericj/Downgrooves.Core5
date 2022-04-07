@@ -42,13 +42,24 @@ namespace Downgrooves.WorkerService.Workers
                     var newVideos = new List<Video>();
                     var videos = new List<Video>(await _youTubeService.GetYouTubeVideosJson());
                     var existingVideos = new List<Video>(await _youTubeService.GetExistingVideos());
+
                     if (existingVideos.Any())
-                        newVideos = videos.Where(x => existingVideos.All(y => x.Id != y.Id)).ToList();
+                        newVideos = videos.Where(x => existingVideos.All(y => x.SourceSystemId != y.SourceSystemId)).ToList();
                     else
                         newVideos = videos;
-                    var count = await _youTubeService.AddNewVideos(newVideos);
-                    if (count > 0)
-                        _logger.LogInformation($"{count} videos added.");
+
+                    if (newVideos.Any())
+                    {
+                        var count = await _youTubeService.AddNewVideos(newVideos);
+                        if (count > 0)
+                            _logger.LogInformation($"{count} videos added.");
+
+                        await _artworkService.GetArtwork(newVideos);
+                    }
+                    else
+                    {
+                        _logger.LogInformation("No new vieos.");
+                    }
 
                     await Task.Delay(_appConfig.YouTube.PollInterval * 1000);
                 }

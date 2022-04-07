@@ -29,7 +29,7 @@ namespace Downgrooves.Persistence
             modelBuilder.Entity<Mix>()
                 .HasMany(x => x.Tracks)
                 .WithOne(y => y.Mix)
-                .HasForeignKey(z => z.TrackId);
+                .HasForeignKey(z => z.MixId);
 
             modelBuilder.Entity<Video>()
                 .HasMany(x => x.Thumbnails)

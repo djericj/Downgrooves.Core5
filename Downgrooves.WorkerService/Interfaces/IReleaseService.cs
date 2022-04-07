@@ -14,6 +14,6 @@ namespace Downgrooves.WorkerService.Interfaces
 
         Task<int> AddNewReleaseTracks(IEnumerable<ReleaseTrack> releaseTracks);
 
-        Task<IEnumerable<Release>> GetReleases(Artist artist);
+        Task<IEnumerable<Release>> GetReleases(Artist artist = null);
     }
 }

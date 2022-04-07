@@ -1,4 +1,5 @@
-﻿using Downgrooves.Domain.ITunes;
+﻿using Downgrooves.Domain;
+using Downgrooves.Domain.ITunes;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,5 +10,7 @@ namespace Downgrooves.WorkerService.Interfaces
         Task GetArtwork(IEnumerable<ITunesTrack> tracks);
 
         Task GetArtwork(IEnumerable<ITunesCollection> tracks);
+
+        Task GetArtwork(IEnumerable<Video> videos);
     }
 }

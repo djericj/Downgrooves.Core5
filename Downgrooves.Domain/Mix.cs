@@ -21,7 +21,7 @@ namespace Downgrooves.Domain
 
         [Key]
         [Column("mixId")]
-        public int Id { get; set; }
+        public int MixId { get; set; }
 
         public string Length { get; set; }
         public string Mp3File { get; set; }
@@ -29,6 +29,8 @@ namespace Downgrooves.Domain
         public string ShortDescription { get; set; }
         public int Show { get; set; }
         public int TotalPlays { get; set; }
+
+        [InverseProperty("Mix")]
         public ICollection<MixTrack> Tracks { get; set; }
     }
 }
