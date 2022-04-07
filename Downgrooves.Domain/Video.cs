@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace Downgrooves.Domain
 {
+    /// <summary>
+    /// A row in the thumbnail table.
+    /// </summary>
     [Table("thumbnail")]
     public class Thumbnail
     {
@@ -24,6 +26,9 @@ namespace Downgrooves.Domain
         public int VideoId { get; set; }
     }
 
+    /// <summary>
+    /// A row in the video table.
+    /// </summary>
     [Table("video")]
     public class Video
     {

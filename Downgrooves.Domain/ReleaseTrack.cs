@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Downgrooves.Domain
 {
+    /// <summary>
+    /// A row in the releaseTrack table.
+    /// </summary>
     [Table("releaseTrack")]
     public class ReleaseTrack
     {

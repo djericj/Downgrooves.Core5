@@ -2,6 +2,9 @@
 
 namespace Downgrooves.Domain
 {
+    /// <summary>
+    /// A row in the user table.
+    /// </summary>
     [Table("user")]
     public class User
     {
