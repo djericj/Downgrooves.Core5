@@ -46,7 +46,7 @@ namespace Downgrooves.Service
 
         public async Task<IEnumerable<Mix>> GetMixesByCategory(string category)
         {
-            return await _unitOfWork.Mixes.FindAsync(x => x.Category == category);
+            return await _unitOfWork.Mixes.FindAsync(x => x.Category.ToUpper().Equals(category.ToUpper()));
         }
 
         public async Task<IEnumerable<Mix>> GetMixesByGenre(string genre)
