@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,8 +12,18 @@ namespace Downgrooves.Domain
     [Table("mix")]
     public class Mix
     {
+        private string _audioUrl;
+        private string _artworkUrl;
+        private string _basePath;
+
         public string Artist { get; set; }
-        public string ArtworkUrl { get; set; }
+
+        public string ArtworkUrl { get => $"{_basePath}/images/mixes/{_artworkUrl}"; set => _artworkUrl = value; }
+
+        [NotMapped]
+        [JsonIgnore]
+        public string BasePath { get => _basePath; set => _basePath = value; }
+
         public string Category { get; set; }
         public DateTime CreateDate { get; set; }
         public string Description { get; set; }
@@ -24,7 +35,13 @@ namespace Downgrooves.Domain
         public int MixId { get; set; }
 
         public string Length { get; set; }
-        public string AudioUrl { get; set; }
+
+        public string AudioUrl
+        {
+            get => $"{_basePath}/mp3/{_audioUrl}";
+            set => _audioUrl = value;
+        }
+
         public string Title { get; set; }
         public string ShortDescription { get; set; }
         public int Show { get; set; }

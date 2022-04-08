@@ -1,8 +1,10 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Service.Interfaces;
+using Downgrooves.WebApi.Config;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,13 +15,15 @@ namespace Downgrooves.WebApi.Controllers
     [Route("videos")]
     public class VideoController : ControllerBase
     {
+        private readonly AppConfig _appConfig;
         private readonly IVideoService _service;
         private readonly ILogger<VideoController> _logger;
 
-        public VideoController(IVideoService service, ILogger<VideoController> logger)
+        public VideoController(IOptions<AppConfig> config, IVideoService service, ILogger<VideoController> logger)
         {
             _service = service;
             _logger = logger;
+            _appConfig = config.Value;
         }
 
         [HttpGet]
@@ -28,7 +32,8 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.GetVideo(id));
+                var video = await _service.GetVideo(id);
+                return Ok(video.SetBasePath(_appConfig.CdnUrl));
             }
             catch (System.Exception ex)
             {
@@ -42,7 +47,8 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.GetVideos());
+                var videos = await _service.GetVideos();
+                return Ok(videos.SetBasePath(_appConfig.CdnUrl));
             }
             catch (System.Exception ex)
             {
@@ -107,6 +113,22 @@ namespace Downgrooves.WebApi.Controllers
                 _logger.LogError($"Exception in {nameof(VideoController)}.Update {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
             }
+        }
+    }
+
+    public static class VideoControllerExtensions
+    {
+        public static IEnumerable<Video> SetBasePath(this IEnumerable<Video> videos, string basePath)
+        {
+            foreach (var video in videos)
+                video.SetBasePath(basePath);
+            return videos;
+        }
+
+        public static Video SetBasePath(this Video video, string basePath)
+        {
+            video.BasePath = basePath;
+            return video;
         }
     }
 }

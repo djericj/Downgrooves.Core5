@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text.Json.Serialization;
 
 namespace Downgrooves.Domain
 {
@@ -33,6 +32,12 @@ namespace Downgrooves.Domain
     [Table("video")]
     public class Video
     {
+        private string _basePath;
+
+        [NotMapped]
+        [JsonIgnore]
+        public string BasePath { get => _basePath; set => _basePath = value; }
+
         public DateTime PublishedAt { get; set; }
 
         public IList<Thumbnail> Thumbnails { get; set; }
@@ -40,7 +45,16 @@ namespace Downgrooves.Domain
         [Column("videoId")]
         public int Id { get; set; }
 
-        public string ArtworkPath => $"/images/artwork/videos/{SourceSystemId}";
+        [NotMapped]
+        [JsonIgnore]
+        public string ArtworkPath
+        {
+            get
+            {
+                return $"{_basePath}/images/artwork/videos/{SourceSystemId}";
+            }
+        }
+
         public string Default => $"{ArtworkPath}/default.jpg";
         public string Description { get; set; }
         public string ETag { get; set; }

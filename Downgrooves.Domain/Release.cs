@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,6 +12,9 @@ namespace Downgrooves.Domain
     [Table("release")]
     public class Release
     {
+        private string _artworkUrl;
+        private string _basePath;
+
         public int CollectionId { get; set; }
 
         public Artist Artist { get; set; }
@@ -21,7 +25,11 @@ namespace Downgrooves.Domain
         public string ArtistName { get; set; }
         public string ArtistViewUrl { get; set; }
 
-        public string ArtworkUrl { get; set; }
+        public string ArtworkUrl { get => $"{_basePath}/images/artwork/collections/{_artworkUrl}"; set => _artworkUrl = value; }
+
+        [NotMapped]
+        [JsonIgnore]
+        public string BasePath { get => _basePath; set => _basePath = value; }
 
         public string BuyUrl { get; set; }
         public string Copyright { get; set; }

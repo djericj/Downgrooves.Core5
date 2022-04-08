@@ -1,8 +1,10 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Service.Interfaces;
+using Downgrooves.WebApi.Config;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +17,15 @@ namespace Downgrooves.WebApi.Controllers
     [Route("releases")]
     public class ReleaseController : ControllerBase
     {
+        private readonly AppConfig _appConfig;
         private readonly ILogger<ReleaseController> _logger;
         private readonly IReleaseService _releaseService;
 
-        public ReleaseController(ILogger<ReleaseController> logger, IReleaseService releaseService)
+        public ReleaseController(IOptions<AppConfig> config, ILogger<ReleaseController> logger, IReleaseService releaseService)
         {
             _logger = logger;
             _releaseService = releaseService;
+            _appConfig = config.Value;
         }
 
         [HttpPost]
@@ -88,7 +92,8 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _releaseService.GetReleases(artistName));
+                var releases = await _releaseService.GetReleases(artistName);
+                return Ok(releases.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
             {
@@ -107,7 +112,7 @@ namespace Downgrooves.WebApi.Controllers
                 releases = releases.OrderByDescending(x => x.ReleaseDate)
                     .Skip((parameters.PageNumber - 1) * parameters.PageSize)
                     .Take(parameters.PageSize);
-                return Ok(releases.ToList());
+                return Ok(releases.SetBasePath(_appConfig.CdnUrl).ToList());
             }
             catch (Exception ex)
             {
@@ -122,7 +127,8 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _releaseService.GetReleases(x => x.Id == id));
+                var release = await _releaseService.GetReleases(x => x.Id == id);
+                return Ok(release.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
             {
@@ -137,13 +143,30 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _releaseService.GetReleases(x => x.CollectionId == collectionId));
+                var releases = await _releaseService.GetReleases(x => x.CollectionId == collectionId);
+                return Ok(releases.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.GetReleases {ex.Message} {ex.StackTrace}");
                 throw;
             }
+        }
+    }
+
+    public static class ReleaseControllerExtensions
+    {
+        public static IEnumerable<Release> SetBasePath(this IEnumerable<Release> releases, string basePath)
+        {
+            foreach (var release in releases)
+                release.SetBasePath(basePath);
+            return releases;
+        }
+
+        public static Release SetBasePath(this Release release, string basePath)
+        {
+            release.BasePath = basePath;
+            return release;
         }
     }
 }
