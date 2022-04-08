@@ -1,131 +1,88 @@
 ﻿using Downgrooves.Domain;
+using Downgrooves.Domain.YouTube;
+using Downgrooves.WorkerService.Base;
 using Downgrooves.WorkerService.Config;
+using Downgrooves.WorkerService.Extensions;
 using Downgrooves.WorkerService.Interfaces;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using RestSharp;
-using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Downgrooves.WorkerService.Services
 {
-    public class YouTubeService : IYouTubeService
+    public class YouTubeService : ApiBase, IYouTubeService
     {
         private int index = 0;
-        private readonly AppConfig _appConfig;
-        private readonly IApiClientService _apiClientService;
         private readonly ILogger<YouTubeService> _logger;
 
         public string ApiUrl { get; }
         public string Token { get; }
 
-        public YouTubeService(IOptions<AppConfig> config, IApiClientService apiClientService, ILogger<YouTubeService> logger)
+        public YouTubeService(IOptions<AppConfig> config, ILogger<YouTubeService> logger) : base(config)
         {
-            _appConfig = config.Value;
-            ApiUrl = _appConfig.ApiUrl;
-            Token = _appConfig.Token;
-            _apiClientService = apiClientService;
+            ApiUrl = config.Value.ApiUrl;
+            Token = config.Value.Token;
             _logger = logger;
         }
 
-        private IEnumerable<Video> GetExistingVideos()
+        public async Task<IEnumerable<Video>> GetExistingVideos()
         {
-            var client = new RestClient(ApiUrl);
-            client.Authenticator = new JwtAuthenticator(Token);
-            var request = new RestRequest("videos");
-            var response = client.Get(request);
+            var response = await ApiGet("videos");
             var json = response.Content;
             var videos = JsonConvert.DeserializeObject<IEnumerable<Video>>(json);
             return videos;
         }
 
-        public void AddNewVideos()
-        {
-            IEnumerable<Video> videosToAdd = new List<Video>();
-            var results = _apiClientService.GetYouTubeVideosJson();
-            var videos = CreateVideos(results);
-            var existingVideos = GetExistingVideos();
-            if (existingVideos != null && existingVideos.Count() > 0)
-                videosToAdd = videos.Where(x => existingVideos.All(y => x.VideoId != y.VideoId));
-            else
-                videosToAdd = videos;
-            var count = AddNewVideos(videosToAdd);
-            if (count > 0)
-                _logger.LogInformation($"{count} videos added.");
-        }
-
-        private int AddNewVideos(IEnumerable<Video> videos)
+        public async Task<int> AddNewVideos(IEnumerable<Video> videos)
         {
             foreach (var video in videos)
-                AddNewVideo(video);
+                await AddNewVideo(video);
             return index;
         }
 
-        private void AddNewVideo(Video video)
+        public async Task UpdateVideo(Video video)
         {
-            var client = new RestClient(ApiUrl);
-            client.Authenticator = new JwtAuthenticator(Token);
-            var request = new RestRequest("videos", Method.POST);
-            var settings = new JsonSerializerSettings();
-            settings.NullValueHandling = NullValueHandling.Ignore;
-            var json = JsonConvert.SerializeObject(video, settings);
-            request.AddParameter("application/json", json, ParameterType.RequestBody);
-            var response = client.Post(request);
-            var description = $"{video.Title} ({video.VideoId})";
+            var response = await ApiPut<Video>("video", video);
+            var description = $"{video.Title} ({video.Id})";
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 index++;
-                Console.WriteLine($"Added {description}");
+                _logger.LogInformation($"Updated {description}");
             }
             else
-                Console.Error.WriteLine($"Error adding {description}");
+                _logger.LogError($"Error adding {description}");
         }
 
-        private IEnumerable<Video> CreateVideos(IJEnumerable<JToken> videos)
+        private async Task AddNewVideo(Video video)
         {
-            var videoList = new List<Video>();
-            foreach (var item in videos)
+            var response = await ApiPost("video", video);
+            var description = $"{video.Title} ({video.Id})";
+            if (response.StatusCode == HttpStatusCode.OK)
             {
-                var video = CreateVideo(item);
-                videoList.Add(video);
+                index++;
+                _logger.LogInformation($"Added {description}");
             }
-            return videoList;
+            else
+                _logger.LogError($"Error adding {description}");
         }
 
-        private Video CreateVideo(JToken token)
+        #region YouTube API
+
+        public async Task<IEnumerable<Video>> GetYouTubeVideosJson()
         {
-            var video = new Video();
-            var snippet = token.SelectToken("snippet");
-            video.Description = snippet.SelectToken("description").ToString();
-            video.ETag = token["etag"].ToString();
-            video.PublishedAt = Convert.ToDateTime(snippet.SelectToken("publishedAt").ToString());
-            video.Thumbnails = GetThumbnails(snippet.SelectToken("thumbnails").Children());
-            video.Title = snippet.SelectToken("title").ToString();
-            video.VideoId = snippet.SelectToken("resourceId").SelectToken("videoId").ToString();
-
-            return video;
+            var ApiKey = _appConfig.YouTube.ApiKey;
+            string url = $"https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&maxResults=100&playlistId=PLvrGGNimrTIMSxEt7InO9NK_aUplnK513&key={ApiKey}";
+            var data = await GetString(url);
+            var results = JsonConvert.DeserializeObject<YouTubeLookupResult>(data);
+            var videos = results?.Items?.ToVideos();
+            return videos;
         }
 
-        private ICollection<Thumbnail> GetThumbnails(IEnumerable<JToken> tokens)
-        {
-            var thumbnails = new List<Thumbnail>();
-            foreach (var item in tokens)
-            {
-                var t = new Thumbnail();
-                var child = item.Children().First();
-                t.Type = ((JProperty)child.Parent).Name;
-                t.Height = Convert.ToInt32(child.SelectToken("height").ToString());
-                t.Url = child.SelectToken("url").ToString();
-                t.Width = Convert.ToInt32(child.SelectToken("width").ToString());
-                thumbnails.Add(t);
-            }
-            return thumbnails;
-        }
+        #endregion YouTube API
     }
 }

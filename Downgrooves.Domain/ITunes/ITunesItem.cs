@@ -1,9 +1,11 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Downgrooves.Domain.ITunes
 {
-    public class ITunesResult
+    /// <summary>
+    /// A base class for common properties of collections and tracks from the iTunes API.
+    /// </summary>
+    public abstract class ITunesItem
     {
         public string WrapperType { get; set; }
         public int ArtistId { get; set; }
@@ -21,7 +23,6 @@ namespace Downgrooves.Domain.ITunes
         public string Currency { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string PrimaryGenreName { get; set; }
-        [NotMapped]
-        public bool IsOriginal => ArtistName?.Contains("Downgrooves", StringComparison.OrdinalIgnoreCase) ?? false;
+        public int SourceArtistId { get; set; }
     }
 }

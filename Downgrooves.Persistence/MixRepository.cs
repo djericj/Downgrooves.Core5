@@ -9,54 +9,31 @@ namespace Downgrooves.Persistence
 {
     public class MixRepository : Repository<Mix>, IMixRepository
     {
-        public DowngroovesDbContext DowngroovesDbContext { get => _context as DowngroovesDbContext; }
+        private IQueryable<Mix> _query;
 
         public MixRepository(DowngroovesDbContext context) : base(context)
         {
+            _query = from mix in context.Mixes
+                     select mix;
         }
 
-        public async Task<IEnumerable<Mix>> GetMixes()
+        public DowngroovesDbContext DowngroovesDbContext { get => _context as DowngroovesDbContext; }
+
+        public async Task<Mix> GetMix(int id)
         {
-            return await GetDbSet().ToListAsync();
+            return await Task.Run(() => _query
+                    .Include(x => x.Tracks)
+                    .Include(x => x.Genre)
+                    .FirstOrDefault(x => x.MixId == id));
         }
 
         public async Task<IEnumerable<Mix>> GetMixes(PagingParameters parameters)
         {
-            return await GetDbSet()
-                .OrderBy(x => x.Name)
+            return await _query
+                .OrderBy(x => x.Title)
                 .Skip((parameters.PageNumber - 1) * parameters.PageSize)
                 .Take(parameters.PageSize)
                 .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Mix>> GetShowMixes()
-        {
-            return await GetDbSet().Where(x => x.Show == 1).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Mix>> GetShowMixes(PagingParameters parameters)
-        {
-            return await GetDbSet()
-                .OrderBy(x => x.Name)
-                .Where(x => x.Show == 1)
-                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
-                .Take(parameters.PageSize)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Mix>> GetMixesByCategory(string category)
-        {
-            return await GetDbSet().Where(x => x.Category == category).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Mix>> GetMixesByGenre(string genre)
-        {
-            return await GetDbSet().Where(x => string.Compare(x.Genre.Name, genre, true) == 0).ToListAsync();
-        }
-
-        private IQueryable<Mix> GetDbSet()
-        {
-            return DowngroovesDbContext.Mixes.Include("Genre").Include("Tracks");
         }
     }
 }
