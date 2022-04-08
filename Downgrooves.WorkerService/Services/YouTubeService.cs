@@ -45,6 +45,19 @@ namespace Downgrooves.WorkerService.Services
             return index;
         }
 
+        public async Task UpdateVideo(Video video)
+        {
+            var response = await ApiPut<Video>("video", video);
+            var description = $"{video.Title} ({video.Id})";
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                index++;
+                _logger.LogInformation($"Updated {description}");
+            }
+            else
+                _logger.LogError($"Error adding {description}");
+        }
+
         private async Task AddNewVideo(Video video)
         {
             var response = await ApiPost("video", video);

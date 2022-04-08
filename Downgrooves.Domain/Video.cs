@@ -33,28 +33,22 @@ namespace Downgrooves.Domain
     [Table("video")]
     public class Video
     {
-        public Thumbnail Default => Thumbnails?.FirstOrDefault(x => x.Type == "default");
+        public DateTime PublishedAt { get; set; }
 
-        public string Description { get; set; }
-
-        public string ETag { get; set; }
-
-        public Thumbnail High => Thumbnails?.FirstOrDefault(x => x.Type == "high");
+        public IList<Thumbnail> Thumbnails { get; set; }
 
         [Column("videoId")]
         public int Id { get; set; }
 
-        public Thumbnail Medium => Thumbnails?.FirstOrDefault(x => x.Type == "medium");
-
-        public DateTime PublishedAt { get; set; }
-
+        public string ArtworkPath => $"/images/artwork/videos/{SourceSystemId}";
+        public string Default => $"{ArtworkPath}/default.jpg";
+        public string Description { get; set; }
+        public string ETag { get; set; }
+        public string High => $"{ArtworkPath}/high.jpg";
+        public string MaxRes => $"{ArtworkPath}/maxres.jpg";
+        public string Medium => $"{ArtworkPath}/medium.jpg";
         public string SourceSystemId { get; set; }
-
-        public Thumbnail Standard => Thumbnails?.FirstOrDefault(x => x.Type == "standard");
-
-        public Thumbnail MaxRes => Thumbnails?.FirstOrDefault(x => x.Type == "maxres");
-
-        public IList<Thumbnail> Thumbnails { get; set; }
+        public string Standard => $"{ArtworkPath}/standard.jpg";
         public string Title { get; set; }
     }
 }

@@ -30,7 +30,7 @@ namespace Downgrooves.Persistence
         public async Task<IEnumerable<Mix>> GetMixes(PagingParameters parameters)
         {
             return await _query
-                .OrderBy(x => x.Name)
+                .OrderBy(x => x.Title)
                 .Skip((parameters.PageNumber - 1) * parameters.PageSize)
                 .Take(parameters.PageSize)
                 .ToListAsync();

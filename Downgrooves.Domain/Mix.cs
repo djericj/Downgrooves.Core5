@@ -12,7 +12,7 @@ namespace Downgrooves.Domain
     public class Mix
     {
         public string Artist { get; set; }
-        public string Attachment { get; set; }
+        public string ArtworkUrl { get; set; }
         public string Category { get; set; }
         public DateTime CreateDate { get; set; }
         public string Description { get; set; }
@@ -24,8 +24,8 @@ namespace Downgrooves.Domain
         public int MixId { get; set; }
 
         public string Length { get; set; }
-        public string Mp3File { get; set; }
-        public string Name { get; set; }
+        public string AudioUrl { get; set; }
+        public string Title { get; set; }
         public string ShortDescription { get; set; }
         public int Show { get; set; }
         public int TotalPlays { get; set; }

@@ -116,7 +116,7 @@ namespace Downgrooves.WorkerService.Workers
                         _logger.LogInformation("No new collections.");
                     }
 
-                    _logger.LogInformation("Finished.");
+                    _logger.LogInformation("iTunes loader worker finished.");
 
                     await Task.Delay(_appConfig.ITunes.PollInterval * 1000);
                 }

@@ -16,16 +16,19 @@ namespace Downgrooves.WorkerService.Workers
     {
         private readonly AppConfig _appConfig;
         private readonly ILogger<YouTubeLoaderWorker> _logger;
+        private readonly IArtworkService _artworkService;
         private readonly IYouTubeService _youTubeService;
         private readonly IHostApplicationLifetime _hostApplicationLifetime;
 
         public YouTubeLoaderWorker(IOptions<AppConfig> config,
             ILogger<YouTubeLoaderWorker> logger,
+            IArtworkService artworkService,
             IYouTubeService youTubeService,
             IHostApplicationLifetime hostApplicationLifetime)
         {
             _appConfig = config.Value;
             _logger = logger;
+            _artworkService = artworkService;
             _youTubeService = youTubeService;
             _hostApplicationLifetime = hostApplicationLifetime;
         }
@@ -58,8 +61,10 @@ namespace Downgrooves.WorkerService.Workers
                     }
                     else
                     {
-                        _logger.LogInformation("No new vieos.");
+                        _logger.LogInformation("No new videos.");
                     }
+
+                    _logger.LogInformation("YouTube loader worker finished.");
 
                     await Task.Delay(_appConfig.YouTube.PollInterval * 1000);
                 }

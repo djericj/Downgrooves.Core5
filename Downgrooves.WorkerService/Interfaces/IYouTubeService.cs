@@ -11,5 +11,7 @@ namespace Downgrooves.WorkerService.Interfaces
         Task<IEnumerable<Video>> GetYouTubeVideosJson();
 
         Task<int> AddNewVideos(IEnumerable<Video> videos);
+
+        Task UpdateVideo(Video video);
     }
 }

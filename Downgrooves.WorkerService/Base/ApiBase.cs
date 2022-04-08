@@ -43,5 +43,17 @@ namespace Downgrooves.WorkerService.Base
             request.AddParameter("application/json", json, ParameterType.RequestBody);
             return await client.ExecutePostAsync(request);
         }
+
+        protected async Task<IRestResponse<T>> ApiPut<T>(string resource, object value)
+        {
+            var client = new RestClient(_appConfig.ApiUrl);
+            client.Authenticator = new JwtAuthenticator(_appConfig.Token);
+            var request = new RestRequest(resource, Method.PUT);
+            var settings = new JsonSerializerSettings();
+            settings.NullValueHandling = NullValueHandling.Ignore;
+            var json = JsonConvert.SerializeObject(value, settings);
+            request.AddParameter("application/json", json, ParameterType.RequestBody);
+            return await client.ExecuteAsync<T>(request);
+        }
     }
 }
