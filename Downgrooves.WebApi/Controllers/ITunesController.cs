@@ -1,9 +1,9 @@
-﻿using Downgrooves.Domain;
-using Downgrooves.Domain.ITunes;
+﻿using Downgrooves.Domain.ITunes;
 using Downgrooves.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Controllers
@@ -13,144 +13,118 @@ namespace Downgrooves.WebApi.Controllers
     [Route("itunes")]
     public class ITunesController : ControllerBase
     {
+        private readonly ILogger<ITunesController> _logger;
         private readonly IITunesService _service;
 
-        public ITunesController(IITunesService service)
+        public ITunesController(ILogger<ITunesController> logger, IITunesService service)
         {
             _service = service;
+            _logger = logger;
         }
 
-        #region Collections
-
-        [HttpGet]
-        [Route("collection/{collectionId}")]
-        public async Task<IActionResult> GetCollection(int collectionId)
+        [HttpPost]
+        [Route("collection")]
+        public async Task<IActionResult> AddCollection(ITunesCollection item)
         {
-            return Ok(await _service.GetCollection(x => x.CollectionId == collectionId));
+            try
+            {
+                return Ok(await _service.Add(item));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.AddCollection {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpPost]
+        [Route("collections")]
+        public async Task<IActionResult> AddCollections(IEnumerable<ITunesCollection> items)
+        {
+            try
+            {
+                return Ok(await _service.AddRange(items));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.AddCollections {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
         }
 
         [HttpGet]
         [Route("collections")]
         public async Task<IActionResult> GetCollections([FromQuery] string artistName = null)
         {
-            return Ok(await _service.GetCollections(artistName));
+            try
+            {
+                return Ok(await _service.GetCollections(artistName));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.GetCollections {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
         }
 
         [HttpGet]
-        [Route("collections/paged")]
-        public async Task<IActionResult> GetCollectionsAsync([FromQuery] PagingParameters parameters, string artistName = null)
+        [Route("exclusions")]
+        public async Task<IActionResult> GetExclusions()
         {
-            return Ok(await _service.GetCollections(parameters, artistName));
-        }
-
-        [HttpGet]
-        [Route("collections/lookup/{collectionId}")]
-        public async Task<IActionResult> LookupCollection(int collectionId)
-        {
-            return Ok(await _service.LookupCollection(collectionId));
+            try
+            {
+                return Ok(await _service.GetExclusions());
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.GetExclusions {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
         }
 
         [HttpPost]
-        [Route("collections")]
-        public async Task<IActionResult> AddCollection(ITunesCollection collection)
+        [Route("track")]
+        public async Task<IActionResult> AddTrack(ITunesTrack item)
         {
             try
             {
-                var exists = await _service.GetCollection(x => x.CollectionId == collection.CollectionId);
-                if (!exists.Any())
-                    return Ok(await _service.Add(collection));
-                return new StatusCodeResult(204);
+                return Ok(await _service.Add(item));
             }
             catch (System.Exception ex)
             {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.AddTrack {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
-        [HttpPut]
-        [Route("collections")]
-        public async Task<IActionResult> UpdateCollection(ITunesCollection collection)
+        [HttpPost]
+        [Route("tracks")]
+        public async Task<IActionResult> AddTracks(IEnumerable<ITunesTrack> items)
         {
             try
             {
-                return Ok(await _service.Update(collection));
+                return Ok(await _service.AddRange(items));
             }
             catch (System.Exception ex)
             {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.AddTracks {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
-            }            
-        }
-
-        #endregion
-
-        #region Tracks
-
-        [HttpGet]
-        [Route("track/{trackId}")]
-        public async Task<IActionResult> GetTracks(int trackId)
-        {
-            return Ok(await _service.GetTrack(x => x.TrackId == trackId));
+            }
         }
 
         [HttpGet]
-        [Route("tracks")]        
+        [Route("tracks")]
         public async Task<IActionResult> GetTracks([FromQuery] string artistName = null)
         {
-            return Ok(await _service.GetTracks(artistName));
-        }
-
-        [HttpGet]
-        [Route("tracks/collection/{collectionId}")]
-        public async Task<IActionResult> GetTracksByCollection(int collectionId)
-        {
-            return Ok(await _service.GetTracksByCollection(collectionId));
-        }
-
-        [HttpGet]
-        [Route("tracks/paged")]
-        public async Task<IActionResult> GetTracksAsync([FromQuery] PagingParameters parameters, string artistName = null)
-        {
-            return Ok(await _service.GetTracks(parameters, artistName));
-        }
-
-        [HttpGet]
-        [Route("tracks/lookup/{collectionId}")]
-        public async Task<IActionResult> LookupTracks(int collectionId)
-        {
-            return Ok(await _service.LookupTracks(collectionId));
-        }
-
-        [HttpPost]
-        [Route("tracks")]
-        public async Task<IActionResult> AddTrack(ITunesTrack track)
-        {
             try
             {
-                var exists = await _service.GetTrack(x => x.TrackId == track.TrackId);
-                if (!exists.Any())
-                    return Ok(await _service.Add(track));
-                return new StatusCodeResult(204);
+                return Ok(await _service.GetTracks(artistName));
             }
             catch (System.Exception ex)
             {
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
-            }            
-        }
-
-        [HttpPut]
-        [Route("tracks")]
-        public async Task<IActionResult> UpdateTrack(ITunesTrack track)
-        {
-            try
-            {
-                return Ok(await _service.Update(track));
-            }
-            catch (System.Exception ex)
-            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.GetTracks {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
-
-        #endregion
     }
 }

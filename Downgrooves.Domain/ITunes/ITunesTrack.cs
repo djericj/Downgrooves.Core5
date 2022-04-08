@@ -1,14 +1,20 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Downgrooves.Domain.ITunes
 {
-    [Table("itunestrack")]
-    public class ITunesTrack : ITunesResult
+    /// <summary>
+    /// A row in the iTunesTrack table.
+    /// </summary>
+    [Table("iTunesTrack")]
+    public class ITunesTrack : ITunesItem
     {
         [Key]
+        [Column("iTunesTrackId")]
+        public int Id { get; set; }
+
         public int TrackId { get; set; }
+
         public string Kind { get; set; }
         public int CollectionId { get; set; }
         public string TrackName { get; set; }
@@ -23,7 +29,5 @@ namespace Downgrooves.Domain.ITunes
         public int TrackNumber { get; set; }
         public int TrackTimeMillis { get; set; }
         public string IsStreamable { get; set; }
-        [NotMapped]
-        public bool IsRemix => TrackCensoredName?.Contains("Downgrooves", StringComparison.OrdinalIgnoreCase) ?? false;
     }
 }
