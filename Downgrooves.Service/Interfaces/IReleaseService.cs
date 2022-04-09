@@ -23,7 +23,8 @@ namespace Downgrooves.Service.Interfaces
 
         Task<IEnumerable<Release>> GetReleases(string artistName = null);
 
-        Task<IEnumerable<Release>> GetReleases(PagingParameters parameters, string artistName = null);
+        Task<IEnumerable<Release>> GetReleases(PagingParameters parameters, string artistName = null,
+            int artistId = 0, bool isOriginal = false, bool isRemix = false);
 
         void Remove(int Id);
 

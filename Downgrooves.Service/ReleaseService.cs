@@ -94,9 +94,10 @@ namespace Downgrooves.Service
             return await _unitOfWork.Releases.GetReleases(artistName);
         }
 
-        public async Task<IEnumerable<Release>> GetReleases(PagingParameters parameters, string artistName = null)
+        public async Task<IEnumerable<Release>> GetReleases(PagingParameters parameters, string artistName = null,
+            int artistId = 0, bool isOriginal = false, bool isRemix = false)
         {
-            return await _unitOfWork.Releases.GetReleases(parameters, artistName);
+            return await _unitOfWork.Releases.GetReleases(parameters, artistName, artistId, isOriginal, isRemix);
         }
 
         public async void Remove(int Id)

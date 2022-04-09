@@ -37,16 +37,28 @@ namespace Downgrooves.Persistence
                 _query = _query.Where(x => EF.Functions.Like(x.ArtistName, $"%{artistName}%"));
 
             return await _query
+                .Include(x => x.Tracks.OrderBy(t => t.TrackNumber))
                 .OrderByDescending(x => x.ReleaseDate)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Release>> GetReleases(PagingParameters parameters, string artistName = null)
+        public async Task<IEnumerable<Release>> GetReleases(PagingParameters parameters, string artistName = null,
+            int artistId = 0, bool isOriginal = false, bool isRemix = false)
         {
             if (artistName != null)
                 _query = _query.Where(x => EF.Functions.Like(x.ArtistName, $"%{artistName}%"));
 
+            if (artistId > 0)
+                _query = _query.Where(x => x.ArtistId == artistId);
+
+            if (isOriginal)
+                _query = _query.Where(x => x.IsOriginal);
+
+            if (isRemix)
+                _query = _query.Where(x => x.IsRemix);
+
             return await _query
+                .Include(x => x.Tracks.OrderBy(t => t.TrackNumber))
                 .OrderByDescending(x => x.ReleaseDate)
                 .Skip((parameters.PageNumber - 1) * parameters.PageSize)
                 .Take(parameters.PageSize)

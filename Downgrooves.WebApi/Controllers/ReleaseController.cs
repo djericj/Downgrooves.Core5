@@ -104,14 +104,12 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("paged")]
-        public async Task<IActionResult> GetReleases([FromQuery] PagingParameters parameters, string artistName = null)
+        public async Task<IActionResult> GetReleases([FromQuery] PagingParameters parameters, string artistName = null,
+            int artistId = 0, bool isOriginal = false, bool isRemix = false)
         {
             try
             {
-                var releases = await _releaseService.GetReleases(artistName);
-                releases = releases.OrderByDescending(x => x.ReleaseDate)
-                    .Skip((parameters.PageNumber - 1) * parameters.PageSize)
-                    .Take(parameters.PageSize);
+                var releases = await _releaseService.GetReleases(parameters, artistName, artistId, isOriginal, isRemix);
                 return Ok(releases.SetBasePath(_appConfig.CdnUrl).ToList());
             }
             catch (Exception ex)
