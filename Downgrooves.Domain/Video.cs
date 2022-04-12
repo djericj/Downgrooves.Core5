@@ -47,7 +47,7 @@ namespace Downgrooves.Domain
 
         [NotMapped]
         [JsonIgnore]
-        public string ArtworkPath
+        public string ArtworkUrl
         {
             get
             {
@@ -55,14 +55,14 @@ namespace Downgrooves.Domain
             }
         }
 
-        public string Default => $"{ArtworkPath}/default.jpg";
+        public string Default => $"{ArtworkUrl}/default.jpg";
         public string Description { get; set; }
         public string ETag { get; set; }
-        public string High => $"{ArtworkPath}/high.jpg";
-        public string MaxRes => $"{ArtworkPath}/maxres.jpg";
-        public string Medium => $"{ArtworkPath}/medium.jpg";
+        public string High => $"{ArtworkUrl}/high.jpg";
+        public string MaxRes => $"{ArtworkUrl}/maxres.jpg";
+        public string Medium => $"{ArtworkUrl}/medium.jpg";
         public string SourceSystemId { get; set; }
-        public string Standard => $"{ArtworkPath}/standard.jpg";
+        public string Standard => $"{ArtworkUrl}/standard.jpg";
         public string Title { get; set; }
     }
 }
