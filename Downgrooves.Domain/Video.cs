@@ -64,5 +64,6 @@ namespace Downgrooves.Domain
         public string SourceSystemId { get; set; }
         public string Standard => $"{ArtworkUrl}/standard.jpg";
         public string Title { get; set; }
+        public string VideoUrl => $"https://youtu.be/{SourceSystemId}";
     }
 }
