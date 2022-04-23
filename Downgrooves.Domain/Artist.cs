@@ -11,13 +11,19 @@ namespace Downgrooves.Domain
     [Table("artist")]
     public class Artist
     {
+        private string description;
+
         [Key]
         [Column("artistId")]
         public int ArtistId { get; set; }
 
         public string Name { get; set; }
 
-        public string Description { get; set; }
+        public string Description 
+        { 
+            get => System.Net.WebUtility.HtmlDecode(description); 
+            set => description = value; 
+        }
 
         [JsonIgnore]
         [ForeignKey("ArtistId")]
