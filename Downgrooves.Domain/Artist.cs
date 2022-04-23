@@ -17,6 +17,8 @@ namespace Downgrooves.Domain
 
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
         [JsonIgnore]
         [ForeignKey("ArtistId")]
         public ICollection<Release> Releases { get; set; }
