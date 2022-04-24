@@ -142,7 +142,7 @@ namespace Downgrooves.WebApi.Controllers
             try
             {
                 var releases = await _releaseService.GetReleases(x => x.CollectionId == collectionId);
-                return Ok(releases.SetBasePath(_appConfig.CdnUrl));
+                return Ok(releases?.FirstOrDefault().SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
             {
