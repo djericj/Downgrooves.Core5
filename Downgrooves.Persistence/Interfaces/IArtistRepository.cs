@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Downgrooves.Service.Interfaces
+namespace Downgrooves.Persistence.Interfaces
 {
-    public interface IArtistService
+    public interface IArtistRepository : IRepository<Artist>
     {
         Task<IEnumerable<Artist>> GetArtists();
         Task<IEnumerable<Artist>> GetArtistsAndReleases();

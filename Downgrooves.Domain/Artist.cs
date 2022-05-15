@@ -25,7 +25,6 @@ namespace Downgrooves.Domain
             set => description = value; 
         }
 
-        [JsonIgnore]
         [ForeignKey("ArtistId")]
         public ICollection<Release> Releases { get; set; }
     }

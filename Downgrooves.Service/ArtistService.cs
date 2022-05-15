@@ -15,6 +15,7 @@ namespace Downgrooves.Service
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Artist>> GetArtists() => await _unitOfWork.Artists.GetAllAsync();
+        public async Task<IEnumerable<Artist>> GetArtists() => await _unitOfWork.Artists.GetArtists();
+        public async Task<IEnumerable<Artist>> GetArtistsAndReleases() => await _unitOfWork.Artists.GetArtistsAndReleases();
     }
 }
