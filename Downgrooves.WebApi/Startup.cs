@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text;
 using Downgrooves.Persistence;
 using Downgrooves.Persistence.Interfaces;
@@ -54,7 +55,11 @@ namespace Downgrooves.WebApi
                     name: "CORS_POLICY",
                     builder =>
                     {
-                        builder.WithOrigins(Configuration["AppConfig:WebAppUrl"].Trim('/', '\\'))
+                        var urls = Configuration
+                            .GetSection("AppConfig:WebAppUrls")
+                            .GetChildren()
+                            .Select(x => x.Value.Trim('/', '\\'));
+                        builder.WithOrigins(urls.ToArray())
                             .AllowAnyMethod()
                             .AllowAnyHeader()
                             .AllowCredentials();
