@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 
 namespace Downgrooves.Domain
 {
@@ -25,7 +26,7 @@ namespace Downgrooves.Domain
         public string ArtistName { get; set; }
         public string ArtistViewUrl { get; set; }
 
-        public string ArtworkUrl { get => $"{_basePath}/images/artwork/collections/{_artworkUrl}"; set => _artworkUrl = value; }
+        public string ArtworkUrl { get => $"{_basePath}/images/artwork/collections/{_artworkUrl}"; set => _artworkUrl = Path.GetFileName(value); }
 
         [NotMapped]
         [JsonIgnore]

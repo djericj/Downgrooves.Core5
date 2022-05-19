@@ -125,5 +125,20 @@ namespace Downgrooves.Service
                 throw;
             }
         }
+
+        public async Task<ReleaseTrack> Update(ReleaseTrack releaseTrack)
+        {
+            try
+            {
+                _unitOfWork.ReleaseTracks.UpdateState(releaseTrack);
+                await _unitOfWork.CompleteAsync();
+                return releaseTrack;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.Update {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
     }
 }

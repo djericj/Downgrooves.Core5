@@ -31,6 +31,8 @@ namespace Downgrooves.Persistence.Interfaces
 
         void RemoveRange(IEnumerable<T> entities);
 
+        T Update(T entity);
+
         void UpdateState(T entity);
     }
 }

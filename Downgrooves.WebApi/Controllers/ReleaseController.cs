@@ -150,6 +150,35 @@ namespace Downgrooves.WebApi.Controllers
                 throw;
             }
         }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(Release collection)
+        {
+            try
+            {
+                return Ok(await _releaseService.Update(collection));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.Update {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpPut]
+        [Route("/release/track")]
+        public async Task<IActionResult> Update(ReleaseTrack track)
+        {
+            try
+            {
+                return Ok(await _releaseService.Update(track));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.Update {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
     }
 
     public static class ReleaseControllerExtensions

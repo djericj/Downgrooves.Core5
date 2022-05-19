@@ -41,6 +41,14 @@ namespace Downgrooves.Persistence
 
         public void RemoveRange(IEnumerable<T> entities) => _context.Set<T>().RemoveRange(entities);
 
+        public T Update(T entity)
+        {
+            _context.Set<T>().Attach(entity);
+            var entry = _context.Entry(entity);
+            entry.State = EntityState.Modified;
+            return entity;
+        }
+
         public void UpdateState(T entity) => _context.Entry(entity).State = EntityState.Modified;
     }
 }

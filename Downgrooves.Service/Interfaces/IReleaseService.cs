@@ -31,5 +31,7 @@ namespace Downgrooves.Service.Interfaces
         void Remove(Release release);
 
         Task<Release> Update(Release collection);
+
+        Task<ReleaseTrack> Update(ReleaseTrack releaseTrack);
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -26,6 +27,34 @@ namespace Downgrooves.WebApi.Controllers
             _appConfig = config.Value;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Add(Mix mix)
+        {
+            try
+            {
+                return Ok(await _service.Add(mix));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.Add {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(Mix mix)
+        {
+            try
+            {
+                return Ok(await _service.Update(mix));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.Update {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetMixes()
         {
@@ -34,7 +63,7 @@ namespace Downgrooves.WebApi.Controllers
                 var mixes = await _service.GetMixes();
                 return Ok(mixes.SetBasePath(_appConfig.CdnUrl));
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(MixController)}.GetMixes {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
@@ -50,7 +79,7 @@ namespace Downgrooves.WebApi.Controllers
                 var mixes = await _service.GetMixes(parameters);
                 return Ok(mixes.SetBasePath(_appConfig.CdnUrl));
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(MixController)}.GetMixes {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
@@ -66,7 +95,7 @@ namespace Downgrooves.WebApi.Controllers
                 var mixes = await _service.GetMixesByCategory(category);
                 return Ok(mixes.SetBasePath(_appConfig.CdnUrl));
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(MixController)}.GetMixesByCategory {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
@@ -82,7 +111,7 @@ namespace Downgrooves.WebApi.Controllers
                 var mixes = await _service.GetMixesByGenre(genre);
                 return Ok(mixes.SetBasePath(_appConfig.CdnUrl));
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(MixController)}.GetMixesByGenre {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
@@ -98,7 +127,7 @@ namespace Downgrooves.WebApi.Controllers
                 var mix = await _service.GetMix(id);
                 return Ok(mix.SetBasePath(_appConfig.CdnUrl));
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(MixController)}.GetMixes {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");

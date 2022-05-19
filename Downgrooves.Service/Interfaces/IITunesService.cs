@@ -14,6 +14,8 @@ namespace Downgrooves.Service.Interfaces
 
         Task<ITunesTrack> Add(ITunesTrack item);
 
+        Task<ITunesCollection> Update(ITunesCollection item);
+
         Task<IEnumerable<ITunesTrack>> AddRange(IEnumerable<ITunesTrack> items);
 
         Task<IEnumerable<ITunesTrack>> GetTracks(string artistName = null);

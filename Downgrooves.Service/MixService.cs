@@ -34,6 +34,21 @@ namespace Downgrooves.Service
             }
         }
 
+        public async Task<Mix> Update(Mix mix)
+        {
+            try
+            {
+                _unitOfWork.Mixes.UpdateState(mix);
+                await _unitOfWork.CompleteAsync();
+                return mix;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.Update {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<Mix>> GetMixes()
         {
             return await _unitOfWork.Mixes.GetAllAsync();

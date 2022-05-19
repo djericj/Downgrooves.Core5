@@ -8,6 +8,8 @@ namespace Downgrooves.Service.Interfaces
     {
         Task<Mix> Add(Mix mix);
 
+        Task<Mix> Update(Mix mix);
+
         Task<IEnumerable<Mix>> GetMixes();
 
         Task<IEnumerable<Mix>> GetMixes(PagingParameters parameters);

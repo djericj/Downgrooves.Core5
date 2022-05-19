@@ -53,6 +53,21 @@ namespace Downgrooves.Service
             }
         }
 
+        public async Task<ITunesCollection> Update(ITunesCollection item)
+        {
+            try
+            {
+                _unitOfWork.ITunesCollection.UpdateState(item);
+                await _unitOfWork.CompleteAsync();
+                return item;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.Add {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<ITunesCollection>> GetCollections(string artistName = null)
         {
             if (artistName != null)

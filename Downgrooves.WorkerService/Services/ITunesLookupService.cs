@@ -28,16 +28,27 @@ namespace Downgrooves.WorkerService.Services
 
         public async Task<IEnumerable<ITunesLookupResultItem>> LookupTracksCollectionById(int collectionId)
         {
-            string url = $"https://itunes.apple.com/lookup?id={collectionId}&entity=song";
-            var data = await GetString(url);
-            return JObject.Parse(data)?.ToObjects<ITunesLookupResultItem>("results")?.Where(x => x.WrapperType == "track");
+            try
+            {
+                string url = $"https://itunes.apple.com/lookup?id={collectionId}&entity=song";
+                var data = await GetString(url);
+                return JObject.Parse(data)?.ToObjects<ITunesLookupResultItem>("results")?.Where(x => x.WrapperType == "track");
+            }
+            catch (System.Exception ex)
+            {
+                throw;
+            }
         }
 
         public async Task<IEnumerable<ITunesLookupResultItem>> LookupCollections(string searchTerm)
         {
             string url = $"https://itunes.apple.com/search/?term={searchTerm}&entity=musicArtist,musicTrack,album,mix,song&media=music&limit=200";
             var data = await GetString(url);
-            return JObject.Parse(data)?.ToObjects<ITunesLookupResultItem>("results")?.Where(x => x.WrapperType == "collection");
+            return JObject.Parse(data)?.ToObjects<ITunesLookupResultItem>("results")?
+                .Where(x => x.WrapperType == "collection")
+                .Where(x => !x.CollectionName.Contains("Remix"))
+                //.Where(x => x.ReleaseDate < System.DateTime.Now)
+                ;
         }
 
         public async Task<IEnumerable<ITunesLookupResultItem>> LookupTracks(string searchTerm)

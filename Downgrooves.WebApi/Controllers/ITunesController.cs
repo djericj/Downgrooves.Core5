@@ -126,5 +126,20 @@ namespace Downgrooves.WebApi.Controllers
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
+
+        [HttpPut]
+        [Route("collection")]
+        public async Task<IActionResult> UpdateCollection(ITunesCollection item)
+        {
+            try
+            {
+                return Ok(await _service.Update(item));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.UpdateCollection {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
     }
 }
