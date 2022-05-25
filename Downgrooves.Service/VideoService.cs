@@ -65,9 +65,11 @@ namespace Downgrooves.Service
             return await _unitOfWork.Videos.GetVideos(parameters);
         }
 
-        public void Remove(Video video)
+        public async Task Remove(string id)
         {
-            throw new NotImplementedException();
+            var video = await GetVideo(id);
+            _unitOfWork.Videos.Remove(video);
+            await _unitOfWork.CompleteAsync();
         }
 
         public async Task<Video> Update(Video video)

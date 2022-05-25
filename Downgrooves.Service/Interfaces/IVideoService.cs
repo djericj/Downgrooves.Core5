@@ -16,7 +16,7 @@ namespace Downgrooves.Service.Interfaces
 
         Task<IEnumerable<Video>> GetVideos(PagingParameters parameters);
 
-        void Remove(Video video);
+        Task Remove(string id);
 
         Task<Video> Update(Video video);
     }

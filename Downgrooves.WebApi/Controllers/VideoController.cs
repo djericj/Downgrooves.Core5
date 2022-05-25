@@ -101,7 +101,24 @@ namespace Downgrooves.WebApi.Controllers
             }
         }
 
+        [HttpDelete]
+        [Route("/video/{id}")]
+        public async Task<IActionResult> RemoveVideo(string id)
+        {
+            try
+            {
+                await _service.Remove(id);
+                return Ok();
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(VideoController)}.RemoveVideo {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
         [HttpPut]
+        [Route("/video/{id}")]
         public IActionResult Update(Video video)
         {
             try
