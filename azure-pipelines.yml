@@ -28,7 +28,7 @@ steps:
     version: '5.0.x'
 
 - task: DotNetCoreCLI@2
-  displayName: Build
+  displayName: Publish
   inputs:
     command: publish
     publishWebProjects: true
