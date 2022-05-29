@@ -27,6 +27,17 @@ steps:
     packageType: sdk
     version: '5.0.x'
 
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\*test*.dll
+      !**\*TestAdapter.dll
+      !**\obj\**
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    runInParallel: true
+    publishRunAttachments: false
+
 - task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
