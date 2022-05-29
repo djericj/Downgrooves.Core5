@@ -21,7 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{B6
 		Database\downgrooves.db = Database\downgrooves.db
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Downgrooves.WorkerService", "Downgrooves.WorkerService\Downgrooves.WorkerService.csproj", "{E971F24C-7EDF-44BB-BDF7-9F35161D4F50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Downgrooves.WorkerService", "Downgrooves.WorkerService\Downgrooves.WorkerService.csproj", "{E971F24C-7EDF-44BB-BDF7-9F35161D4F50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Downgrooves.Test", "Downgrooves.Test\Downgrooves.Test.csproj", "{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -126,6 +128,24 @@ Global
 		{E971F24C-7EDF-44BB-BDF7-9F35161D4F50}.WebApiOnly|x64.Build.0 = Debug|Any CPU
 		{E971F24C-7EDF-44BB-BDF7-9F35161D4F50}.WebApiOnly|x86.ActiveCfg = Debug|Any CPU
 		{E971F24C-7EDF-44BB-BDF7-9F35161D4F50}.WebApiOnly|x86.Build.0 = Debug|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.Debug|x64.Build.0 = Debug|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.Debug|x86.Build.0 = Debug|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.Release|x64.ActiveCfg = Release|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.Release|x64.Build.0 = Release|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.Release|x86.ActiveCfg = Release|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.Release|x86.Build.0 = Release|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.WebApiOnly|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.WebApiOnly|Any CPU.Build.0 = Debug|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.WebApiOnly|x64.ActiveCfg = Debug|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.WebApiOnly|x64.Build.0 = Debug|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.WebApiOnly|x86.ActiveCfg = Debug|Any CPU
+		{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}.WebApiOnly|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
