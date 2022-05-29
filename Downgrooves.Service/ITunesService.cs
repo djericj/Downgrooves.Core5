@@ -23,7 +23,7 @@ namespace Downgrooves.Service
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ITunesCollection> Add(ITunesCollection item)
+        public async Task<ITunesCollection> AddCollection(ITunesCollection item)
         {
             try
             {
@@ -33,12 +33,12 @@ namespace Downgrooves.Service
             }
             catch (System.Exception ex)
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.Add {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddCollection {ex.Message} {ex.StackTrace}");
                 throw;
             }
         }
 
-        public async Task<IEnumerable<ITunesCollection>> AddRange(IEnumerable<ITunesCollection> items)
+        public async Task<IEnumerable<ITunesCollection>> AddCollections(IEnumerable<ITunesCollection> items)
         {
             try
             {
@@ -48,22 +48,37 @@ namespace Downgrooves.Service
             }
             catch (System.Exception ex)
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddRange {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddCollections {ex.Message} {ex.StackTrace}");
                 throw;
             }
         }
 
-        public async Task<ITunesCollection> Update(ITunesCollection item)
+        public async Task<ITunesTrack> AddTrack(ITunesTrack item)
         {
             try
             {
-                _unitOfWork.ITunesCollection.UpdateState(item);
+                await _unitOfWork.ITunesTrack.AddAsync(item);
                 await _unitOfWork.CompleteAsync();
                 return item;
             }
             catch (System.Exception ex)
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.Add {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddTrack {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<ITunesTrack>> AddTracks(IEnumerable<ITunesTrack> items)
+        {
+            try
+            {
+                await _unitOfWork.ITunesTrack.AddRangeAsync(items);
+                await _unitOfWork.CompleteAsync();
+                return items;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddTracks {ex.Message} {ex.StackTrace}");
                 throw;
             }
         }
@@ -74,36 +89,6 @@ namespace Downgrooves.Service
                 return await _unitOfWork.ITunesCollection.FindAsync(x => x.ArtistName.Contains(artistName));
             else
                 return await _unitOfWork.ITunesCollection.GetAllAsync();
-        }
-
-        public async Task<ITunesTrack> Add(ITunesTrack item)
-        {
-            try
-            {
-                await _unitOfWork.ITunesTrack.AddAsync(item);
-                await _unitOfWork.CompleteAsync();
-                return item;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.Add {ex.Message} {ex.StackTrace}");
-                throw;
-            }
-        }
-
-        public async Task<IEnumerable<ITunesTrack>> AddRange(IEnumerable<ITunesTrack> items)
-        {
-            try
-            {
-                await _unitOfWork.ITunesTrack.AddRangeAsync(items);
-                await _unitOfWork.CompleteAsync();
-                return items;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddRange {ex.Message} {ex.StackTrace}");
-                throw;
-            }
         }
 
         public async Task<IEnumerable<ITunesTrack>> GetTracks(string artistName = null)
@@ -143,6 +128,124 @@ namespace Downgrooves.Service
                 _logger.LogError(ex.Message + " " + ex.StackTrace);
             }
             return null;
+        }
+
+        public async Task RemoveCollection(int id)
+        {
+            try
+            {
+                await _unitOfWork.ITunesCollection.Remove(id);
+                await _unitOfWork.CompleteAsync();
+                return;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.RemoveCollection {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        public async Task RemoveTrack(int id)
+        {
+            try
+            {
+                await _unitOfWork.ITunesTrack.Remove(id);
+                await _unitOfWork.CompleteAsync();
+                return;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.RemoveTrack {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        public async Task RemoveCollections(IEnumerable<int> ids)
+        {
+            try
+            {
+                foreach (var item in ids)
+                    await RemoveCollection(item);
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.RemoveCollections {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        public async Task RemoveTracks(IEnumerable<int> ids)
+        {
+            try
+            {
+                foreach (var item in ids)
+                    await RemoveTrack(item);
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.RemoveTracks {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        public async Task<ITunesCollection> UpdateCollection(ITunesCollection item)
+        {
+            try
+            {
+                _unitOfWork.ITunesCollection.UpdateState(item);
+                await _unitOfWork.CompleteAsync();
+                return item;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.UpdateCollection {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        public async Task<ITunesTrack> UpdateTrack(ITunesTrack item)
+        {
+            try
+            {
+                _unitOfWork.ITunesTrack.UpdateState(item);
+                await _unitOfWork.CompleteAsync();
+                return item;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.UpdateTrack {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<ITunesCollection>> UpdateCollections(IEnumerable<ITunesCollection> items)
+        {
+            try
+            {
+                foreach (var item in items)
+                    await UpdateCollection(item);
+                return items;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.UpdateCollections {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<ITunesTrack>> UpdateTracks(IEnumerable<ITunesTrack> items)
+        {
+            try
+            {
+                foreach (var item in items)
+                    await UpdateTrack(item);
+                return items;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.UpdateTracks {ex.Message} {ex.StackTrace}");
+                throw;
+            }
         }
     }
 }

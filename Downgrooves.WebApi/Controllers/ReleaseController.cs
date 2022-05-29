@@ -44,6 +44,7 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPost]
+        [Route("/releases")]
         public async Task<IActionResult> AddRange(IEnumerable<Release> releases)
         {
             try
@@ -59,30 +60,30 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("/release/track")]
-        public async Task<IActionResult> Add(ReleaseTrack releaseTrack)
+        public async Task<IActionResult> AddTrack(ReleaseTrack releaseTrack)
         {
             try
             {
-                return Ok(await _releaseService.Add(releaseTrack));
+                return Ok(await _releaseService.AddTrack(releaseTrack));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.Add {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(ReleaseController)}.AddTrack {ex.Message} {ex.StackTrace}");
                 throw;
             }
         }
 
         [HttpPost]
         [Route("/release/tracks")]
-        public async Task<IActionResult> AddRange(IEnumerable<ReleaseTrack> releaseTracks)
+        public async Task<IActionResult> AddTracks(IEnumerable<ReleaseTrack> releaseTracks)
         {
             try
             {
-                return Ok(await _releaseService.AddRange(releaseTracks));
+                return Ok(await _releaseService.AddTracks(releaseTracks));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.AddRange {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(ReleaseController)}.AddTracks {ex.Message} {ex.StackTrace}");
                 throw;
             }
         }
@@ -130,7 +131,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.GetReleases {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(ReleaseController)}.GetRelease {ex.Message} {ex.StackTrace}");
                 throw;
             }
         }
@@ -146,7 +147,55 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.GetReleases {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(ReleaseController)}.GetCollection {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        [Route("/release/{id}")]
+        public async Task<IActionResult> Remove(int ids)
+        {
+            try
+            {
+                await _releaseService.Remove(ids);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.Remove {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        [Route("/release/track/{id}")]
+        public async Task<IActionResult> RemoveTrack(int id)
+        {
+            try
+            {
+                await _releaseService.RemoveTrack(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.RemoveTrack {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        [Route("/release/tracks")]
+        public async Task<IActionResult> RemoveTracks(IEnumerable<int> ids)
+        {
+            try
+            {
+                await _releaseService.RemoveTracks(ids);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.RemoveTracks {ex.Message} {ex.StackTrace}");
                 throw;
             }
         }
@@ -167,15 +216,30 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("/release/track")]
-        public async Task<IActionResult> Update(ReleaseTrack track)
+        public async Task<IActionResult> UpdateTrack(ReleaseTrack releaseTrack)
         {
             try
             {
-                return Ok(await _releaseService.Update(track));
+                return Ok(await _releaseService.UpdateTrack(releaseTrack));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.Update {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.UpdateTrack {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpPut]
+        [Route("/release/tracks")]
+        public async Task<IActionResult> UpdateTracks(IEnumerable<ReleaseTrack> releaseTracks)
+        {
+            try
+            {
+                return Ok(await _releaseService.UpdateTracks(releaseTracks));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.UpdateTracks {ex.Message} {ex.StackTrace}");
                 throw;
             }
         }

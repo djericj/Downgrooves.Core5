@@ -37,9 +37,15 @@ namespace Downgrooves.Persistence
 
         public async Task<T> GetAsync(int id) => await _context.Set<T>().FindAsync(id);
 
-        public void Remove(T entity) => _context.Set<T>().Remove(entity);
+        public async Task Remove(int id)
+        {
+            var entity = await _context.Set<T>().FindAsync(id);
+            _context.Set<T>().Remove(entity);
+        }
 
-        public void RemoveRange(IEnumerable<T> entities) => _context.Set<T>().RemoveRange(entities);
+        public Task Remove(T entity) => Task.Run(() => _context.Set<T>().Remove(entity));
+
+        public Task RemoveRange(IEnumerable<T> entities) => Task.Run(() => _context.Set<T>().RemoveRange(entities));
 
         public T Update(T entity)
         {

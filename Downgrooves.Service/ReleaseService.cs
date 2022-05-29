@@ -52,7 +52,7 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<ReleaseTrack> Add(ReleaseTrack releaseTrack)
+        public async Task<ReleaseTrack> AddTrack(ReleaseTrack releaseTrack)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<IEnumerable<ReleaseTrack>> AddRange(IEnumerable<ReleaseTrack> releaseTracks)
+        public async Task<IEnumerable<ReleaseTrack>> AddTracks(IEnumerable<ReleaseTrack> releaseTracks)
         {
             try
             {
@@ -100,15 +100,20 @@ namespace Downgrooves.Service
             return await _unitOfWork.Releases.GetReleases(parameters, artistName, artistId, isOriginal, isRemix);
         }
 
-        public async void Remove(int Id)
+        public async Task Remove(int id)
         {
-            var release = await GetReleases(x => x.Id == Id);
-            _unitOfWork.Releases.Remove(release.FirstOrDefault());
+            await _unitOfWork.Releases.Remove(id);
         }
 
-        public void Remove(Release release)
+        public async Task RemoveTrack(int id)
         {
-            _unitOfWork.Releases.Remove(release);
+            await _unitOfWork.ReleaseTracks.Remove(id);
+        }
+
+        public async Task RemoveTracks(IEnumerable<int> ids)
+        {
+            foreach (var item in ids)
+                await RemoveTrack(item);
         }
 
         public async Task<Release> Update(Release collection)
@@ -126,7 +131,7 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<ReleaseTrack> Update(ReleaseTrack releaseTrack)
+        public async Task<ReleaseTrack> UpdateTrack(ReleaseTrack releaseTrack)
         {
             try
             {
@@ -139,6 +144,13 @@ namespace Downgrooves.Service
                 _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.Update {ex.Message} {ex.StackTrace}");
                 throw;
             }
+        }
+
+        public async Task<IEnumerable<ReleaseTrack>> UpdateTracks(IEnumerable<ReleaseTrack> releaseTracks)
+        {
+            foreach (var item in releaseTracks)
+                await UpdateTrack(item);
+            return releaseTracks;
         }
     }
 }

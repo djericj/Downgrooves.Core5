@@ -28,7 +28,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.Add(item));
+                return Ok(await _service.AddCollection(item));
             }
             catch (System.Exception ex)
             {
@@ -43,11 +43,41 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.AddRange(items));
+                return Ok(await _service.AddCollections(items));
             }
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.AddCollections {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpPost]
+        [Route("track")]
+        public async Task<IActionResult> AddTrack(ITunesTrack item)
+        {
+            try
+            {
+                return Ok(await _service.AddTrack(item));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.AddTrack {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpPost]
+        [Route("tracks")]
+        public async Task<IActionResult> AddTracks(IEnumerable<ITunesTrack> items)
+        {
+            try
+            {
+                return Ok(await _service.AddTracks(items));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.AddTracks {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -82,36 +112,6 @@ namespace Downgrooves.WebApi.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("track")]
-        public async Task<IActionResult> AddTrack(ITunesTrack item)
-        {
-            try
-            {
-                return Ok(await _service.Add(item));
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ITunesController)}.AddTrack {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpPost]
-        [Route("tracks")]
-        public async Task<IActionResult> AddTracks(IEnumerable<ITunesTrack> items)
-        {
-            try
-            {
-                return Ok(await _service.AddRange(items));
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ITunesController)}.AddTracks {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
         [HttpGet]
         [Route("tracks")]
         public async Task<IActionResult> GetTracks([FromQuery] string artistName = null)
@@ -127,17 +127,126 @@ namespace Downgrooves.WebApi.Controllers
             }
         }
 
+        [HttpDelete]
+        [Route("collection/{id}")]
+        public async Task<IActionResult> RemoveCollection(int id)
+        {
+            try
+            {
+                await _service.RemoveCollection(id);
+                return Ok();
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.RemoveCollection {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpDelete]
+        [Route("track/{id}")]
+        public async Task<IActionResult> RemoveTrack(int id)
+        {
+            try
+            {
+                await _service.RemoveTrack(id);
+                return Ok();
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.RemoveTrack {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpDelete]
+        [Route("collections")]
+        public async Task<IActionResult> RemoveCollections(IEnumerable<int> ids)
+        {
+            try
+            {
+                await _service.RemoveCollections(ids);
+                return Ok();
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.RemoveCollections {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpDelete]
+        [Route("tracks")]
+        public async Task<IActionResult> RemoveTracks(IEnumerable<int> ids)
+        {
+            try
+            {
+                await _service.RemoveTracks(ids);
+                return Ok();
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.RemoveTracks {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
         [HttpPut]
         [Route("collection")]
         public async Task<IActionResult> UpdateCollection(ITunesCollection item)
         {
             try
             {
-                return Ok(await _service.Update(item));
+                return Ok(await _service.UpdateCollection(item));
             }
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.UpdateCollection {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpPut]
+        [Route("collections")]
+        public async Task<IActionResult> UpdateCollections(IEnumerable<ITunesCollection> items)
+        {
+            try
+            {
+                return Ok(await _service.UpdateCollections(items));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.UpdateCollections {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpPut]
+        [Route("track")]
+        public async Task<IActionResult> UpdateTrack(ITunesTrack item)
+        {
+            try
+            {
+                return Ok(await _service.UpdateTrack(item));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.UpdateTrack {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpPut]
+        [Route("tracks")]
+        public async Task<IActionResult> UpdateTracks(IEnumerable<ITunesTrack> items)
+        {
+            try
+            {
+                return Ok(await _service.UpdateTracks(items));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.UpdateTracks {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }

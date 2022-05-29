@@ -28,6 +28,7 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPost]
+        [Route("/mix")]
         public async Task<IActionResult> Add(Mix mix)
         {
             try
@@ -41,16 +42,32 @@ namespace Downgrooves.WebApi.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(Mix mix)
+        [HttpPost]
+        [Route("/mix/track")]
+        public async Task<IActionResult> AddTrack(MixTrack mixTrack)
         {
             try
             {
-                return Ok(await _service.Update(mix));
+                return Ok(await _service.AddTrack(mixTrack));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.Update {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddTrack {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpPost]
+        [Route("/mix/tracks")]
+        public async Task<IActionResult> AddTracks(IEnumerable<MixTrack> mixTracks)
+        {
+            try
+            {
+                return Ok(await _service.AddTracks(mixTracks));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddTracks {ex.Message} {ex.StackTrace}");
                 throw;
             }
         }
@@ -131,6 +148,99 @@ namespace Downgrooves.WebApi.Controllers
             {
                 _logger.LogError($"Exception in {nameof(MixController)}.GetMixes {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpDelete]
+        [Route("/mix/{id}")]
+        public async Task<IActionResult> Remove(int id)
+        {
+            try
+            {
+                await _service.Remove(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.Remove {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        [Route("/mix/track/{id}")]
+        public async Task<IActionResult> RemoveTrack(int id)
+        {
+            try
+            {
+                await _service.RemoveTrack(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.RemoveTrack {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        [Route("/mix/tracks")]
+        public async Task<IActionResult> RemoveTracks(IEnumerable<int> ids)
+        {
+            try
+            {
+                await _service.RemoveTracks(ids);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.RemoveTracks {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpPut]
+        [Route("/mix")]
+        public async Task<IActionResult> Update(Mix mix)
+        {
+            try
+            {
+                return Ok(await _service.Update(mix));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.Update {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpPut]
+        [Route("/mix/track")]
+        public async Task<IActionResult> UpdateTrack(MixTrack mixTrack)
+        {
+            try
+            {
+                return Ok(await _service.UpdateTrack(mixTrack));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.UpdateTrack {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpPut]
+        [Route("/mix/tracks")]
+        public async Task<IActionResult> UpdateTracks(IEnumerable<MixTrack> mixTracks)
+        {
+            try
+            {
+                return Ok(await _service.UpdateTracks(mixTracks));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.UpdateTracks {ex.Message} {ex.StackTrace}");
+                throw;
             }
         }
     }

@@ -103,7 +103,7 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("/video/{id}")]
-        public async Task<IActionResult> RemoveVideo(string id)
+        public async Task<IActionResult> Remove(string id)
         {
             try
             {

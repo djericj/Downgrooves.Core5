@@ -28,16 +28,9 @@ namespace Downgrooves.WorkerService.Services
 
         public async Task<IEnumerable<ITunesLookupResultItem>> LookupTracksCollectionById(int collectionId)
         {
-            try
-            {
-                string url = $"https://itunes.apple.com/lookup?id={collectionId}&entity=song";
-                var data = await GetString(url);
-                return JObject.Parse(data)?.ToObjects<ITunesLookupResultItem>("results")?.Where(x => x.WrapperType == "track");
-            }
-            catch (System.Exception ex)
-            {
-                throw;
-            }
+            string url = $"https://itunes.apple.com/lookup?id={collectionId}&entity=song";
+            var data = await GetString(url);
+            return JObject.Parse(data)?.ToObjects<ITunesLookupResultItem>("results")?.Where(x => x.WrapperType == "track");
         }
 
         public async Task<IEnumerable<ITunesLookupResultItem>> LookupCollections(string searchTerm)

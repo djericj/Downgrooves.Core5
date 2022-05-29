@@ -13,9 +13,9 @@ namespace Downgrooves.Service.Interfaces
 
         Task<IEnumerable<Release>> AddRange(IEnumerable<Release> releases);
 
-        Task<ReleaseTrack> Add(ReleaseTrack releaseTrack);
+        Task<ReleaseTrack> AddTrack(ReleaseTrack releaseTrack);
 
-        Task<IEnumerable<ReleaseTrack>> AddRange(IEnumerable<ReleaseTrack> releaseTracks);
+        Task<IEnumerable<ReleaseTrack>> AddTracks(IEnumerable<ReleaseTrack> releaseTracks);
 
         List<ITunesExclusion> GetExclusions();
 
@@ -26,12 +26,16 @@ namespace Downgrooves.Service.Interfaces
         Task<IEnumerable<Release>> GetReleases(PagingParameters parameters, string artistName = null,
             int artistId = 0, bool isOriginal = false, bool isRemix = false);
 
-        void Remove(int Id);
+        Task Remove(int id);
 
-        void Remove(Release release);
+        Task RemoveTrack(int id);
+
+        Task RemoveTracks(IEnumerable<int> ids);
 
         Task<Release> Update(Release collection);
 
-        Task<ReleaseTrack> Update(ReleaseTrack releaseTrack);
+        Task<ReleaseTrack> UpdateTrack(ReleaseTrack releaseTrack);
+
+        Task<IEnumerable<ReleaseTrack>> UpdateTracks(IEnumerable<ReleaseTrack> releaseTracks);
     }
 }

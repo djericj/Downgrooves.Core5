@@ -68,7 +68,7 @@ namespace Downgrooves.Service
         public async Task Remove(string id)
         {
             var video = await GetVideo(id);
-            _unitOfWork.Videos.Remove(video);
+            await _unitOfWork.Videos.Remove(video);
             await _unitOfWork.CompleteAsync();
         }
 
