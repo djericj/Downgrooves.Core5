@@ -74,11 +74,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("/video")]
-        public IActionResult Add(Video video)
+        public async Task<IActionResult> Add(Video video)
         {
             try
             {
-                return Ok(_service.Add(video));
+                return Ok(await _service.Add(video));
             }
             catch (System.Exception ex)
             {
@@ -88,11 +88,11 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddRange(IEnumerable<Video> videos)
+        public async Task<IActionResult> AddRange(IEnumerable<Video> videos)
         {
             try
             {
-                return Ok(_service.AddRange(videos));
+                return Ok(await _service.AddRange(videos));
             }
             catch (System.Exception ex)
             {
@@ -119,11 +119,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("/video/{id}")]
-        public IActionResult Update(Video video)
+        public async Task<IActionResult> Update(Video video)
         {
             try
             {
-                return Ok(_service.Update(video));
+                return Ok(await _service.Update(video));
             }
             catch (System.Exception ex)
             {

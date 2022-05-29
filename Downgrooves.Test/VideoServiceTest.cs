@@ -44,33 +44,39 @@ namespace Downgrooves.Test
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.Add(video);
+            var output = videoController.Add(video).Result;
             var okResult = output as OkObjectResult;
-            var result = okResult.Value as Task<Video>;
-            var v = result.Result;
+            var result = okResult.Value as Video;
 
             // Assert
 
             Assert.IsInstanceOfType(output, typeof(OkObjectResult));
             Assert.IsNotNull(okResult.Value);
-            Assert.IsNotNull(v);
-            Assert.AreEqual(v.Id, 3);
-            Assert.AreEqual(v.PublishedAt, now);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.Id, 3);
+            Assert.AreEqual(result.PublishedAt, now);
         }
 
         [TestMethod]
         public void AddRange()
         {
-            var mockSet = new Mock<IVideoRepository>();
-            var mockContext = new Mock<IUnitOfWork>();
-            var mockLogger = new Mock<ILogger<VideoService>>();
-            mockContext.Setup(m => m.Videos).Returns(mockSet.Object);
+            var now = DateTime.Now;
+            // Arrange
+            var videos = GetTestVideos();
+            _service.Setup(x => x.AddRange(videos).Result).Returns(videos);
 
-            var service = new VideoService(mockContext.Object, mockLogger.Object);
-            service.AddRange(GetTestVideos());
+            // Act
 
-            mockSet.Verify(m => m.AddRange(It.IsAny<IEnumerable<Video>>()), Times.Once());
-            mockContext.Verify(m => m.CompleteAsync(), Times.Once());
+            var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
+            var output = videoController.AddRange(videos).Result;
+            var okResult = output as OkObjectResult;
+            var result = okResult.Value as IEnumerable<Video>;
+
+            // Assert
+
+            Assert.IsInstanceOfType(output, typeof(OkObjectResult));
+            Assert.IsNotNull(okResult.Value);
+            Assert.AreEqual(2, result.Count());
         }
 
         [TestMethod]
@@ -144,17 +150,16 @@ namespace Downgrooves.Test
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.Update(video);
+            var output = videoController.Update(video).Result;
             var okResult = output as OkObjectResult;
-            var result = okResult.Value as Task<Video>;
-            var v = result.Result;
+            var result = okResult.Value as Video;
 
             // Assert
 
             Assert.IsInstanceOfType(output, typeof(OkObjectResult));
             Assert.IsNotNull(okResult.Value);
-            Assert.IsNotNull(v);
-            Assert.AreEqual(v.PublishedAt, now);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.PublishedAt, now);
         }
 
         private IEnumerable<Video> GetTestVideos()
