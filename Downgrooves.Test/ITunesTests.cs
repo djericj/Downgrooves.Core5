@@ -19,11 +19,6 @@ namespace Downgrooves.Test
         private Mock<IITunesService> _service = new Mock<IITunesService>();
         private Mock<ILogger<ITunesController>> _mockLogger = new Mock<ILogger<ITunesController>>();
 
-        [TestInitialize]
-        public void Init()
-        {
-        }
-
         [TestMethod]
         public void AddCollection()
         {
@@ -138,11 +133,6 @@ namespace Downgrooves.Test
 
             Assert.IsInstanceOfType(output, typeof(OkObjectResult));
             Assert.AreEqual(2, result.Count());
-        }
-
-        [TestMethod]
-        public void GetExclusions()
-        {
         }
 
         [TestMethod]
