@@ -26,6 +26,8 @@ namespace Downgrooves.Service.Interfaces
         Task<IEnumerable<Release>> GetReleases(PagingParameters parameters, string artistName = null,
             int artistId = 0, bool isOriginal = false, bool isRemix = false);
 
+        Task<ReleaseTrack> GetReleaseTrack(int id);
+
         Task Remove(int id);
 
         Task RemoveTrack(int id);

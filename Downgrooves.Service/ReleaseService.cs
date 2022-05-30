@@ -100,20 +100,28 @@ namespace Downgrooves.Service
             return await _unitOfWork.Releases.GetReleases(parameters, artistName, artistId, isOriginal, isRemix);
         }
 
+        public async Task<ReleaseTrack> GetReleaseTrack(int id)
+        {
+            var releaseTrack = await _unitOfWork.ReleaseTracks.FindAsync(x => x.Id == id);
+            return releaseTrack?.FirstOrDefault();
+        }
+
         public async Task Remove(int id)
         {
-            await _unitOfWork.Releases.Remove(id);
+            var release = await GetReleases(x => x.Id == id);
+            await _unitOfWork.Releases.Remove(release.FirstOrDefault());
         }
 
         public async Task RemoveTrack(int id)
         {
-            await _unitOfWork.ReleaseTracks.Remove(id);
+            var track = await GetReleaseTrack(id);
+            await _unitOfWork.ReleaseTracks.Remove(track);
         }
 
         public async Task RemoveTracks(IEnumerable<int> ids)
         {
-            foreach (var item in ids)
-                await RemoveTrack(item);
+            foreach (var id in ids)
+                await RemoveTrack(id);
         }
 
         public async Task<Release> Update(Release collection)

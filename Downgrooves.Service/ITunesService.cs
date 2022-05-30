@@ -134,7 +134,8 @@ namespace Downgrooves.Service
         {
             try
             {
-                await _unitOfWork.ITunesCollection.Remove(id);
+                var collection = await _unitOfWork.ITunesCollection.GetAsync(id);
+                await _unitOfWork.ITunesCollection.Remove(collection);
                 await _unitOfWork.CompleteAsync();
                 return;
             }
@@ -149,7 +150,8 @@ namespace Downgrooves.Service
         {
             try
             {
-                await _unitOfWork.ITunesTrack.Remove(id);
+                var track = await _unitOfWork.ITunesTrack.GetAsync(id);
+                await _unitOfWork.ITunesTrack.Remove(track);
                 await _unitOfWork.CompleteAsync();
                 return;
             }

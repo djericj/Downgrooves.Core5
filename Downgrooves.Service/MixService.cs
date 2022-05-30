@@ -93,7 +93,8 @@ namespace Downgrooves.Service
         {
             try
             {
-                await _unitOfWork.Mixes.Remove(id);
+                var mix = await _unitOfWork.Mixes.GetAsync(id);
+                await _unitOfWork.Mixes.Remove(mix);
                 await _unitOfWork.CompleteAsync();
                 return;
             }
@@ -108,7 +109,8 @@ namespace Downgrooves.Service
         {
             try
             {
-                await _unitOfWork.MixTracks.Remove(id);
+                var track = await _unitOfWork.MixTracks.GetAsync(id);
+                await _unitOfWork.MixTracks.Remove(track);
                 await _unitOfWork.CompleteAsync();
                 return;
             }

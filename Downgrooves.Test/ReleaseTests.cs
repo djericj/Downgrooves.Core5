@@ -177,6 +177,26 @@ namespace Downgrooves.Test
         }
 
         [TestMethod]
+        public void GetReleaseTrack()
+        {
+            // Arrange
+
+            _service.Setup(x => x.GetReleaseTrack(1).Result).Returns(GetTestTracks().Where(x => x.Id == 1).FirstOrDefault());
+
+            // Act
+
+            var releaseController = new ReleaseController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
+            var output = releaseController.GetReleaseTrack(1).Result;
+            var okResult = output as OkObjectResult;
+            var result = okResult.Value as ReleaseTrack;
+
+            // Assert
+
+            Assert.IsInstanceOfType(output, typeof(OkObjectResult));
+            Assert.IsInstanceOfType(((OkObjectResult)output).Value, typeof(ReleaseTrack));
+        }
+
+        [TestMethod]
         public void Remove()
         {
             // Arrange

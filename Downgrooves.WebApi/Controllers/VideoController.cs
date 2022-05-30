@@ -88,6 +88,7 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPost]
+        [Route("/videos")]
         public async Task<IActionResult> AddRange(IEnumerable<Video> videos)
         {
             try
@@ -108,6 +109,24 @@ namespace Downgrooves.WebApi.Controllers
             try
             {
                 await _service.Remove(id);
+                return Ok();
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(VideoController)}.RemoveVideo {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpDelete]
+        [Route("/videos")]
+        public async Task<IActionResult> RemoveVideos([FromBody] string[] ids)
+        {
+            try
+            {
+                foreach (var id in ids)
+                    await _service.Remove(id);
+
                 return Ok();
             }
             catch (System.Exception ex)

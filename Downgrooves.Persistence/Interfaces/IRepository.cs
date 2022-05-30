@@ -27,8 +27,6 @@ namespace Downgrooves.Persistence.Interfaces
 
         Task<T> GetAsync(int id);
 
-        Task Remove(int id);
-
         Task Remove(T entity);
 
         Task RemoveRange(IEnumerable<T> entities);
