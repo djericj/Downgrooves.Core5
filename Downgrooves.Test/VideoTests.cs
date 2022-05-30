@@ -1,6 +1,4 @@
 ﻿using Downgrooves.Domain;
-using Downgrooves.Persistence.Interfaces;
-using Downgrooves.Service;
 using Downgrooves.Service.Interfaces;
 using Downgrooves.WebApi.Config;
 using Downgrooves.WebApi.Controllers;
@@ -12,12 +10,11 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Test
 {
     [TestClass]
-    public class VideoServiceTest
+    public class VideoTests
     {
         private Mock<IOptions<AppConfig>> _appConfigMock;
         private Mock<IVideoService> _service = new Mock<IVideoService>();
