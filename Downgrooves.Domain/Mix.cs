@@ -27,7 +27,10 @@ namespace Downgrooves.Domain
         public string Category { get; set; }
         public DateTime CreateDate { get; set; }
         public string Description { get; set; }
+
+        [ForeignKey("GenreId")]
         public Genre Genre { get; set; }
+
         public int GenreId { get; set; }
 
         [Key]

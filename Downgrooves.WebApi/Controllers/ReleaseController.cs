@@ -170,11 +170,28 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("/release/{id}")]
-        public async Task<IActionResult> Remove(int ids)
+        public async Task<IActionResult> Remove(int id)
         {
             try
             {
-                await _releaseService.Remove(ids);
+                await _releaseService.Remove(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.Remove {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        [Route("/releases")]
+        public async Task<IActionResult> RemoveReleases(int[] ids)
+        {
+            try
+            {
+                foreach (var id in ids)
+                    await _releaseService.Remove(id);
                 return Ok();
             }
             catch (Exception ex)
@@ -217,6 +234,7 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPut]
+        [Route("/release/{id}")]
         public async Task<IActionResult> Update(Release collection)
         {
             try
@@ -231,7 +249,7 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("/release/track")]
+        [Route("/release/track/{id}")]
         public async Task<IActionResult> UpdateTrack(ReleaseTrack releaseTrack)
         {
             try

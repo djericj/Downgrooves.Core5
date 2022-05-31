@@ -98,6 +98,8 @@ namespace Downgrooves.WebApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Downgrooves.WebApi", Version = "v1" });
             });
 
+            services.AddSwaggerGenNewtonsoftSupport();
+
             services.AddDbContext<DowngroovesDbContext>(options =>
             {
                 options.UseSqlite(Configuration.GetConnectionString("DatabaseConnection"), sqlOptions => sqlOptions.CommandTimeout(120));

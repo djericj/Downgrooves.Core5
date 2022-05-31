@@ -17,11 +17,24 @@ namespace Downgrooves.Persistence
         public ReleaseRepository(DowngroovesDbContext context) : base(context)
         {
             _query = from release in context.Releases
+                         //.Include(x => x.Artist)
                      select release;
         }
 
         public DowngroovesDbContext DowngroovesDbContext { get => _context as DowngroovesDbContext; }
         public List<ITunesExclusion> Exclusions => DowngroovesDbContext.ITunesExclusions.ToList();
+
+        public void AddRelease(Release release)
+        {
+            //_context.Entry(release.Artist).State = EntityState.Unchanged;
+            _context.Set<Release>().Add(release);
+        }
+
+        public async Task AddReleaseAsync(Release release)
+        {
+            //_context.Entry(release.Artist).State = EntityState.Unchanged;
+            await _context.Set<Release>().AddAsync(release);
+        }
 
         public override async Task<IEnumerable<Release>> FindAsync(Expression<Func<Release, bool>> predicate)
         {

@@ -192,7 +192,7 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("collection")]
+        [Route("collection/{id}")]
         public async Task<IActionResult> UpdateCollection(ITunesCollection item)
         {
             try
@@ -222,7 +222,7 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("track")]
+        [Route("track/{id}")]
         public async Task<IActionResult> UpdateTrack(ITunesTrack item)
         {
             try

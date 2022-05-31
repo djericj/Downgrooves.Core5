@@ -23,7 +23,7 @@ namespace Downgrooves.Service
         {
             try
             {
-                _unitOfWork.Mixes.Add(mix);
+                await _unitOfWork.Mixes.AddMixAsync(mix);
                 await _unitOfWork.CompleteAsync();
                 return mix;
             }

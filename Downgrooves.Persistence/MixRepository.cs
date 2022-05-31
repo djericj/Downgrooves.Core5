@@ -17,6 +17,18 @@ namespace Downgrooves.Persistence
                      select mix;
         }
 
+        public void AddMix(Mix mix)
+        {
+            _context.Entry(mix.Genre).State = EntityState.Unchanged;
+            _context.Set<Mix>().Add(mix);
+        }
+
+        public async Task AddMixAsync(Mix mix)
+        {
+            _context.Entry(mix.Genre).State = EntityState.Unchanged;
+            await _context.Set<Mix>().AddAsync(mix);
+        }
+
         public DowngroovesDbContext DowngroovesDbContext { get => _context as DowngroovesDbContext; }
 
         public async Task<Mix> GetMix(int id)

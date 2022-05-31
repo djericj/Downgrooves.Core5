@@ -26,7 +26,7 @@ namespace Downgrooves.Service
         {
             try
             {
-                _unitOfWork.Releases.Add(release);
+                await _unitOfWork.Releases.AddReleaseAsync(release);
                 await _unitOfWork.CompleteAsync();
                 return release;
             }
@@ -41,7 +41,8 @@ namespace Downgrooves.Service
         {
             try
             {
-                _unitOfWork.Releases.AddRange(releases);
+                foreach (var release in releases)
+                    await _unitOfWork.Releases.AddReleaseAsync(release);
                 await _unitOfWork.CompleteAsync();
                 return releases;
             }
@@ -110,12 +111,14 @@ namespace Downgrooves.Service
         {
             var release = await GetReleases(x => x.Id == id);
             await _unitOfWork.Releases.Remove(release.FirstOrDefault());
+            await _unitOfWork.CompleteAsync();
         }
 
         public async Task RemoveTrack(int id)
         {
             var track = await GetReleaseTrack(id);
             await _unitOfWork.ReleaseTracks.Remove(track);
+            await _unitOfWork.CompleteAsync();
         }
 
         public async Task RemoveTracks(IEnumerable<int> ids)

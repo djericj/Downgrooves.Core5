@@ -27,7 +27,7 @@ namespace Downgrooves.Persistence
         public async Task<IEnumerable<Artist>> GetArtistsAndReleases()
         {
             return await _context.Artists
-                .Include(x => x.Releases)
+                .Include(x => x.Releases).AsNoTracking()
                 .ToListAsync();
         }
     }

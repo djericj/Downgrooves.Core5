@@ -18,9 +18,9 @@ namespace Downgrooves.Domain
 
         public int CollectionId { get; set; }
 
+        [ForeignKey("artistId")]
         public Artist Artist { get; set; }
 
-        [ForeignKey("Artist")]
         public int ArtistId { get; set; }
 
         public string ArtistName { get; set; }
@@ -41,6 +41,7 @@ namespace Downgrooves.Domain
 
         [Key]
         [Column("releaseId")]
+        [JsonProperty("releaseId")]
         public int Id { get; set; }
 
         public bool IsOriginal { get; set; }
