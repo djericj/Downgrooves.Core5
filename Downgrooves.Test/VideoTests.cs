@@ -165,12 +165,12 @@ namespace Downgrooves.Test
             // Arrange
             var thumbnail = GetTestThumbnails().FirstOrDefault();
             thumbnail.ThumbnailId = 3;
-            _service.Setup(x => x.AddThumbnail(thumbnail).Result).Returns(thumbnail);
+            _service.Setup(x => x.AddThumbnail(3, thumbnail).Result).Returns(thumbnail);
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.AddThumbnail(thumbnail).Result;
+            var output = videoController.AddThumbnail(3, thumbnail).Result;
             var okResult = output as OkObjectResult;
             var result = okResult.Value as Thumbnail;
 
@@ -187,12 +187,12 @@ namespace Downgrooves.Test
         {
             // Arrange
             var thumbnails = GetTestThumbnails();
-            _service.Setup(x => x.AddThumbnails(thumbnails).Result).Returns(thumbnails);
+            _service.Setup(x => x.AddThumbnails(3, thumbnails).Result).Returns(thumbnails);
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.AddThumbnails(thumbnails).Result;
+            var output = videoController.AddThumbnails(3, thumbnails).Result;
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<Thumbnail>;
 
@@ -208,12 +208,12 @@ namespace Downgrooves.Test
         {
             // Arrange
             var video = new Video() { Id = 1 };
-            _service.Setup(x => x.GetThumbnails(video).Result).Returns(GetTestThumbnails());
+            _service.Setup(x => x.GetThumbnails(3).Result).Returns(GetTestThumbnails());
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.GetThumbnails(video).Result;
+            var output = videoController.GetThumbnails(3).Result;
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<Thumbnail>;
 
@@ -272,7 +272,7 @@ namespace Downgrooves.Test
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.RemoveThumbnails(thumbnails.Select(x => x.ThumbnailId)).Result;
+            var output = videoController.RemoveThumbnails(3, thumbnails.Select(x => x.ThumbnailId)).Result;
             var okResult = output as OkResult;
 
             // Assert
@@ -286,12 +286,12 @@ namespace Downgrooves.Test
         {
             // Arrange
             var thumbnail = GetTestThumbnails().FirstOrDefault();
-            _service.Setup(x => x.UpdateThumbnail(thumbnail).Result).Returns(thumbnail);
+            _service.Setup(x => x.UpdateThumbnail(3, thumbnail).Result).Returns(thumbnail);
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.UpdateThumbnail(thumbnail).Result;
+            var output = videoController.UpdateThumbnail(3, thumbnail).Result;
             var okResult = output as OkObjectResult;
             var result = okResult.Value as Thumbnail;
 
@@ -307,12 +307,12 @@ namespace Downgrooves.Test
         {
             // Arrange
             var thumbnails = GetTestThumbnails();
-            _service.Setup(x => x.UpdateThumbnails(thumbnails).Result).Returns(thumbnails);
+            _service.Setup(x => x.UpdateThumbnails(3, thumbnails).Result).Returns(thumbnails);
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.UpdateThumbnails(thumbnails).Result;
+            var output = videoController.UpdateThumbnails(3, thumbnails).Result;
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<Thumbnail>;
 

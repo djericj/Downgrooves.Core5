@@ -4,8 +4,6 @@ using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Downgrooves.Service
@@ -88,10 +86,11 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<Thumbnail> AddThumbnail(Thumbnail thumbnail)
+        public async Task<Thumbnail> AddThumbnail(int videoId, Thumbnail thumbnail)
         {
             try
             {
+                thumbnail.VideoId = videoId;
                 await _unitOfWork.Thumbnails.AddAsync(thumbnail);
                 await _unitOfWork.CompleteAsync();
                 return thumbnail;
@@ -103,12 +102,12 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<IEnumerable<Thumbnail>> AddThumbnails(IEnumerable<Thumbnail> thumbnails)
+        public async Task<IEnumerable<Thumbnail>> AddThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails)
         {
             try
             {
                 foreach (var thumbnail in thumbnails)
-                    await AddThumbnail(thumbnail);
+                    await AddThumbnail(videoId, thumbnail);
                 return thumbnails;
             }
             catch (Exception ex)
@@ -118,12 +117,11 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<IEnumerable<Thumbnail>> GetThumbnails(Video video)
+        public async Task<IEnumerable<Thumbnail>> GetThumbnails(int videoId)
         {
             try
             {
-                var thumbnails = await _unitOfWork.Thumbnails.GetAllAsync();
-                return thumbnails?.Where(x => x.Video?.SourceSystemId == video.SourceSystemId);
+                return await _unitOfWork.Thumbnails.FindAsync(x => x.VideoId == videoId);
             }
             catch (Exception ex)
             {
@@ -132,11 +130,11 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<Thumbnail> GetThumbnail(int id)
+        public async Task<Thumbnail> GetThumbnail(int thumbnailId)
         {
             try
             {
-                return await _unitOfWork.Thumbnails.GetAsync(id);
+                return await _unitOfWork.Thumbnails.GetAsync(thumbnailId);
             }
             catch (Exception ex)
             {
@@ -145,11 +143,11 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task RemoveThumbnail(int id)
+        public async Task RemoveThumbnail(int thumbnailId)
         {
             try
             {
-                var thumbnail = await GetThumbnail(id);
+                var thumbnail = await GetThumbnail(thumbnailId);
                 await _unitOfWork.Thumbnails.Remove(thumbnail);
                 await _unitOfWork.CompleteAsync();
             }
@@ -174,10 +172,11 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<Thumbnail> UpdateThumbnail(Thumbnail thumbnail)
+        public async Task<Thumbnail> UpdateThumbnail(int videoId, Thumbnail thumbnail)
         {
             try
             {
+                thumbnail.VideoId = videoId;
                 _unitOfWork.Thumbnails.Update(thumbnail);
                 await _unitOfWork.CompleteAsync();
                 return thumbnail;
@@ -189,12 +188,12 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<IEnumerable<Thumbnail>> UpdateThumbnails(IEnumerable<Thumbnail> thumbnails)
+        public async Task<IEnumerable<Thumbnail>> UpdateThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails)
         {
             try
             {
                 foreach (var thumbnail in thumbnails)
-                    await UpdateThumbnail(thumbnail);
+                    await UpdateThumbnail(videoId, thumbnail);
                 return thumbnails;
             }
             catch (Exception ex)

@@ -153,12 +153,12 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("/video/thumbnail")]
-        public async Task<IActionResult> AddThumbnail(Thumbnail thumbnail)
+        [Route("/video/{videoId}/thumbnail")]
+        public async Task<IActionResult> AddThumbnail(int videoId, Thumbnail thumbnail)
         {
             try
             {
-                return Ok(await _service.AddThumbnail(thumbnail));
+                return Ok(await _service.AddThumbnail(videoId, thumbnail));
             }
             catch (Exception ex)
             {
@@ -168,12 +168,12 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("/video/thumbnails")]
-        public async Task<IActionResult> AddThumbnails(IEnumerable<Thumbnail> thumbnails)
+        [Route("/video/{videoId}/thumbnails")]
+        public async Task<IActionResult> AddThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails)
         {
             try
             {
-                return Ok(await _service.AddThumbnails(thumbnails));
+                return Ok(await _service.AddThumbnails(videoId, thumbnails));
             }
             catch (Exception ex)
             {
@@ -183,12 +183,12 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("/video/thumbnails")]
-        public async Task<IActionResult> GetThumbnails(Video video)
+        [Route("/video/{videoId}/thumbnails")]
+        public async Task<IActionResult> GetThumbnails(int videoId)
         {
             try
             {
-                return Ok(await _service.GetThumbnails(video));
+                return Ok(await _service.GetThumbnails(videoId));
             }
             catch (Exception ex)
             {
@@ -198,12 +198,12 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("/video/thumbnail/{id}")]
-        public async Task<IActionResult> GetThumbnail(int id)
+        [Route("/video/thumbnail/{thumbnailId}")]
+        public async Task<IActionResult> GetThumbnail(int thumbnailId)
         {
             try
             {
-                return Ok(await _service.GetThumbnail(id));
+                return Ok(await _service.GetThumbnail(thumbnailId));
             }
             catch (Exception ex)
             {
@@ -213,12 +213,12 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpDelete]
-        [Route("/video/thumbnails/{id}")]
-        public async Task<IActionResult> RemoveThumbnail(int id)
+        [Route("/video/thumbnail/{thumbnailId}")]
+        public async Task<IActionResult> RemoveThumbnail(int thumbnailId)
         {
             try
             {
-                await _service.RemoveThumbnail(id);
+                await _service.RemoveThumbnail(thumbnailId);
                 return Ok();
             }
             catch (Exception ex)
@@ -229,8 +229,8 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpDelete]
-        [Route("/video/thumbnails")]
-        public async Task<IActionResult> RemoveThumbnails(IEnumerable<int> ids)
+        [Route("/video/{videoId}/thumbnails")]
+        public async Task<IActionResult> RemoveThumbnails(int videoId, IEnumerable<int> ids)
         {
             try
             {
@@ -245,12 +245,12 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("/video/thumbnail")]
-        public async Task<IActionResult> UpdateThumbnail(Thumbnail thumbnail)
+        [Route("/video/{videoId}/thumbnail")]
+        public async Task<IActionResult> UpdateThumbnail(int videoId, Thumbnail thumbnail)
         {
             try
             {
-                return Ok(await _service.UpdateThumbnail(thumbnail));
+                return Ok(await _service.UpdateThumbnail(videoId, thumbnail));
             }
             catch (Exception ex)
             {
@@ -260,12 +260,12 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("/video/thumbnails")]
-        public async Task<IActionResult> UpdateThumbnails(IEnumerable<Thumbnail> thumbnails)
+        [Route("/video/{videoId}/thumbnails")]
+        public async Task<IActionResult> UpdateThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails)
         {
             try
             {
-                return Ok(await _service.UpdateThumbnails(thumbnails));
+                return Ok(await _service.UpdateThumbnails(videoId, thumbnails));
             }
             catch (Exception ex)
             {

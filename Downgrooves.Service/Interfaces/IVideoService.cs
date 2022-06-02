@@ -20,20 +20,20 @@ namespace Downgrooves.Service.Interfaces
 
         Task<Video> UpdateVideo(Video video);
 
-        Task<Thumbnail> AddThumbnail(Thumbnail thumbnail);
+        Task<Thumbnail> AddThumbnail(int videoId, Thumbnail thumbnail);
 
-        Task<IEnumerable<Thumbnail>> AddThumbnails(IEnumerable<Thumbnail> thumbnails);
+        Task<IEnumerable<Thumbnail>> AddThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails);
 
-        Task<Thumbnail> GetThumbnail(int id);
+        Task<Thumbnail> GetThumbnail(int thumbnailId);
 
-        Task<IEnumerable<Thumbnail>> GetThumbnails(Video video);
+        Task<IEnumerable<Thumbnail>> GetThumbnails(int videoId);
 
-        Task RemoveThumbnail(int id);
+        Task RemoveThumbnail(int thumbnailId);
 
         Task RemoveThumbnails(IEnumerable<int> ids);
 
-        Task<Thumbnail> UpdateThumbnail(Thumbnail thumbnail);
+        Task<Thumbnail> UpdateThumbnail(int videoId, Thumbnail thumbnail);
 
-        Task<IEnumerable<Thumbnail>> UpdateThumbnails(IEnumerable<Thumbnail> thumbnails);
+        Task<IEnumerable<Thumbnail>> UpdateThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails);
     }
 }
