@@ -15,6 +15,8 @@ namespace Downgrooves.Persistence.Interfaces
         IRepository<MixTrack> MixTracks { get; }
         IReleaseRepository Releases { get; }
         IRepository<ReleaseTrack> ReleaseTracks { get; }
+
+        IRepository<Thumbnail> Thumbnails { get; }
         IUserRepository Users { get; }
         IVideoRepository Videos { get; }
 

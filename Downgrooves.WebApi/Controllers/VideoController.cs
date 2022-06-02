@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -78,7 +79,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.Add(video));
+                return Ok(await _service.AddVideo(video));
             }
             catch (System.Exception ex)
             {
@@ -89,15 +90,15 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("/videos")]
-        public async Task<IActionResult> AddRange(IEnumerable<Video> videos)
+        public async Task<IActionResult> AddVideos(IEnumerable<Video> videos)
         {
             try
             {
-                return Ok(await _service.AddRange(videos));
+                return Ok(await _service.AddVideos(videos));
             }
             catch (System.Exception ex)
             {
-                _logger.LogError($"Exception in {nameof(VideoController)}.AddRange {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(VideoController)}.AddVideos {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -138,16 +139,138 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("/video/{id}")]
-        public async Task<IActionResult> Update(Video video)
+        public async Task<IActionResult> UpdateVideo(Video video)
         {
             try
             {
-                return Ok(await _service.Update(video));
+                return Ok(await _service.UpdateVideo(video));
             }
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.Update {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpPost]
+        [Route("/video/thumbnail")]
+        public async Task<IActionResult> AddThumbnail(Thumbnail thumbnail)
+        {
+            try
+            {
+                return Ok(await _service.AddThumbnail(thumbnail));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(VideoController)}.AddThumbnail {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpPost]
+        [Route("/video/thumbnails")]
+        public async Task<IActionResult> AddThumbnails(IEnumerable<Thumbnail> thumbnails)
+        {
+            try
+            {
+                return Ok(await _service.AddThumbnails(thumbnails));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(VideoController)}.AddThumbnails {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpGet]
+        [Route("/video/thumbnails")]
+        public async Task<IActionResult> GetThumbnails(Video video)
+        {
+            try
+            {
+                return Ok(await _service.GetThumbnails(video));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(VideoController)}.GetThumbnails {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpGet]
+        [Route("/video/thumbnail/{id}")]
+        public async Task<IActionResult> GetThumbnail(int id)
+        {
+            try
+            {
+                return Ok(await _service.GetThumbnail(id));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(VideoController)}.GetThumbnail {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        [Route("/video/thumbnails/{id}")]
+        public async Task<IActionResult> RemoveThumbnail(int id)
+        {
+            try
+            {
+                await _service.RemoveThumbnail(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(VideoController)}.RemoveThumbnail {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        [Route("/video/thumbnails")]
+        public async Task<IActionResult> RemoveThumbnails(IEnumerable<int> ids)
+        {
+            try
+            {
+                await _service.RemoveThumbnails(ids);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(VideoController)}.RemoveThumbnails {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpPut]
+        [Route("/video/thumbnail")]
+        public async Task<IActionResult> UpdateThumbnail(Thumbnail thumbnail)
+        {
+            try
+            {
+                return Ok(await _service.UpdateThumbnail(thumbnail));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(VideoController)}.UpdateThumbnail {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpPut]
+        [Route("/video/thumbnails")]
+        public async Task<IActionResult> UpdateThumbnails(IEnumerable<Thumbnail> thumbnails)
+        {
+            try
+            {
+                return Ok(await _service.UpdateThumbnails(thumbnails));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(VideoController)}.UpdateThumbnails {ex.Message} {ex.StackTrace}");
+                throw;
             }
         }
     }

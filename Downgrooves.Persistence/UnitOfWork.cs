@@ -20,6 +20,7 @@ namespace Downgrooves.Persistence
             MixTracks = new Repository<MixTrack>(context);
             Releases = new ReleaseRepository(context);
             ReleaseTracks = new Repository<ReleaseTrack>(context);
+            Thumbnails = new Repository<Thumbnail>(context);
             Users = new UserRepository(context);
             Videos = new VideoRepository(context);
         }
@@ -32,6 +33,7 @@ namespace Downgrooves.Persistence
         public IRepository<MixTrack> MixTracks { get; private set; }
         public IReleaseRepository Releases { get; private set; }
         public IRepository<ReleaseTrack> ReleaseTracks { get; private set; }
+        public IRepository<Thumbnail> Thumbnails { get; set; }
         public IUserRepository Users { get; private set; }
         public IVideoRepository Videos { get; private set; }
 
