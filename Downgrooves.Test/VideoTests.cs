@@ -81,12 +81,12 @@ namespace Downgrooves.Test
         {
             // Arrange
 
-            _service.Setup(x => x.GetVideo("1").Result).Returns(GetTestVideos().Where(x => x.SourceSystemId == "1").FirstOrDefault());
+            _service.Setup(x => x.GetVideo(1).Result).Returns(GetTestVideos().Where(x => x.Id == 1).FirstOrDefault());
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.GetVideo("1").Result;
+            var output = videoController.GetVideo(1).Result;
 
             // Assert
 
@@ -121,12 +121,12 @@ namespace Downgrooves.Test
             var videos = GetTestVideos();
             var video = videos.FirstOrDefault();
             var id = video.Id;
-            _service.Setup(x => x.Remove(video.SourceSystemId));
+            _service.Setup(x => x.Remove(video.Id));
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.Remove(video.SourceSystemId).Result;
+            var output = videoController.Remove(video.Id).Result;
             var okResult = output as OkResult;
 
             // Assert
@@ -248,7 +248,7 @@ namespace Downgrooves.Test
             var thumbnails = GetTestThumbnails();
             var thumbnail = thumbnails.FirstOrDefault();
             var id = thumbnail.ThumbnailId;
-            _service.Setup(x => x.Remove(thumbnail.ThumbnailId.ToString()));
+            _service.Setup(x => x.RemoveThumbnail(thumbnail.ThumbnailId));
 
             // Act
 
@@ -330,14 +330,12 @@ namespace Downgrooves.Test
             {
                 PublishedAt = new DateTime(2016, 7, 2),
                 Id = 1,
-                SourceSystemId = "1",
                 Title = "Test One"
             });
             videos.Add(new Video()
             {
                 PublishedAt = new DateTime(2016, 7, 1),
                 Id = 2,
-                SourceSystemId = "2",
                 Title = "Test Two"
             });
             return videos;

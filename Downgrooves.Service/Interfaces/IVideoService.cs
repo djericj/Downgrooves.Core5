@@ -10,13 +10,13 @@ namespace Downgrooves.Service.Interfaces
 
         Task<IEnumerable<Video>> AddVideos(IEnumerable<Video> videos);
 
-        Task<Video> GetVideo(string id);
+        Task<Video> GetVideo(int id);
 
         Task<IEnumerable<Video>> GetVideos();
 
         Task<IEnumerable<Video>> GetVideos(PagingParameters parameters);
 
-        Task Remove(string id);
+        Task Remove(int id);
 
         Task<Video> UpdateVideo(Video video);
 

@@ -20,9 +20,9 @@ namespace Downgrooves.Persistence
                       select video;
         }
 
-        public async Task<Video> GetVideo(string id)
+        public async Task<Video> GetVideo(int id)
         {
-            return await _videos.FirstOrDefaultAsync(x => x.SourceSystemId == id);
+            return await _videos.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IEnumerable<Video>> GetVideos()

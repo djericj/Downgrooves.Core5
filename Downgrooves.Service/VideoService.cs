@@ -49,7 +49,7 @@ namespace Downgrooves.Service
             }
         }
 
-        public async Task<Video> GetVideo(string id)
+        public async Task<Video> GetVideo(int id)
         {
             return await _unitOfWork.Videos.GetVideo(id);
         }
@@ -64,7 +64,7 @@ namespace Downgrooves.Service
             return await _unitOfWork.Videos.GetVideos(parameters);
         }
 
-        public async Task Remove(string id)
+        public async Task Remove(int id)
         {
             var video = await GetVideo(id);
             await _unitOfWork.Videos.Remove(video);

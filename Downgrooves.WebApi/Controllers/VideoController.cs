@@ -29,7 +29,7 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("/video/{id}")]
-        public async Task<IActionResult> GetVideo(string id)
+        public async Task<IActionResult> GetVideo(int id)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("/video/{id}")]
-        public async Task<IActionResult> Remove(string id)
+        public async Task<IActionResult> Remove(int id)
         {
             try
             {
@@ -121,7 +121,7 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("/videos")]
-        public async Task<IActionResult> RemoveVideos([FromBody] string[] ids)
+        public async Task<IActionResult> RemoveVideos([FromBody] int[] ids)
         {
             try
             {

@@ -6,7 +6,7 @@ namespace Downgrooves.Persistence.Interfaces
 {
     public interface IVideoRepository : IRepository<Video>
     {
-        Task<Video> GetVideo(string id);
+        Task<Video> GetVideo(int id);
 
         Task<IEnumerable<Video>> GetVideos();
 
