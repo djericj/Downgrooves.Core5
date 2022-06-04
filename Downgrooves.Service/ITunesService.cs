@@ -91,12 +91,22 @@ namespace Downgrooves.Service
                 return await _unitOfWork.ITunesCollection.GetAllAsync();
         }
 
+        public async Task<ITunesCollection> GetCollection(int id)
+        {
+            return await _unitOfWork.ITunesCollection.GetAsync(id);
+        }
+
         public async Task<IEnumerable<ITunesTrack>> GetTracks(string artistName = null)
         {
             if (artistName != null)
                 return await _unitOfWork.ITunesTrack.FindAsync(x => x.TrackCensoredName.Contains(artistName));
             else
                 return await _unitOfWork.ITunesTrack.GetAllAsync();
+        }
+
+        public async Task<ITunesTrack> GetTrack(int id)
+        {
+            return await _unitOfWork.ITunesTrack.GetAsync(id);
         }
 
         public async Task<IEnumerable<ITunesExclusion>> GetExclusions()

@@ -16,7 +16,11 @@ namespace Downgrooves.Service.Interfaces
 
         Task<IEnumerable<ITunesCollection>> GetCollections(string artistName = null);
 
+        Task<ITunesCollection> GetCollection(int id);
+
         Task<IEnumerable<ITunesTrack>> GetTracks(string artistName = null);
+
+        Task<ITunesTrack> GetTrack(int id);
 
         Task<IEnumerable<ITunesExclusion>> GetExclusions();
 

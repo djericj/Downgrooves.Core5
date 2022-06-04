@@ -168,12 +168,12 @@ namespace Downgrooves.Test
             var releaseController = new ReleaseController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
             var output = releaseController.GetRelease(1).Result;
             var okResult = output as OkObjectResult;
-            var result = okResult.Value as IEnumerable<Release>;
+            var result = okResult.Value as Release;
 
             // Assert
 
             Assert.IsInstanceOfType(output, typeof(OkObjectResult));
-            Assert.IsInstanceOfType(((OkObjectResult)output).Value, typeof(IEnumerable<Release>));
+            Assert.IsInstanceOfType(((OkObjectResult)output).Value, typeof(Release));
         }
 
         [TestMethod]

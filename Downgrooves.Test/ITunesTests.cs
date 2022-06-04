@@ -136,6 +136,28 @@ namespace Downgrooves.Test
         }
 
         [TestMethod]
+        public void GetCollection()
+        {
+            // Arrange
+
+            _service.Setup(x => x.GetCollection(1).Result).Returns(GetTestCollections().Where(x => x.Id == 1).FirstOrDefault());
+
+            // Act
+
+            var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
+            var output = iTunesController.GetCollection(1).Result;
+            var okResult = output as OkObjectResult;
+            var result = okResult.Value as ITunesCollection;
+
+            // Assert
+
+            Assert.IsInstanceOfType(output, typeof(OkObjectResult));
+            Assert.IsNotNull(okResult.Value);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.Id, 1);
+        }
+
+        [TestMethod]
         public void GetTracks()
         {
             // Arrange
@@ -153,6 +175,28 @@ namespace Downgrooves.Test
 
             Assert.IsInstanceOfType(output, typeof(OkObjectResult));
             Assert.AreEqual(2, result.Count());
+        }
+
+        [TestMethod]
+        public void GetTrack()
+        {
+            // Arrange
+
+            _service.Setup(x => x.GetTrack(1).Result).Returns(GetTestTracks().Where(x => x.Id == 1).FirstOrDefault());
+
+            // Act
+
+            var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
+            var output = iTunesController.GetTrack(1).Result;
+            var okResult = output as OkObjectResult;
+            var result = okResult.Value as ITunesTrack;
+
+            // Assert
+
+            Assert.IsInstanceOfType(output, typeof(OkObjectResult));
+            Assert.IsNotNull(okResult.Value);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.Id, 1);
         }
 
         [TestMethod]

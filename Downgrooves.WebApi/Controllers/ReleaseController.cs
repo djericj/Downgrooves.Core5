@@ -127,7 +127,7 @@ namespace Downgrooves.WebApi.Controllers
             try
             {
                 var release = await _releaseService.GetReleases(x => x.Id == id);
-                return Ok(release.SetBasePath(_appConfig.CdnUrl));
+                return Ok(release.FirstOrDefault().SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
             {
@@ -234,12 +234,12 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("/release/{id}")]
-        public async Task<IActionResult> Update(Release collection)
+        [Route("/release")]
+        public async Task<IActionResult> Update(Release release)
         {
             try
             {
-                return Ok(await _releaseService.Update(collection));
+                return Ok(await _releaseService.Update(release));
             }
             catch (Exception ex)
             {

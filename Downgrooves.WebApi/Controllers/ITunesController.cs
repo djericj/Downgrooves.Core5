@@ -98,6 +98,21 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
+        [Route("collection/{id}")]
+        public async Task<IActionResult> GetCollection(int id)
+        {
+            try
+            {
+                return Ok(await _service.GetCollection(id));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.GetCollection {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpGet]
         [Route("exclusions")]
         public async Task<IActionResult> GetExclusions()
         {
@@ -123,6 +138,21 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.GetTracks {ex.Message} {ex.StackTrace}");
+                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpGet]
+        [Route("track/{id}")]
+        public async Task<IActionResult> GetTrack(int id)
+        {
+            try
+            {
+                return Ok(await _service.GetTrack(id));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.GetTrack {ex.Message} {ex.StackTrace}");
                 return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
