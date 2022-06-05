@@ -29,6 +29,12 @@ namespace Downgrooves.Persistence
             await _context.Set<Mix>().AddAsync(mix);
         }
 
+        public void UpdateMix(Mix mix)
+        {
+            _context.Entry(mix.Genre).State = EntityState.Unchanged;
+            _context.Set<Mix>().Update(mix);
+        }
+
         public DowngroovesDbContext DowngroovesDbContext { get => _context as DowngroovesDbContext; }
 
         public async Task<Mix> GetMix(int id)

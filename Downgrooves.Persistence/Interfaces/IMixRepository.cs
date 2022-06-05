@@ -12,6 +12,8 @@ namespace Downgrooves.Persistence.Interfaces
 
         Task<Mix> GetMix(int id);
 
+        void UpdateMix(Mix mix);
+
         Task<IEnumerable<Mix>> GetMixes(PagingParameters parameters);
     }
 }

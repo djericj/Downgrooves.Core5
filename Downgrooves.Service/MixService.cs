@@ -139,7 +139,7 @@ namespace Downgrooves.Service
         {
             try
             {
-                _unitOfWork.Mixes.UpdateState(mix);
+                _unitOfWork.Mixes.UpdateMix(mix);
                 await _unitOfWork.CompleteAsync();
                 return mix;
             }
