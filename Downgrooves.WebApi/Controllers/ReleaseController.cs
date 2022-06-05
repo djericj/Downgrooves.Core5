@@ -249,7 +249,7 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("/release/track/{id}")]
+        [Route("/release/track")]
         public async Task<IActionResult> UpdateTrack(ReleaseTrack releaseTrack)
         {
             try

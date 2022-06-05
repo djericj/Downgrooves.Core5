@@ -25,6 +25,5 @@ namespace Downgrooves.Domain
         public int Number { get; set; }
         public string Remix { get; set; }
         public string Title { get; set; }
-        public int TrackId { get; set; }
     }
 }
