@@ -18,7 +18,14 @@ namespace Downgrooves.Domain
 
         public string Artist { get; set; }
 
-        public string ArtworkUrl { get => $"{_basePath}/images/mixes/{_artworkUrl}"; set => _artworkUrl = value; }
+        public string ArtworkUrl
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(_artworkUrl) ? $"{_basePath}/images/mixes/{_artworkUrl}" : null;
+            }
+            set => _artworkUrl = value;
+        }
 
         [NotMapped]
         [JsonIgnore]
@@ -41,7 +48,10 @@ namespace Downgrooves.Domain
 
         public string AudioUrl
         {
-            get => $"{_basePath}/mp3/{_audioUrl}";
+            get
+            {
+                return !string.IsNullOrWhiteSpace(_audioUrl) ? $"{_basePath}/mp3/{_audioUrl}" : null;
+            }
             set => _audioUrl = value;
         }
 

@@ -4,8 +4,8 @@
     {
         public string ApiUrl { get; set; }
         public string Token { get; set; }
-        public string ArtworkBasePath { get; set; }
-        public ITunes ITunes { get; set; }   
+        public string MediaBasePath { get; set; }
+        public ITunes ITunes { get; set; }
         public YouTube YouTube { get; set; }
     }
 

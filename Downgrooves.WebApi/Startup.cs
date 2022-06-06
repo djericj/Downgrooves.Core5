@@ -113,6 +113,7 @@ namespace Downgrooves.WebApi
             services.AddScoped<IITunesService, ITunesService>();
             services.AddScoped<IGenreService, GenreService>();
             services.AddScoped<IMixService, MixService>();
+            services.AddScoped<IMediaService, MediaService>();
             services.AddScoped<IReleaseService, ReleaseService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IVideoService, VideoService>();

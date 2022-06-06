@@ -19,7 +19,8 @@ namespace Downgrooves.Test
     public class MixTests
     {
         private Mock<IOptions<AppConfig>> _appConfigMock;
-        private Mock<IMixService> _service = new Mock<IMixService>();
+        private Mock<IMixService> _mixService = new Mock<IMixService>();
+        private Mock<IMediaService> _mediaService = new Mock<IMediaService>();
         private Mock<ILogger<MixController>> _mockLogger = new Mock<ILogger<MixController>>();
 
         [TestInitialize]
@@ -38,11 +39,11 @@ namespace Downgrooves.Test
             var mix = GetTestMixes().FirstOrDefault();
             mix.MixId = 3;
             mix.CreateDate = now;
-            _service.Setup(x => x.Add(mix).Result).Returns(mix);
+            _mixService.Setup(x => x.Add(mix).Result).Returns(mix);
 
             // Act
 
-            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
+            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _mixService.Object, _mediaService.Object);
             var output = mixController.Add(mix).Result;
             var okResult = output as OkObjectResult;
             var result = okResult.Value as Mix;
@@ -63,11 +64,11 @@ namespace Downgrooves.Test
             var track = GetTestTracks().FirstOrDefault();
             track.MixId = 3;
             track.Number = 1;
-            _service.Setup(x => x.AddTrack(track).Result).Returns(track);
+            _mixService.Setup(x => x.AddTrack(track).Result).Returns(track);
 
             // Act
 
-            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
+            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _mixService.Object, _mediaService.Object);
             var output = mixController.AddTrack(track).Result;
             var okResult = output as OkObjectResult;
             var result = okResult.Value as MixTrack;
@@ -86,11 +87,11 @@ namespace Downgrooves.Test
         {
             // Arrange
             var tracks = GetTestTracks();
-            _service.Setup(x => x.AddTracks(tracks).Result).Returns(tracks);
+            _mixService.Setup(x => x.AddTracks(tracks).Result).Returns(tracks);
 
             // Act
 
-            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
+            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _mixService.Object, _mediaService.Object);
             var output = mixController.AddTracks(tracks).Result;
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<MixTrack>;
@@ -107,11 +108,11 @@ namespace Downgrooves.Test
         {
             // Arrange
 
-            _service.Setup(x => x.GetMixes().Result).Returns(GetTestMixes());
+            _mixService.Setup(x => x.GetMixes().Result).Returns(GetTestMixes());
 
             // Act
 
-            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
+            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _mixService.Object, _mediaService.Object);
             var output = mixController.GetMixes().Result;
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<Mix>;
@@ -127,11 +128,11 @@ namespace Downgrooves.Test
         {
             // Arrange
 
-            _service.Setup(x => x.GetMixesByCategory("Test").Result).Returns(GetTestMixes());
+            _mixService.Setup(x => x.GetMixesByCategory("Test").Result).Returns(GetTestMixes());
 
             // Act
 
-            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
+            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _mixService.Object, _mediaService.Object);
             var output = mixController.GetMixesByCategory("Test").Result;
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<Mix>;
@@ -147,11 +148,11 @@ namespace Downgrooves.Test
         {
             // Arrange
             var genre = new Genre() { Name = "Test" };
-            _service.Setup(x => x.GetMixesByGenre("Test").Result).Returns(GetTestMixes());
+            _mixService.Setup(x => x.GetMixesByGenre("Test").Result).Returns(GetTestMixes());
 
             // Act
 
-            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
+            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _mixService.Object, _mediaService.Object);
             var output = mixController.GetMixesByGenre("Test").Result;
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<Mix>;
@@ -167,11 +168,11 @@ namespace Downgrooves.Test
         {
             // Arrange
 
-            _service.Setup(x => x.GetMix(1).Result).Returns(GetTestMixes().Where(x => x.MixId == 1).FirstOrDefault());
+            _mixService.Setup(x => x.GetMix(1).Result).Returns(GetTestMixes().Where(x => x.MixId == 1).FirstOrDefault());
 
             // Act
 
-            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
+            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _mixService.Object, _mediaService.Object);
             var output = mixController.GetMix(1).Result;
 
             // Assert
@@ -187,11 +188,11 @@ namespace Downgrooves.Test
             var mixes = GetTestMixes();
             var mix = mixes.FirstOrDefault();
             var id = mix.MixId;
-            _service.Setup(x => x.Remove(mix.MixId));
+            _mixService.Setup(x => x.Remove(mix.MixId));
 
             // Act
 
-            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
+            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _mixService.Object, _mediaService.Object);
             var output = mixController.Remove(mix.MixId).Result;
             var okResult = output as OkResult;
 
@@ -207,11 +208,11 @@ namespace Downgrooves.Test
             // Arrange
             var tracks = GetTestTracks();
             var track = tracks.FirstOrDefault();
-            _service.Setup(x => x.RemoveTrack(track.MixTrackId));
+            _mixService.Setup(x => x.RemoveTrack(track.MixTrackId));
 
             // Act
 
-            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
+            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _mixService.Object, _mediaService.Object);
             var output = mixController.RemoveTrack(track.MixTrackId).Result;
             var okResult = output as OkResult;
 
@@ -226,11 +227,11 @@ namespace Downgrooves.Test
         {
             // Arrange
             var tracks = GetTestTracks();
-            _service.Setup(x => x.RemoveTracks(tracks.Select(x => x.MixTrackId)));
+            _mixService.Setup(x => x.RemoveTracks(tracks.Select(x => x.MixTrackId)));
 
             // Act
 
-            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
+            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _mixService.Object, _mediaService.Object);
             var output = mixController.RemoveTracks(tracks.Select(x => x.MixTrackId)).Result;
             var okResult = output as OkResult;
 
@@ -247,11 +248,11 @@ namespace Downgrooves.Test
             // Arrange
             var mix = GetTestMixes().FirstOrDefault();
             mix.CreateDate = now;
-            _service.Setup(x => x.Update(mix).Result).Returns(mix);
+            _mixService.Setup(x => x.Update(mix).Result).Returns(mix);
 
             // Act
 
-            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
+            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _mixService.Object, _mediaService.Object);
             var output = mixController.Update(mix).Result;
             var okResult = output as OkObjectResult;
             var result = okResult.Value as Mix;
@@ -270,11 +271,11 @@ namespace Downgrooves.Test
             // Arrange
             var track = GetTestTracks().FirstOrDefault();
             track.Number = 10;
-            _service.Setup(x => x.UpdateTrack(track).Result).Returns(track);
+            _mixService.Setup(x => x.UpdateTrack(track).Result).Returns(track);
 
             // Act
 
-            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
+            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _mixService.Object, _mediaService.Object);
             var output = mixController.UpdateTrack(track).Result;
             var okResult = output as OkObjectResult;
             var result = okResult.Value as MixTrack;
@@ -297,11 +298,11 @@ namespace Downgrooves.Test
                 item.Number = 10;
                 tracks.Add(item);
             }
-            _service.Setup(x => x.UpdateTracks(tracks).Result).Returns(tracks);
+            _mixService.Setup(x => x.UpdateTracks(tracks).Result).Returns(tracks);
 
             // Act
 
-            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
+            var mixController = new MixController(_appConfigMock.Object, _mockLogger.Object, _mixService.Object, _mediaService.Object);
             var output = mixController.UpdateTracks(tracks).Result;
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<MixTrack>;

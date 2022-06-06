@@ -25,7 +25,7 @@ namespace Downgrooves.WorkerService.Services
         {
             ApiUrl = config.Value.ApiUrl;
             Token = config.Value.Token;
-            ArtworkBasePath = config.Value.ArtworkBasePath;
+            ArtworkBasePath = config.Value.MediaBasePath;
             _logger = logger;
             _youTubeService = youTubeService;
         }

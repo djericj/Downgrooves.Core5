@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Controllers
@@ -19,12 +20,55 @@ namespace Downgrooves.WebApi.Controllers
         private readonly AppConfig _appConfig;
         private readonly ILogger<MixController> _logger;
         private readonly IMixService _service;
+        private readonly IMediaService _mediaService;
 
-        public MixController(IOptions<AppConfig> config, ILogger<MixController> logger, IMixService service)
+        public MixController(IOptions<AppConfig> config, ILogger<MixController> logger, IMixService service, IMediaService mediaService)
         {
             _service = service;
+            _mediaService = mediaService;
             _logger = logger;
             _appConfig = config.Value;
+        }
+
+        [HttpPost]
+        [Route("/mix/{id}/artwork")]
+        public async Task<IActionResult> AddArtwork(int id, [FromBody] MediaFile mediaFile)
+        {
+            try
+            {
+                var path = Path.Combine(_appConfig.MediaBasePath, "images", "mixes", Path.GetFileName(mediaFile.FileName));
+                var mix = await _service.GetMix(id);
+                _mediaService.AddMedia(path, mediaFile);
+                mix.ArtworkUrl = Path.GetFileName(mediaFile.FileName);
+                var m = await _service.Update(mix);
+                return Ok(m);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddArtwork {ex.Message} {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        [Route("/mix/{id}/artwork")]
+        public async Task<IActionResult> DeleteArtwork(int id)
+        {
+            try
+            {
+                var mix = await _service.GetMix(id);
+                var basePath = _appConfig.MediaBasePath;
+                var path = Path.Combine(basePath, "images", "mixes", Path.GetFileName(mix.ArtworkUrl));
+                _mediaService.RemoveMedia(path);
+                mix.ArtworkUrl = "";
+                var m = await _service.Update(mix);
+                return Ok(m);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddArtwork {ex.Message} {ex.StackTrace}");
+                throw;
+            }
         }
 
         [HttpPost]
@@ -33,7 +77,8 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.Add(mix));
+                var m = await _service.Add(mix);
+                return Ok(m);
             }
             catch (Exception ex)
             {
@@ -205,7 +250,8 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.Update(mix));
+                var m = await _service.Update(mix);
+                return Ok(m);
             }
             catch (Exception ex)
             {
