@@ -39,7 +39,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.GetVideos {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -54,7 +54,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.GetVideos {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -69,7 +69,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.GetVideos {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -84,7 +84,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.Add {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -99,7 +99,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.AddVideos {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -115,7 +115,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.RemoveVideo {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -133,7 +133,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.RemoveVideo {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -148,7 +148,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.Update {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -163,7 +163,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.AddThumbnail {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -178,7 +178,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.AddThumbnails {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -193,7 +193,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.GetThumbnails {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -208,7 +208,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.GetThumbnail {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -224,7 +224,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.RemoveThumbnail {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -240,7 +240,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.RemoveThumbnails {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -255,7 +255,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.UpdateThumbnail {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -270,7 +270,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.UpdateThumbnails {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
     }

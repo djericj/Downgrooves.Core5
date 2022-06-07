@@ -33,7 +33,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.AddCollection {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -48,7 +48,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.AddCollections {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -63,7 +63,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.AddTrack {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -78,7 +78,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.AddTracks {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -93,7 +93,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.GetCollections {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -108,7 +108,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.GetCollection {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -123,7 +123,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.GetExclusions {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -138,7 +138,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.GetTracks {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -153,7 +153,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.GetTrack {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -169,7 +169,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.RemoveCollection {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -185,7 +185,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.RemoveTrack {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -201,7 +201,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.RemoveCollections {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -217,7 +217,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.RemoveTracks {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -232,7 +232,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.UpdateCollection {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -247,7 +247,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.UpdateCollections {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -262,7 +262,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.UpdateTrack {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -277,7 +277,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.UpdateTracks {ex.Message} {ex.StackTrace}");
-                return BadRequest($"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
     }

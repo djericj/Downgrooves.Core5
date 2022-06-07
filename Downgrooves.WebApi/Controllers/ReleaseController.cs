@@ -39,7 +39,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.Add {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -54,7 +54,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.AddRange {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -69,7 +69,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.AddTrack {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -84,7 +84,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.AddTracks {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -99,7 +99,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.GetReleases {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -116,7 +116,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.GetReleases {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -132,7 +132,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.GetRelease {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -148,7 +148,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.GetReleaseTrack {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -164,7 +164,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.GetCollection {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -180,7 +180,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.Remove {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -197,7 +197,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.Remove {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -213,7 +213,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.RemoveTrack {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -229,7 +229,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.RemoveTracks {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -244,7 +244,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.Update {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -259,7 +259,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.UpdateTrack {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -274,7 +274,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.UpdateTracks {ex.Message} {ex.StackTrace}");
-                throw;
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
     }
