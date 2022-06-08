@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Downgrooves.Domain
 {
+    [Table("log")]
     public class Log
     {
         public int Id { get; set; }
