@@ -12,6 +12,7 @@ namespace Downgrooves.Persistence.Interfaces
         IRepository<ITunesCollection> ITunesCollection { get; }
         IRepository<ITunesTrack> ITunesTrack { get; }
         IRepository<Genre> Genres { get; }
+        IRepository<Log> Logs { get; }
         IMixRepository Mixes { get; }
         IRepository<MixTrack> MixTracks { get; }
         IReleaseRepository Releases { get; }

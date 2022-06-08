@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Downgrooves.Persistence;
@@ -20,6 +21,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Downgrooves.WebApi
 {
@@ -48,6 +51,8 @@ namespace Downgrooves.WebApi
                 // Disable authentication and authorization in Development.
                 services.TryAddSingleton<IPolicyEvaluator, DisableAuthenticationPolicyEvaluator>();
             }
+
+            services.AddLogging();
 
             services.AddCors(options =>
             {
@@ -125,6 +130,22 @@ namespace Downgrooves.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var connectionString = Configuration.GetConnectionString("DatabaseConnection");
+            var sqliteDbPath = connectionString.Replace("Data Source=", "");
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Configuration)
+                .WriteTo.Console(theme: AnsiConsoleTheme.Literate, applyThemeToRedirectedOutput: true)
+                .WriteTo.SQLite(sqliteDbPath, "log")
+                .Enrich.FromLogContext()
+                .Enrich.WithMachineName()
+                .CreateLogger();
+
+            Serilog.Debugging.SelfLog.Enable(msg =>
+            {
+                Console.WriteLine(msg);
+                Debugger.Break();
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

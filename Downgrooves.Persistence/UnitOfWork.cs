@@ -17,6 +17,7 @@ namespace Downgrooves.Persistence
             ITunesCollection = new Repository<ITunesCollection>(context);
             ITunesTrack = new Repository<ITunesTrack>(context);
             Genres = new Repository<Genre>(context);
+            Logs = new Repository<Log>(context);
             Mixes = new MixRepository(context);
             MixTracks = new Repository<MixTrack>(context);
             Releases = new ReleaseRepository(context);
@@ -31,6 +32,7 @@ namespace Downgrooves.Persistence
         public IRepository<ITunesCollection> ITunesCollection { get; private set; }
         public IRepository<ITunesTrack> ITunesTrack { get; private set; }
         public IRepository<Genre> Genres { get; private set; }
+        public IRepository<Log> Logs { get; set; }
         public IMixRepository Mixes { get; private set; }
         public IRepository<MixTrack> MixTracks { get; private set; }
         public IReleaseRepository Releases { get; private set; }

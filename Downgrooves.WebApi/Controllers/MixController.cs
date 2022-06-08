@@ -74,28 +74,44 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("/mix/{id}/audio")]
-        public async Task<IActionResult> AddAudio(int id, [FromForm] IFormFile file)
+        public async Task<IActionResult> AddAudio(int id, string fileName)
         {
             try
             {
-                if (file == null)
-                    return BadRequest("File is required");
-
-                var fileName = file.FileName;
-                var extension = Path.GetExtension(fileName);
-                var newFileName = $"{Path.GetFileNameWithoutExtension(fileName)}-{Guid.NewGuid()}{extension}";
-                var fullPath = Path.Combine(_appConfig.MediaBasePath, "mp3", newFileName);
-                using (var fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
-                    await file.CopyToAsync(fileStream);
-
                 var mix = await _service.GetMix(id);
-                mix.AudioUrl = newFileName;
+                mix.AudioUrl = fileName;
                 var m = await _service.Update(mix);
                 return Ok(m);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddArtwork {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddAudio {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpPost]
+        [Route("/mix/audio/appendfile/{fragment}")]
+        public async Task<IActionResult> UploadFileChunk([FromForm] IFormFile file)
+        {
+            try
+            {
+                var fileName = file.FileName;
+                var extension = Path.GetExtension(fileName);
+                var newFileName = $"{Path.GetFileNameWithoutExtension(fileName)}-{Guid.NewGuid()}{extension}";
+                var fullPath = Path.Combine(_appConfig.MediaBasePath, "mp3", newFileName);
+
+                //if (fragment == 0 && System.IO.File.Exists(newFileName))
+                //    System.IO.File.Delete(newFileName);
+
+                using (var fileStream = new FileStream(newFileName, FileMode.Append, FileAccess.Write, FileShare.None))
+                using (var bw = new BinaryWriter(fileStream))
+                    await file.CopyToAsync(fileStream);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.UploadFileChunk {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
