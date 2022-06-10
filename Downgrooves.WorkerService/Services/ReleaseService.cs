@@ -1,7 +1,7 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.WorkerService.Base;
 using Downgrooves.WorkerService.Config;
-using Downgrooves.WorkerService.Interfaces;
+using Downgrooves.WorkerService.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;

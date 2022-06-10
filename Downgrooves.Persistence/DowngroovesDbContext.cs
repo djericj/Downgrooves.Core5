@@ -10,6 +10,7 @@ namespace Downgrooves.Persistence
         {
         }
 
+        public DbSet<ApiData> ApiData { get; set; }
         public DbSet<Artist> Artists { get; set; }
         public DbSet<ITunesExclusion> ITunesExclusions { get; set; }
         public DbSet<ITunesCollection> ITunesCollections { get; set; }

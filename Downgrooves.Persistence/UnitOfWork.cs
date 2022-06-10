@@ -12,6 +12,7 @@ namespace Downgrooves.Persistence
         public UnitOfWork(DowngroovesDbContext context)
         {
             _context = context;
+            ApiData = new Repository<ApiData>(context);
             Artists = new ArtistRepository(context);
             ITunesExclusion = new Repository<ITunesExclusion>(context);
             ITunesCollection = new Repository<ITunesCollection>(context);
@@ -27,6 +28,7 @@ namespace Downgrooves.Persistence
             Videos = new VideoRepository(context);
         }
 
+        public IRepository<ApiData> ApiData { get; set; }
         public IArtistRepository Artists { get; private set; }
         public IRepository<ITunesExclusion> ITunesExclusion { get; private set; }
         public IRepository<ITunesCollection> ITunesCollection { get; private set; }

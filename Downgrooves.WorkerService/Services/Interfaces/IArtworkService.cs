@@ -3,7 +3,7 @@ using Downgrooves.Domain.ITunes;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Downgrooves.WorkerService.Interfaces
+namespace Downgrooves.WorkerService.Services.Interfaces
 {
     public interface IArtworkService
     {

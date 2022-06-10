@@ -1,7 +1,6 @@
 using Downgrooves.WorkerService.Config;
-using Downgrooves.WorkerService.Interfaces;
+using Downgrooves.WorkerService.Services.Interfaces;
 using Downgrooves.WorkerService.Services;
-using Downgrooves.WorkerService.Workers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -35,8 +34,7 @@ namespace Downgrooves.WorkerService
                     services.AddSingleton<IITunesService, ITunesService>();
                     services.AddSingleton<IReleaseService, ReleaseService>();
                     services.AddSingleton<IYouTubeService, YouTubeService>();
-                    services.AddHostedService<ITunesLoaderWorker>();
-                    services.AddHostedService<YouTubeLoaderWorker>();
+                    services.AddHostedService<ProcessWorker>();
                 });
     }
 }

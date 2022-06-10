@@ -7,6 +7,7 @@ namespace Downgrooves.Persistence.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
+        IRepository<ApiData> ApiData { get; }
         IArtistRepository Artists { get; }
         IRepository<ITunesExclusion> ITunesExclusion { get; }
         IRepository<ITunesCollection> ITunesCollection { get; }

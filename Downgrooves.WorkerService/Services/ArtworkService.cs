@@ -2,7 +2,7 @@
 using Downgrooves.Domain.ITunes;
 using Downgrooves.WorkerService.Base;
 using Downgrooves.WorkerService.Config;
-using Downgrooves.WorkerService.Interfaces;
+using Downgrooves.WorkerService.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -16,18 +16,16 @@ namespace Downgrooves.WorkerService.Services
     public class ArtworkService : ApiBase, IArtworkService
     {
         private readonly ILogger<ArtworkService> _logger;
-        private readonly IYouTubeService _youTubeService;
         public string ApiUrl { get; }
         public string Token { get; }
         public string ArtworkBasePath { get; }
 
-        public ArtworkService(IOptions<AppConfig> config, ILogger<ArtworkService> logger, IYouTubeService youTubeService) : base(config)
+        public ArtworkService(IOptions<AppConfig> config, ILogger<ArtworkService> logger) : base(config)
         {
             ApiUrl = config.Value.ApiUrl;
             Token = config.Value.Token;
             ArtworkBasePath = config.Value.MediaBasePath;
             _logger = logger;
-            _youTubeService = youTubeService;
         }
 
         public async Task GetArtwork(IEnumerable<ITunesTrack> tracks)

@@ -1,4 +1,5 @@
-﻿using Downgrooves.Domain.ITunes;
+﻿using Downgrooves.Domain;
+using Downgrooves.Domain.ITunes;
 using Downgrooves.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +15,13 @@ namespace Downgrooves.WebApi.Controllers
     public class ITunesController : ControllerBase
     {
         private readonly ILogger<ITunesController> _logger;
-        private readonly IITunesService _service;
+        private readonly IITunesService _itunesService;
+        private readonly IApiDataService _apiDataService;
 
-        public ITunesController(ILogger<ITunesController> logger, IITunesService service)
+        public ITunesController(ILogger<ITunesController> logger, IITunesService itunesService, IApiDataService apiDataService)
         {
-            _service = service;
+            _itunesService = itunesService;
+            _apiDataService = apiDataService;
             _logger = logger;
         }
 
@@ -28,7 +31,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.AddCollection(item));
+                return Ok(await _itunesService.AddCollection(item));
             }
             catch (System.Exception ex)
             {
@@ -43,7 +46,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.AddCollections(items));
+                return Ok(await _itunesService.AddCollections(items));
             }
             catch (System.Exception ex)
             {
@@ -58,7 +61,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.AddTrack(item));
+                return Ok(await _itunesService.AddTrack(item));
             }
             catch (System.Exception ex)
             {
@@ -73,7 +76,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.AddTracks(items));
+                return Ok(await _itunesService.AddTracks(items));
             }
             catch (System.Exception ex)
             {
@@ -88,7 +91,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.GetCollections(artistName));
+                return Ok(await _itunesService.GetCollections(artistName));
             }
             catch (System.Exception ex)
             {
@@ -103,7 +106,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.GetCollection(id));
+                return Ok(await _itunesService.GetCollection(id));
             }
             catch (System.Exception ex)
             {
@@ -118,7 +121,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.GetExclusions());
+                return Ok(await _itunesService.GetExclusions());
             }
             catch (System.Exception ex)
             {
@@ -133,7 +136,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.GetTracks(artistName));
+                return Ok(await _itunesService.GetTracks(artistName));
             }
             catch (System.Exception ex)
             {
@@ -148,7 +151,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.GetTrack(id));
+                return Ok(await _itunesService.GetTrack(id));
             }
             catch (System.Exception ex)
             {
@@ -163,7 +166,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                await _service.RemoveCollection(id);
+                await _itunesService.RemoveCollection(id);
                 return Ok();
             }
             catch (System.Exception ex)
@@ -179,7 +182,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                await _service.RemoveTrack(id);
+                await _itunesService.RemoveTrack(id);
                 return Ok();
             }
             catch (System.Exception ex)
@@ -195,7 +198,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                await _service.RemoveCollections(ids);
+                await _itunesService.RemoveCollections(ids);
                 return Ok();
             }
             catch (System.Exception ex)
@@ -211,7 +214,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                await _service.RemoveTracks(ids);
+                await _itunesService.RemoveTracks(ids);
                 return Ok();
             }
             catch (System.Exception ex)
@@ -227,7 +230,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.UpdateCollection(item));
+                return Ok(await _itunesService.UpdateCollection(item));
             }
             catch (System.Exception ex)
             {
@@ -242,7 +245,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.UpdateCollections(items));
+                return Ok(await _itunesService.UpdateCollections(items));
             }
             catch (System.Exception ex)
             {
@@ -257,7 +260,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.UpdateTrack(item));
+                return Ok(await _itunesService.UpdateTrack(item));
             }
             catch (System.Exception ex)
             {
@@ -272,11 +275,72 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                return Ok(await _service.UpdateTracks(items));
+                return Ok(await _itunesService.UpdateTracks(items));
             }
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ITunesController)}.UpdateTracks {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpPost]
+        [Route("data")]
+        public async Task<IActionResult> AddApiData(ApiData data)
+        {
+            try
+            {
+                return Ok(await _apiDataService.Add(data));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.AddApiData {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpGet]
+        [Route("data/type/{type}")]
+        public async Task<IActionResult> GetApiData(ApiData.ApiDataType type)
+        {
+            try
+            {
+                return Ok(await _apiDataService.GetApiData(type));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.GetApiData {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpPut]
+        [Route("data")]
+        public async Task<IActionResult> UpdateApiData(ApiData data)
+        {
+            try
+            {
+                return Ok(await _apiDataService.Update(data));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.UpdateApiData {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpDelete]
+        [Route("data/{id}")]
+        public async Task<IActionResult> RemoveApiData(int id)
+        {
+            try
+            {
+                await _apiDataService.Remove(id);
+                return Ok();
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.RemoveApiData {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }

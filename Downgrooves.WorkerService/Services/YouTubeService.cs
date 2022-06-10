@@ -3,7 +3,7 @@ using Downgrooves.Domain.YouTube;
 using Downgrooves.WorkerService.Base;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Extensions;
-using Downgrooves.WorkerService.Interfaces;
+using Downgrooves.WorkerService.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -19,15 +19,42 @@ namespace Downgrooves.WorkerService.Services
     {
         private int index = 0;
         private readonly ILogger<YouTubeService> _logger;
+        private readonly IArtworkService _artworkService;
 
         public string ApiUrl { get; }
         public string Token { get; }
 
-        public YouTubeService(IOptions<AppConfig> config, ILogger<YouTubeService> logger) : base(config)
+        public YouTubeService(IOptions<AppConfig> config, ILogger<YouTubeService> logger, IArtworkService artworkService) : base(config)
         {
             ApiUrl = config.Value.ApiUrl;
             Token = config.Value.Token;
             _logger = logger;
+            _artworkService = artworkService;
+        }
+
+        public async void Process()
+        {
+            var newVideos = new List<Video>();
+            var videos = new List<Video>(await GetYouTubeVideosJson());
+            var existingVideos = new List<Video>(await GetExistingVideos());
+
+            if (existingVideos.Any())
+                newVideos = videos.Where(x => existingVideos.All(y => x.SourceSystemId != y.SourceSystemId)).ToList();
+            else
+                newVideos = videos;
+
+            if (newVideos.Any())
+            {
+                var count = await AddNewVideos(newVideos);
+                if (count > 0)
+                    _logger.LogInformation($"{count} videos added.");
+
+                await _artworkService.GetArtwork(newVideos);
+            }
+            else
+            {
+                _logger.LogInformation("No new videos.");
+            }
         }
 
         public async Task<IEnumerable<Video>> GetExistingVideos()

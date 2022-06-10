@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Downgrooves.WorkerService.Interfaces
+namespace Downgrooves.WorkerService.Services.Interfaces
 {
     public interface IYouTubeService
     {
+        void Process();
+
         Task<IEnumerable<Video>> GetExistingVideos();
 
         Task<IEnumerable<Video>> GetYouTubeVideosJson();
