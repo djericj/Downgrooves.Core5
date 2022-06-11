@@ -47,6 +47,11 @@ namespace Downgrooves.Persistence
                 .WithOne(y => y.Release)
                 .IsRequired();
 
+            modelBuilder
+                .Entity<ApiData>()
+                .Property(e => e.IsChanged)
+                .HasConversion<int>();
+
             //modelBuilder.Entity<Release>()
             //    .HasOne(x => x.Artist)
             //    .WithMany(y => y.Releases)

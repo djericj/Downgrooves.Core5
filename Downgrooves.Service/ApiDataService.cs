@@ -2,6 +2,7 @@
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,21 +23,32 @@ namespace Downgrooves.Service
         {
             try
             {
-                await _unitOfWork.ApiData.AddAsync(data);
-                await _unitOfWork.CompleteAsync();
-                return data;
+                var exists = await GetApiData(data.DataType, data.Artist);
+                if (exists != null && exists.Data == data.Data)
+                {
+                    _logger.LogInformation($"Data for {data.Artist} {data.DataType} is unchanged.");
+                    exists.IsChanged = false;
+                    exists.LastUpdate = DateTime.Now;
+                    _unitOfWork.ApiData.UpdateState(exists);
+                    await _unitOfWork.CompleteAsync();
+                    return data;
+                }
+                else
+                {
+                    _logger.LogInformation($"Data for {data.Artist} {data.DataType} HAS changed.");
+                    await _unitOfWork.ApiData.Remove(exists);
+                    data.IsChanged = true;
+                    data.LastUpdate = DateTime.Now;
+                    await _unitOfWork.ApiData.AddAsync(data);
+                    await _unitOfWork.CompleteAsync();
+                    return data;
+                }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"Exception in Downgrooves.Service.ApiDataService.Add {ex.Message} {ex.StackTrace}");
                 throw;
             }
-        }
-
-        public async Task<ApiData> GetApiData(ApiData.ApiDataType dataType)
-        {
-            var apiData = await _unitOfWork.ApiData.FindAsync(x => (int)x.DataType == (int)dataType);
-            return apiData.FirstOrDefault();
         }
 
         public async Task<ApiData> Update(ApiData data)
@@ -47,27 +59,21 @@ namespace Downgrooves.Service
                 await _unitOfWork.CompleteAsync();
                 return data;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"Exception in Downgrooves.Service.ApiDataService.Update {ex.Message} {ex.StackTrace}");
                 throw;
             }
         }
 
-        public async Task Remove(int id)
+        public async Task<ApiData> GetApiData(ApiData.ApiDataType dataType, string artist)
         {
-            try
-            {
-                var data = await _unitOfWork.ApiData.GetAsync(id);
-                await _unitOfWork.ApiData.Remove(data);
-                await _unitOfWork.CompleteAsync();
-                return;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.ApiDataService.Remove {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            var apiData = await _unitOfWork.ApiData.FindAsync(x => (int)x.DataType == (int)dataType && x.Artist == artist);
+            return apiData.FirstOrDefault();
+        }
+
+        public async Task ReloadData()
+        {
         }
     }
 }

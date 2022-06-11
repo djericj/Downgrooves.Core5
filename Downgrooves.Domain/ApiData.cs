@@ -7,6 +7,8 @@ namespace Downgrooves.Domain
     [Table("apiData")]
     public class ApiData
     {
+        private bool isChanged;
+
         public enum ApiDataType
         {
             iTunesCollection = 1,
@@ -23,6 +25,8 @@ namespace Downgrooves.Domain
         public string Artist { get; set; }
         public string Url { get; set; }
         public string Data { get; set; }
+        public int Total { get; set; }
+        public bool IsChanged { get => isChanged; set => isChanged = value; }
         public DateTime LastUpdate { get; set; }
     }
 }

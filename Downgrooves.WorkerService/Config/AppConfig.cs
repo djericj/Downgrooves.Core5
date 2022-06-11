@@ -14,6 +14,8 @@
     public class ITunes
     {
         public int PollInterval { get; set; }
+        public string CollectionLookupUrl { get; set; }
+        public string TracksLookupUrl { get; set; }
     }
 
     public class YouTube

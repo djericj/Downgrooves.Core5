@@ -284,63 +284,18 @@ namespace Downgrooves.WebApi.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("data")]
-        public async Task<IActionResult> AddApiData(ApiData data)
-        {
-            try
-            {
-                return Ok(await _apiDataService.Add(data));
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ITunesController)}.AddApiData {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
         [HttpGet]
-        [Route("data/type/{type}")]
-        public async Task<IActionResult> GetApiData(ApiData.ApiDataType type)
+        [Route("reload")]
+        public async Task<IActionResult> ReloadData()
         {
             try
             {
-                return Ok(await _apiDataService.GetApiData(type));
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ITunesController)}.GetApiData {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpPut]
-        [Route("data")]
-        public async Task<IActionResult> UpdateApiData(ApiData data)
-        {
-            try
-            {
-                return Ok(await _apiDataService.Update(data));
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ITunesController)}.UpdateApiData {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpDelete]
-        [Route("data/{id}")]
-        public async Task<IActionResult> RemoveApiData(int id)
-        {
-            try
-            {
-                await _apiDataService.Remove(id);
+                await _apiDataService.ReloadData();
                 return Ok();
             }
             catch (System.Exception ex)
             {
-                _logger.LogError($"Exception in {nameof(ITunesController)}.RemoveApiData {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(ITunesController)}.UpdateTracks {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
