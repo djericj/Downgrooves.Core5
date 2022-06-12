@@ -283,21 +283,5 @@ namespace Downgrooves.WebApi.Controllers
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
-
-        [HttpGet]
-        [Route("reload")]
-        public async Task<IActionResult> ReloadData()
-        {
-            try
-            {
-                await _apiDataService.ReloadData();
-                return Ok();
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ITunesController)}.UpdateTracks {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
     }
 }

@@ -11,6 +11,6 @@ namespace Downgrooves.Service.Interfaces
 
         Task<ApiData> Update(ApiData data);
 
-        Task ReloadData();
+        Task ReloadData(ApiData data);
     }
 }

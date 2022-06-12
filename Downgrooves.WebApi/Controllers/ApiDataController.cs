@@ -22,6 +22,7 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
+        [Route("/data/{type}/artist/{artist}")]
         public async Task<IActionResult> GetApiData(ApiData.ApiDataType dataType, string artist)
         {
             try
@@ -49,18 +50,16 @@ namespace Downgrooves.WebApi.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("reload")]
-        public async Task<IActionResult> ReloadData()
+        [HttpPut]
+        public async Task<IActionResult> Update(ApiData data)
         {
             try
             {
-                await _apiDataService.ReloadData();
-                return Ok();
+                return Ok(await _apiDataService.Update(data));
             }
             catch (System.Exception ex)
             {
-                _logger.LogError($"Exception in {nameof(ITunesController)}.ReloadData {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(ITunesController)}.Update {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }

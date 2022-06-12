@@ -2,6 +2,8 @@
 using Downgrooves.Domain.ITunes;
 using Downgrooves.Persistence.Interfaces;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Downgrooves.Persistence
 {
@@ -42,6 +44,19 @@ namespace Downgrooves.Persistence
         public IRepository<Thumbnail> Thumbnails { get; set; }
         public IUserRepository Users { get; private set; }
         public IVideoRepository Videos { get; private set; }
+
+        public async Task<int> ExecuteNonQueryAsync(string query)
+        {
+            using (var command = _context.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = query;
+                command.CommandType = CommandType.Text;
+
+                await _context.Database.OpenConnectionAsync();
+
+                return await command.ExecuteNonQueryAsync();
+            }
+        }
 
         public void Complete() => _context.SaveChanges();
 

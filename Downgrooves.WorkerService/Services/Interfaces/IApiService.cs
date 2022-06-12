@@ -8,10 +8,10 @@ namespace Downgrooves.WorkerService.Services.Interfaces
     {
         Task<JObject> Lookup(string url);
 
-        Task<JObject> GetResultsFromApi(string url, ApiData.ApiDataType type, string artist);
+        Task<ApiData> GetResultsFromApi(string url, ApiData.ApiDataType type, string artist);
 
         Task<ApiData> AddApiData(ApiData data);
 
-        Task<ApiData> AddApiData(ApiData.ApiDataType type, string artist, string url, JObject obj);
+        Task<ApiData> UpdateApiData(ApiData data);
     }
 }

@@ -2,6 +2,7 @@
 using Downgrooves.WorkerService.Base;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -22,28 +23,10 @@ namespace Downgrooves.WorkerService.Services
             return JObject.Parse(data);
         }
 
-        public async Task<JObject> GetResultsFromApi(string url, ApiData.ApiDataType type, string artist)
+        public async Task<ApiData> GetResultsFromApi(string url, ApiData.ApiDataType type, string artist)
         {
             var data = await GetString(url.Replace("{searchTerm}", artist));
             var obj = JObject.Parse(data);
-            await AddApiData(type, artist, url, obj);
-            return obj;
-        }
-
-        public async Task<ApiData> AddApiData(ApiData data)
-        {
-            var content = "";
-            var response = await ApiPost("data", data);
-            if (response.IsSuccessful)
-                content = response.Content;
-
-            if (!string.IsNullOrEmpty(content))
-                return JsonConvert.DeserializeObject<ApiData>(content);
-            return null;
-        }
-
-        public async Task<ApiData> AddApiData(ApiData.ApiDataType type, string artist, string url, JObject obj)
-        {
             var apiData = new ApiData();
             apiData.DataType = type;
             apiData.Artist = artist;
@@ -53,6 +36,22 @@ namespace Downgrooves.WorkerService.Services
             apiData.LastUpdate = DateTime.Now;
             await AddApiData(apiData);
             return apiData;
+        }
+
+        public async Task<ApiData> AddApiData(ApiData apiData)
+        {
+            var response = await ApiPost("data", apiData);
+            if (response.IsSuccessful && !string.IsNullOrEmpty(response.Content))
+                return JsonConvert.DeserializeObject<ApiData>(response.Content);
+            return null;
+        }
+
+        public async Task<ApiData> UpdateApiData(ApiData apiData)
+        {
+            var response = await ApiPut<ApiData>("data", apiData);
+            if (response.IsSuccessful && !string.IsNullOrEmpty(response.Content))
+                return JsonConvert.DeserializeObject<ApiData>(response.Content);
+            return null;
         }
     }
 }

@@ -23,6 +23,8 @@ namespace Downgrooves.Persistence.Interfaces
         IUserRepository Users { get; }
         IVideoRepository Videos { get; }
 
+        Task<int> ExecuteNonQueryAsync(string query);
+
         void Complete();
 
         Task CompleteAsync();

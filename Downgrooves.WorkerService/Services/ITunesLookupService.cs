@@ -5,6 +5,7 @@ using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Extensions;
 using Downgrooves.WorkerService.Services.Interfaces;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -41,8 +42,8 @@ namespace Downgrooves.WorkerService.Services
         public async Task<IEnumerable<ITunesLookupResultItem>> LookupCollections(string searchTerm)
         {
             var url = _appConfig.ITunes.CollectionLookupUrl;
-            var obj = await _apiService.GetResultsFromApi(url, ApiData.ApiDataType.iTunesCollection, searchTerm);
-            var results = obj?.ToObjects<ITunesLookupResultItem>("results");
+            var apiData = await _apiService.GetResultsFromApi(url, ApiData.ApiDataType.iTunesCollection, searchTerm);
+            var results = JsonConvert.DeserializeObject<ITunesLookupResultItem[]>(apiData.Data);
             return results?
                 .Where(x => x.WrapperType == "collection")
                 .Where(x => !x.CollectionName.Contains("Remix"))
@@ -52,8 +53,8 @@ namespace Downgrooves.WorkerService.Services
         public async Task<IEnumerable<ITunesLookupResultItem>> LookupTracks(string searchTerm)
         {
             var url = _appConfig.ITunes.TracksLookupUrl;
-            var obj = await _apiService.GetResultsFromApi(url, ApiData.ApiDataType.iTunesTrack, searchTerm);
-            var results = obj?.ToObjects<ITunesLookupResultItem>("results");
+            var apiData = await _apiService.GetResultsFromApi(url, ApiData.ApiDataType.iTunesTrack, searchTerm);
+            var results = JsonConvert.DeserializeObject<ITunesLookupResultItem[]>(apiData.Data);
             return results?.Where(x => x.WrapperType == "track");
         }
 
