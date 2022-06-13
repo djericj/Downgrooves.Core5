@@ -1,5 +1,4 @@
-﻿using Downgrooves.Domain;
-using Downgrooves.Domain.ITunes;
+﻿using Downgrooves.Domain.ITunes;
 using Downgrooves.WorkerService.Base;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Services.Interfaces;
@@ -24,16 +23,16 @@ namespace Downgrooves.WorkerService.Services
         {
             ApiUrl = config.Value.ApiUrl;
             Token = config.Value.Token;
-            ArtworkBasePath = config.Value.MediaBasePath;
+            ArtworkBasePath = config.Value.ArtworkBasePath;
             _logger = logger;
         }
 
-        public async Task GetArtwork(IEnumerable<ITunesTrack> tracks)
+        public async Task DownloadArtwork(IEnumerable<ITunesTrack> tracks)
         {
             try
             {
                 foreach (var item in tracks)
-                    await GetArtwork(item);
+                    await DownloadArtwork(item);
             }
             catch (Exception ex)
             {
@@ -42,12 +41,12 @@ namespace Downgrooves.WorkerService.Services
             }
         }
 
-        public async Task GetArtwork(IEnumerable<ITunesCollection> collections)
+        public async Task DownloadArtwork(IEnumerable<ITunesCollection> collections)
         {
             try
             {
                 foreach (var item in collections)
-                    await GetArtwork(item);
+                    await DownloadArtwork(item);
             }
             catch (Exception ex)
             {
@@ -56,21 +55,7 @@ namespace Downgrooves.WorkerService.Services
             }
         }
 
-        public async Task GetArtwork(IEnumerable<Video> videos)
-        {
-            try
-            {
-                foreach (var item in videos)
-                    await GetArtwork(item);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                _logger.LogError(ex.StackTrace);
-            }
-        }
-
-        private async Task GetArtwork(ITunesTrack track)
+        private async Task DownloadArtwork(ITunesTrack track)
         {
             var fileName = track.TrackId.ToString();
             var imagePath = Path.Combine(ArtworkBasePath, "tracks", $"{fileName}.jpg");
@@ -82,6 +67,7 @@ namespace Downgrooves.WorkerService.Services
                     {
                         await client.DownloadFileTaskAsync(new Uri(track.ArtworkUrl100.Replace("100x100", "500x500")), $"{imagePath}");
                         _logger.LogInformation($"Downloaded track artwork {imagePath}");
+                        await Task.Delay(1000); // wait 1 sec to prevent getting 429 Too Many Requests error from iTunes API
                     }
                     catch (Exception ex)
                     {
@@ -92,7 +78,7 @@ namespace Downgrooves.WorkerService.Services
             }
         }
 
-        private async Task GetArtwork(ITunesCollection collection)
+        private async Task DownloadArtwork(ITunesCollection collection)
         {
             var fileName = collection.CollectionId.ToString();
             var imagePath = Path.Combine(ArtworkBasePath, "collections", $"{fileName}.jpg");
@@ -104,42 +90,12 @@ namespace Downgrooves.WorkerService.Services
                     {
                         await client.DownloadFileTaskAsync(new Uri(collection.ArtworkUrl100.Replace("100x100", "500x500")), $"{imagePath}");
                         _logger.LogInformation($"Downloaded collection artwork {imagePath}");
+                        await Task.Delay(1000); // wait 1 sec to prevent getting 429 Too Many Requests error from iTunes API
                     }
                     catch (Exception ex)
                     {
                         _logger.LogError(ex.Message);
                         _logger.LogError(ex.StackTrace);
-                    }
-                }
-            }
-        }
-
-        private async Task GetArtwork(Video video)
-        {
-            var folder = new DirectoryInfo(Path.Combine(ArtworkBasePath, "videos", video.SourceSystemId));
-            if (!folder.Exists)
-                folder.Create();
-            if (video.Thumbnails != null)
-            {
-                foreach (var item in video.Thumbnails)
-                {
-                    var imagePath = Path.Combine(folder.FullName, $"{item.Type}.jpg");
-                    if (!File.Exists(imagePath))
-                    {
-                        using (WebClient client = new WebClient())
-                        {
-                            try
-                            {
-                                await client.DownloadFileTaskAsync(new Uri(item.Url), $"{imagePath}");
-                                item.Url = Path.GetFileName(imagePath);
-                                _logger.LogInformation($"Downloaded video artwork {imagePath}");
-                            }
-                            catch (Exception ex)
-                            {
-                                _logger.LogError(ex.Message);
-                                _logger.LogError(ex.StackTrace);
-                            }
-                        }
                     }
                 }
             }

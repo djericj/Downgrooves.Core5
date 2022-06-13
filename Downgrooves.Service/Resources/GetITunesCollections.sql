@@ -1,4 +1,4 @@
-﻿delete from iTunesCollection;
+﻿delete from iTunesCollection where Artist = @artistName;
 insert into iTunesCollection
 (
 CollectionId,
@@ -16,6 +16,7 @@ Copyright,
 Country,
 Currency,
 ReleaseDate,
+SourceArtistId,
 PrimaryGenreName,
 CollectionType,
 WrapperType,
@@ -37,6 +38,7 @@ json_extract( value, '$.copyright' ) Copyright,
 json_extract( value, '$.country' ) Country,
 json_extract( value, '$.currency' ) Currency,
 json_extract( value, '$.releaseDate' ) ReleaseDate,
+(select artistId from artist where name = @artistName),
 json_extract( value, '$.primaryGenreName' ) PrimaryGenreName,
 json_extract( value, '$.collectionType' ) CollectionType,
 json_extract( value, '$.wrapperType' ) WrapperType,
@@ -52,4 +54,5 @@ json_each( apiData.data )
 where json_extract( value, '$.collectionId' ) is not NULL
 and json_extract( value, '$.wrapperType' ) = 'collection'
 and CollectionId not in (select collectionId from iTunesExclusion WHERE collectionId is not null)
+and CollectionId not in (select collectionId from iTunesCollection WHERE collectionId is not null)
 order by json_extract( value, '$.collectionCensoredName' )

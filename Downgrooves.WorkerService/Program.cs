@@ -56,10 +56,7 @@ namespace Downgrooves.WorkerService
                     services.AddSingleton<IApiService, ApiService>();
                     services.AddSingleton<IArtistService, ArtistService>();
                     services.AddSingleton<IArtworkService, ArtworkService>();
-                    services.AddSingleton<IITunesLookupService, ITunesLookupService>();
                     services.AddSingleton<IITunesService, ITunesService>();
-                    services.AddSingleton<IReleaseService, ReleaseService>();
-                    services.AddSingleton<IYouTubeService, YouTubeService>();
                     services.AddHostedService<ProcessWorker>();
                 });
     }

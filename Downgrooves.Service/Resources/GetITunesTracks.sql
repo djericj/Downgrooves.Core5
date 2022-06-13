@@ -1,4 +1,4 @@
-﻿delete from iTunesTrack;
+﻿delete from iTunesTrack where Artist = @artistName;
 insert into iTunesTrack
 (
 Kind,
@@ -73,4 +73,5 @@ and apiDataType = 2
 order by lastUpdate DESC
 ) as apiData, 
 json_each( apiData.data ) 
+where TrackId not in (select TrackId from iTunesTrack where TrackId is not null)
 order by json_extract( value, '$.collectionId' )

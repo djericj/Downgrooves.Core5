@@ -17,5 +17,6 @@ namespace Downgrooves.Domain.ITunes
 
         public string CollectionType { get; set; }
         public string Copyright { get; set; }
+        public string WrapperType { get; set; }
     }
 }

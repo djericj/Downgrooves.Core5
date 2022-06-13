@@ -22,7 +22,7 @@ namespace Downgrooves.Domain.ITunes
         public string TrackViewUrl { get; set; }
         public string PreviewUrl { get; set; }
         public string ArtworkUrl30 { get; set; }
-        public double TrackPrice { get; set; }
+        public double? TrackPrice { get; set; }
         public string TrackExplicitness { get; set; }
         public int DiscCount { get; set; }
         public int DiscNumber { get; set; }
