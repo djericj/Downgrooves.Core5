@@ -2,7 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Configurations>Debug;Release;WebApiOnly</Configurations>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	  <Nullable>enable</Nullable>
+	  <PackageId>Downgrooves.Domain</PackageId>
+	  <Version>5.0.0</Version>
+	  <Authors>Eric Rydberg</Authors>
+	  <Company>Downgrooves</Company>
+	  <PackageTags>Downgrooves</PackageTags>
+	  <Description>This package contains the domain model objects for downgrooves.com</Description>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
