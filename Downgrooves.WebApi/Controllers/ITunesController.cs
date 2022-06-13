@@ -16,12 +16,10 @@ namespace Downgrooves.WebApi.Controllers
     {
         private readonly ILogger<ITunesController> _logger;
         private readonly IITunesService _itunesService;
-        private readonly IApiDataService _apiDataService;
 
-        public ITunesController(ILogger<ITunesController> logger, IITunesService itunesService, IApiDataService apiDataService)
+        public ITunesController(ILogger<ITunesController> logger, IITunesService itunesService)
         {
             _itunesService = itunesService;
-            _apiDataService = apiDataService;
             _logger = logger;
         }
 

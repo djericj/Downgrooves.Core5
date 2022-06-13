@@ -392,13 +392,13 @@ namespace Downgrooves.Test
             {
                 ReleaseDate = new DateTime(2016, 7, 1),
                 Id = 1,
-                CollectionName = "Test One"
+                CollectionCensoredName = "Test One"
             });
             collections.Add(new ITunesCollection()
             {
                 ReleaseDate = new DateTime(2016, 7, 1),
                 Id = 2,
-                CollectionName = "Test Two"
+                CollectionCensoredName = "Test Two"
             });
             return collections;
         }

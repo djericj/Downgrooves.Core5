@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Downgrooves.Domain.ITunes
 {
@@ -7,9 +8,15 @@ namespace Downgrooves.Domain.ITunes
     /// </summary>
     public abstract class ITunesItem
     {
+        private string _collectionCensoredName;
+
         public int ArtistId { get; set; }
         public string ArtistName { get; set; }
-        public string CollectionCensoredName { get; set; }
+
+        [NotMapped]
+        public string CollectionName { get => _collectionCensoredName; }
+
+        public string CollectionCensoredName { get => _collectionCensoredName; set => _collectionCensoredName = value; }
         public string ArtistViewUrl { get; set; }
         public string CollectionViewUrl { get; set; }
         public string ArtworkUrl60 { get; set; }
