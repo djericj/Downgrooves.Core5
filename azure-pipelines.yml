@@ -30,8 +30,6 @@ steps:
     version: '5.0.x'
 
 - task: NuGetAuthenticate@1
-  inputs:
-    nuGetServiceConnections: 'NEPTUNE'
 
 - task: NuGetToolInstaller@1
 
