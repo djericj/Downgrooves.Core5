@@ -1,9 +1,7 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Downgrooves.Domain
+namespace Downgrooves.Persistence.Entites
 {
-    [Table("log")]
     public class Log
     {
         public int Id { get; set; }

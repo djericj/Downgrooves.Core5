@@ -1,14 +1,13 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Model;
 using Downgrooves.Service.Interfaces;
+using Downgrooves.Utilities;
 using Downgrooves.WebApi.Config;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Controllers
@@ -21,120 +20,12 @@ namespace Downgrooves.WebApi.Controllers
         private readonly AppConfig _appConfig;
         private readonly ILogger<MixController> _logger;
         private readonly IMixService _service;
-        private readonly IMediaService _mediaService;
 
-        public MixController(IOptions<AppConfig> config, ILogger<MixController> logger, IMixService service, IMediaService mediaService)
+        public MixController(IOptions<AppConfig> config, ILogger<MixController> logger, IMixService service)
         {
             _service = service;
-            _mediaService = mediaService;
             _logger = logger;
             _appConfig = config.Value;
-        }
-
-        [HttpPost]
-        [Route("/mix/{id}/artwork")]
-        public async Task<IActionResult> AddArtwork(int id, [FromBody] MediaFile mediaFile)
-        {
-            try
-            {
-                var path = Path.Combine(_appConfig.MediaBasePath, "images", "mixes", Path.GetFileName(mediaFile.FileName));
-                var mix = await _service.GetMix(id);
-                _mediaService.AddMedia(path, mediaFile);
-                mix.ArtworkUrl = Path.GetFileName(mediaFile.FileName);
-                var m = await _service.Update(mix);
-                return Ok(m);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddArtwork {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpDelete]
-        [Route("/mix/{id}/artwork")]
-        public async Task<IActionResult> DeleteArtwork(int id)
-        {
-            try
-            {
-                var mix = await _service.GetMix(id);
-                var basePath = _appConfig.MediaBasePath;
-                var path = Path.Combine(basePath, "images", "mixes", Path.GetFileName(mix.ArtworkUrl));
-                _mediaService.RemoveMedia(path);
-                mix.ArtworkUrl = "";
-                var m = await _service.Update(mix);
-                return Ok(m);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddArtwork {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpPost]
-        [Route("/mix/{id}/audio")]
-        public async Task<IActionResult> AddAudio(int id, string fileName)
-        {
-            try
-            {
-                var mix = await _service.GetMix(id);
-                mix.AudioUrl = fileName;
-                var m = await _service.Update(mix);
-                return Ok(m);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddAudio {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpPost]
-        [Route("/mix/audio/appendfile/{fragment}")]
-        public async Task<IActionResult> UploadFileChunk([FromForm] IFormFile file)
-        {
-            try
-            {
-                var fileName = file.FileName;
-                var extension = Path.GetExtension(fileName);
-                var newFileName = $"{Path.GetFileNameWithoutExtension(fileName)}-{Guid.NewGuid()}{extension}";
-                var fullPath = Path.Combine(_appConfig.MediaBasePath, "mp3", newFileName);
-
-                //if (fragment == 0 && System.IO.File.Exists(newFileName))
-                //    System.IO.File.Delete(newFileName);
-
-                using (var fileStream = new FileStream(newFileName, FileMode.Append, FileAccess.Write, FileShare.None))
-                using (var bw = new BinaryWriter(fileStream))
-                    await file.CopyToAsync(fileStream);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.UploadFileChunk {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpDelete]
-        [Route("/mix/{id}/audio")]
-        public async Task<IActionResult> DeleteAudio(int id)
-        {
-            try
-            {
-                var mix = await _service.GetMix(id);
-                var basePath = _appConfig.MediaBasePath;
-                var path = Path.Combine(basePath, "mp3", Path.GetFileName(mix.AudioUrl));
-                _mediaService.RemoveMedia(path);
-                mix.AudioUrl = "";
-                var m = await _service.Update(mix);
-                return Ok(m);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddArtwork {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
         }
 
         [HttpPost]
@@ -148,7 +39,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.Add {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(MixController)}.{nameof(Add)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -163,7 +54,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddTrack {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(MixController)}.{nameof(AddTrack)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -178,7 +69,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.AddTracks {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(MixController)}.{nameof(AddTracks)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -193,7 +84,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in {nameof(MixController)}.GetMixes {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(MixController)}.{nameof(GetMixes)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -209,7 +100,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in {nameof(MixController)}.GetMixes {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(MixController)}.{nameof(GetMixes)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -225,7 +116,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in {nameof(MixController)}.GetMixesByCategory {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(MixController)}.{nameof(GetMixesByCategory)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -241,7 +132,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in {nameof(MixController)}.GetMixesByGenre {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(MixController)}.{nameof(GetMixesByGenre)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -257,7 +148,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in {nameof(MixController)}.GetMixes {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(MixController)}.{nameof(GetMix)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -273,7 +164,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.Remove {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(MixController)}.{nameof(Remove)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -289,7 +180,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.RemoveTrack {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(MixController)}.{nameof(RemoveTrack)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -305,7 +196,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.RemoveTracks {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(MixController)}.{nameof(RemoveTracks)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -321,13 +212,13 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.Update {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(MixController)}.{nameof(Update)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
 
         [HttpPut]
-        [Route("/mix/track")]
+        [Route("/mix/track/{id}")]
         public async Task<IActionResult> UpdateTrack(MixTrack mixTrack)
         {
             try
@@ -336,7 +227,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.UpdateTrack {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(MixController)}.{nameof(UpdateTrack)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -351,7 +242,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ITunesService.UpdateTracks {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(MixController)}.{nameof(UpdateTracks)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }

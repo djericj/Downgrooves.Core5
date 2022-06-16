@@ -1,5 +1,6 @@
-﻿using Downgrooves.Domain;
-using Downgrooves.Domain.ITunes;
+﻿using Downgrooves.Model;
+using Downgrooves.Model.ITunes;
+using Downgrooves.Persistence.Entites;
 using System;
 using System.Threading.Tasks;
 

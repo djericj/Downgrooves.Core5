@@ -1,4 +1,4 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Persistence.Entites;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

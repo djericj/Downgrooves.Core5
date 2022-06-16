@@ -1,4 +1,4 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Model;
 
 namespace Downgrooves.Service.Interfaces
 {

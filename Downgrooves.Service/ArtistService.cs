@@ -1,4 +1,4 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Model;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ namespace Downgrooves.Service
         }
 
         public async Task<IEnumerable<Artist>> GetArtists() => await _unitOfWork.Artists.GetArtists();
+
         public async Task<IEnumerable<Artist>> GetArtistsAndReleases() => await _unitOfWork.Artists.GetArtistsAndReleases();
     }
 }

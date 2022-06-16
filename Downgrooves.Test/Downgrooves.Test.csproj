@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Downgrooves.Model" Version="5.0.8" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="Moq" Version="4.18.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
@@ -15,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Downgrooves.Domain\Downgrooves.Domain.csproj" />
     <ProjectReference Include="..\Downgrooves.Service\Downgrooves.Service.csproj" />
     <ProjectReference Include="..\Downgrooves.WebApi\Downgrooves.WebApi.csproj" />
   </ItemGroup>

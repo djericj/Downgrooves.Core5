@@ -1,4 +1,4 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Model;
 using Downgrooves.Service.Interfaces;
 using Downgrooves.WebApi.Config;
 using Downgrooves.WebApi.Controllers;
@@ -54,33 +54,6 @@ namespace Downgrooves.Test
             Assert.IsNotNull(result);
             Assert.AreEqual(result.Id, 3);
             Assert.AreEqual(result.ReleaseDate, now);
-        }
-
-        [TestMethod]
-        public void AddRange()
-        {
-            var now = DateTime.Now;
-            // Arrange
-            var releases = new List<Release>();
-            foreach (var item in GetTestReleases())
-            {
-                item.ReleaseDate = now;
-                releases.Add(item);
-            }
-            _service.Setup(x => x.AddRange(releases).Result).Returns(releases);
-
-            // Act
-
-            var releaseController = new ReleaseController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
-            var output = releaseController.AddRange(releases).Result;
-            var okResult = output as OkObjectResult;
-            var result = okResult.Value as IEnumerable<Release>;
-
-            // Assert
-
-            Assert.IsInstanceOfType(output, typeof(OkObjectResult));
-            Assert.IsNotNull(okResult.Value);
-            Assert.AreEqual(2, result.Count());
         }
 
         [TestMethod]

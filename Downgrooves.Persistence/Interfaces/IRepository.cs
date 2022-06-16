@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Downgrooves.Utilities;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -24,6 +26,8 @@ namespace Downgrooves.Persistence.Interfaces
         IEnumerable<T> GetAll();
 
         Task<IEnumerable<T>> GetAllAsync();
+
+        Task<IEnumerable<T>> GetAllAsync(IQueryable<T> query, PagingParameters parameters);
 
         Task<T> GetAsync(int id);
 

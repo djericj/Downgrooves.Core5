@@ -1,8 +1,8 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Model;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
+using Downgrooves.Utilities;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,43 +10,25 @@ namespace Downgrooves.Service
 {
     public class VideoService : IVideoService
     {
-        private readonly ILogger<IVideoService> _logger;
         private IUnitOfWork _unitOfWork;
 
-        public VideoService(IUnitOfWork unitOfWork, ILogger<IVideoService> logger)
+        public VideoService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _logger = logger;
         }
 
         public async Task<Video> AddVideo(Video video)
         {
-            try
-            {
-                _unitOfWork.Videos.Add(video);
-                await _unitOfWork.CompleteAsync();
-                return video;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.VideoService.Add {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            _unitOfWork.Videos.Add(video);
+            await _unitOfWork.CompleteAsync();
+            return video;
         }
 
         public async Task<IEnumerable<Video>> AddVideos(IEnumerable<Video> videos)
         {
-            try
-            {
-                _unitOfWork.Videos.AddRange(videos);
-                await _unitOfWork.CompleteAsync();
-                return videos;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.VideoService.AddRange {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            _unitOfWork.Videos.AddRange(videos);
+            await _unitOfWork.CompleteAsync();
+            return videos;
         }
 
         public async Task<Video> GetVideo(int id)
@@ -73,134 +55,62 @@ namespace Downgrooves.Service
 
         public async Task<Video> UpdateVideo(Video video)
         {
-            try
-            {
-                _unitOfWork.Videos.UpdateState(video);
-                await _unitOfWork.CompleteAsync();
-                return video;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.VideoService.Update {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            _unitOfWork.Videos.UpdateState(video);
+            await _unitOfWork.CompleteAsync();
+            return video;
         }
 
         public async Task<Thumbnail> AddThumbnail(int videoId, Thumbnail thumbnail)
         {
-            try
-            {
-                thumbnail.VideoId = videoId;
-                await _unitOfWork.Thumbnails.AddAsync(thumbnail);
-                await _unitOfWork.CompleteAsync();
-                return thumbnail;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.VideoService.AddThumbnail {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            thumbnail.VideoId = videoId;
+            await _unitOfWork.Thumbnails.AddAsync(thumbnail);
+            await _unitOfWork.CompleteAsync();
+            return thumbnail;
         }
 
         public async Task<IEnumerable<Thumbnail>> AddThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails)
         {
-            try
-            {
-                foreach (var thumbnail in thumbnails)
-                    await AddThumbnail(videoId, thumbnail);
-                return thumbnails;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.VideoService.AddThumbnails {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            foreach (var thumbnail in thumbnails)
+                await AddThumbnail(videoId, thumbnail);
+            return thumbnails;
         }
 
         public async Task<IEnumerable<Thumbnail>> GetThumbnails(int videoId)
         {
-            try
-            {
-                return await _unitOfWork.Thumbnails.FindAsync(x => x.VideoId == videoId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.VideoService.GetThumbnails {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            return await _unitOfWork.Thumbnails.FindAsync(x => x.VideoId == videoId);
         }
 
         public async Task<Thumbnail> GetThumbnail(int thumbnailId)
         {
-            try
-            {
-                return await _unitOfWork.Thumbnails.GetAsync(thumbnailId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.VideoService.GetThumbnail {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            return await _unitOfWork.Thumbnails.GetAsync(thumbnailId);
         }
 
         public async Task RemoveThumbnail(int thumbnailId)
         {
-            try
-            {
-                var thumbnail = await GetThumbnail(thumbnailId);
-                await _unitOfWork.Thumbnails.Remove(thumbnail);
-                await _unitOfWork.CompleteAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.VideoService.RemoveThumbnail {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            var thumbnail = await GetThumbnail(thumbnailId);
+            await _unitOfWork.Thumbnails.Remove(thumbnail);
+            await _unitOfWork.CompleteAsync();
         }
 
         public async Task RemoveThumbnails(IEnumerable<int> ids)
         {
-            try
-            {
-                foreach (var id in ids)
-                    await RemoveThumbnail(id);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.VideoService.RemoveThumbnails {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            foreach (var id in ids)
+                await RemoveThumbnail(id);
         }
 
         public async Task<Thumbnail> UpdateThumbnail(int videoId, Thumbnail thumbnail)
         {
-            try
-            {
-                thumbnail.VideoId = videoId;
-                _unitOfWork.Thumbnails.Update(thumbnail);
-                await _unitOfWork.CompleteAsync();
-                return thumbnail;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.VideoService.UpdateThumbnail {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            thumbnail.VideoId = videoId;
+            _unitOfWork.Thumbnails.Update(thumbnail);
+            await _unitOfWork.CompleteAsync();
+            return thumbnail;
         }
 
         public async Task<IEnumerable<Thumbnail>> UpdateThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails)
         {
-            try
-            {
-                foreach (var thumbnail in thumbnails)
-                    await UpdateThumbnail(videoId, thumbnail);
-                return thumbnails;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.VideoService.UpdateThumbnails {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            foreach (var thumbnail in thumbnails)
+                await UpdateThumbnail(videoId, thumbnail);
+            return thumbnails;
         }
     }
 }

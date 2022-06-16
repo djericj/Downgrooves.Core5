@@ -1,4 +1,4 @@
-﻿using Downgrooves.Domain.ITunes;
+﻿using Downgrooves.Model.ITunes;
 using Downgrooves.WorkerService.Base;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Services.Interfaces;
@@ -57,7 +57,7 @@ namespace Downgrooves.WorkerService.Services
 
         private async Task DownloadArtwork(ITunesTrack track)
         {
-            var fileName = track.TrackId.ToString();
+            var fileName = track.Id.ToString();
             var imagePath = Path.Combine(ArtworkBasePath, "tracks", $"{fileName}.jpg");
             if (!File.Exists(imagePath))
             {
@@ -80,7 +80,7 @@ namespace Downgrooves.WorkerService.Services
 
         private async Task DownloadArtwork(ITunesCollection collection)
         {
-            var fileName = collection.CollectionId.ToString();
+            var fileName = collection.Id.ToString();
             var imagePath = Path.Combine(ArtworkBasePath, "collections", $"{fileName}.jpg");
             if (!File.Exists(imagePath))
             {

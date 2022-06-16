@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	  <Nullable>enable</Nullable>
 	  <PackageId>Downgrooves.Domain</PackageId>
 	  <Version>5.0.1</Version>
 	  <Authors>Eric Rydberg</Authors>
@@ -14,6 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Downgrooves.Model" Version="5.0.1" />
+    <PackageReference Include="Downgrooves.Utilities" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 

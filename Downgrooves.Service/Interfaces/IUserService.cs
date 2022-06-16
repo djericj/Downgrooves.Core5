@@ -1,4 +1,4 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Model;
 using System.Threading.Tasks;
 
 namespace Downgrooves.Service.Interfaces

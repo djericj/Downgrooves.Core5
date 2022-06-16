@@ -1,5 +1,6 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Model;
 using Downgrooves.Persistence.Interfaces;
+using Downgrooves.Utilities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,18 +43,17 @@ namespace Downgrooves.Persistence
             return await Task.Run(() => _query
                     .Include(x => x.Tracks)
                     .Include(x => x.Genre)
-                    .FirstOrDefault(x => x.MixId == id));
+                    .FirstOrDefault(x => x.Id == id));
         }
 
         public async Task<IEnumerable<Mix>> GetMixes(PagingParameters parameters)
         {
-            return await _query
+            _query = _query
                 .Include(x => x.Tracks)
                 .Include(x => x.Genre)
-                .OrderBy(x => x.Title)
-                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
-                .Take(parameters.PageSize)
-                .ToListAsync();
+                .OrderBy(x => x.Title);
+
+            return await GetAllAsync(_query, parameters);
         }
     }
 }

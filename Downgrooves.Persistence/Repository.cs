@@ -1,4 +1,5 @@
 ﻿using Downgrooves.Persistence.Interfaces;
+using Downgrooves.Utilities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,14 @@ namespace Downgrooves.Persistence
         public IEnumerable<T> GetAll() => _context.Set<T>().ToList();
 
         public async Task<IEnumerable<T>> GetAllAsync() => await _context.Set<T>().ToListAsync();
+
+        public async Task<IEnumerable<T>> GetAllAsync(IQueryable<T> query, PagingParameters parameters)
+        {
+            return await query
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToListAsync();
+        }
 
         public async Task<T> GetAsync(int id) => await _context.Set<T>().FindAsync(id);
 

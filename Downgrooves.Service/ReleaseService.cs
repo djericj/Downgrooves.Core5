@@ -1,4 +1,4 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Model;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -7,80 +7,39 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Linq;
-using Downgrooves.Domain.ITunes;
+using Downgrooves.Persistence.Entites;
+using Downgrooves.Utilities;
 
 namespace Downgrooves.Service
 {
     public class ReleaseService : IReleaseService
     {
-        private readonly ILogger<IReleaseService> _logger;
         private IUnitOfWork _unitOfWork;
 
-        public ReleaseService(IUnitOfWork unitOfWork, ILogger<ReleaseService> logger)
+        public ReleaseService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _logger = logger;
         }
 
         public async Task<Release> Add(Release release)
         {
-            try
-            {
-                await _unitOfWork.Releases.AddReleaseAsync(release);
-                await _unitOfWork.CompleteAsync();
-                return release;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.Add {ex.Message} {ex.StackTrace}");
-                throw;
-            }
-        }
-
-        public async Task<IEnumerable<Release>> AddRange(IEnumerable<Release> releases)
-        {
-            try
-            {
-                foreach (var release in releases)
-                    await _unitOfWork.Releases.AddReleaseAsync(release);
-                await _unitOfWork.CompleteAsync();
-                return releases;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.AddRange {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            await _unitOfWork.Releases.AddReleaseAsync(release);
+            await _unitOfWork.CompleteAsync();
+            return release;
         }
 
         public async Task<ReleaseTrack> AddTrack(ReleaseTrack releaseTrack)
         {
-            try
-            {
-                _unitOfWork.ReleaseTracks.Add(releaseTrack);
-                await _unitOfWork.CompleteAsync();
-                return releaseTrack;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.Add {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            _unitOfWork.ReleaseTracks.Add(releaseTrack);
+            await _unitOfWork.CompleteAsync();
+            return releaseTrack;
         }
 
         public async Task<IEnumerable<ReleaseTrack>> AddTracks(IEnumerable<ReleaseTrack> releaseTracks)
         {
-            try
-            {
-                _unitOfWork.ReleaseTracks.AddRange(releaseTracks);
-                await _unitOfWork.CompleteAsync();
-                return releaseTracks;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.AddRange {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            _unitOfWork.ReleaseTracks.AddRange(releaseTracks);
+            await _unitOfWork.CompleteAsync();
+            return releaseTracks;
         }
 
         public List<ITunesExclusion> GetExclusions() => _unitOfWork.Releases.Exclusions;
@@ -127,34 +86,18 @@ namespace Downgrooves.Service
                 await RemoveTrack(id);
         }
 
-        public async Task<Release> Update(Release collection)
+        public async Task<Release> Update(Release release)
         {
-            try
-            {
-                _unitOfWork.Releases.UpdateState(collection);
-                await _unitOfWork.CompleteAsync();
-                return collection;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.Update {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            _unitOfWork.Releases.UpdateState(release);
+            await _unitOfWork.CompleteAsync();
+            return release;
         }
 
         public async Task<ReleaseTrack> UpdateTrack(ReleaseTrack releaseTrack)
         {
-            try
-            {
-                _unitOfWork.ReleaseTracks.UpdateState(releaseTrack);
-                await _unitOfWork.CompleteAsync();
-                return releaseTrack;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.ReleaseService.Update {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            _unitOfWork.ReleaseTracks.UpdateState(releaseTrack);
+            await _unitOfWork.CompleteAsync();
+            return releaseTrack;
         }
 
         public async Task<IEnumerable<ReleaseTrack>> UpdateTracks(IEnumerable<ReleaseTrack> releaseTracks)

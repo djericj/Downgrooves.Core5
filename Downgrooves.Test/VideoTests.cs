@@ -1,4 +1,4 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Model;
 using Downgrooves.Service.Interfaces;
 using Downgrooves.WebApi.Config;
 using Downgrooves.WebApi.Controllers;
@@ -164,7 +164,7 @@ namespace Downgrooves.Test
         {
             // Arrange
             var thumbnail = GetTestThumbnails().FirstOrDefault();
-            thumbnail.ThumbnailId = 3;
+            thumbnail.Id = 3;
             _service.Setup(x => x.AddThumbnail(3, thumbnail).Result).Returns(thumbnail);
 
             // Act
@@ -179,7 +179,7 @@ namespace Downgrooves.Test
             Assert.IsInstanceOfType(output, typeof(OkObjectResult));
             Assert.IsNotNull(okResult.Value);
             Assert.IsNotNull(result);
-            Assert.AreEqual(result.ThumbnailId, 3);
+            Assert.AreEqual(result.Id, 3);
         }
 
         [TestMethod]
@@ -228,7 +228,7 @@ namespace Downgrooves.Test
         {
             // Arrange
             var video = new Video() { Id = 1 };
-            _service.Setup(x => x.GetThumbnail(1).Result).Returns(GetTestThumbnails().Where(x => x.ThumbnailId == 1).FirstOrDefault());
+            _service.Setup(x => x.GetThumbnail(1).Result).Returns(GetTestThumbnails().Where(x => x.Id == 1).FirstOrDefault());
 
             // Act
 
@@ -247,13 +247,13 @@ namespace Downgrooves.Test
             // Arrange
             var thumbnails = GetTestThumbnails();
             var thumbnail = thumbnails.FirstOrDefault();
-            var id = thumbnail.ThumbnailId;
-            _service.Setup(x => x.RemoveThumbnail(thumbnail.ThumbnailId));
+            var id = thumbnail.Id;
+            _service.Setup(x => x.RemoveThumbnail(thumbnail.Id));
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.RemoveThumbnail(thumbnail.ThumbnailId).Result;
+            var output = videoController.RemoveThumbnail(thumbnail.Id).Result;
             var okResult = output as OkResult;
 
             // Assert
@@ -267,12 +267,12 @@ namespace Downgrooves.Test
         {
             // Arrange
             var thumbnails = GetTestThumbnails();
-            _service.Setup(x => x.RemoveThumbnails(thumbnails.Select(x => x.ThumbnailId)));
+            _service.Setup(x => x.RemoveThumbnails(thumbnails.Select(x => x.Id)));
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.RemoveThumbnails(3, thumbnails.Select(x => x.ThumbnailId)).Result;
+            var output = videoController.RemoveThumbnails(3, thumbnails.Select(x => x.Id)).Result;
             var okResult = output as OkResult;
 
             // Assert
@@ -347,13 +347,13 @@ namespace Downgrooves.Test
             thumbnail.Add(new Thumbnail()
             {
                 VideoId = 3,
-                ThumbnailId = 1,
+                Id = 1,
                 Url = "Test One"
             });
             thumbnail.Add(new Thumbnail()
             {
                 VideoId = 3,
-                ThumbnailId = 2,
+                Id = 2,
                 Url = "Test Two"
             });
             return thumbnail;

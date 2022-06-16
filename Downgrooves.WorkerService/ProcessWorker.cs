@@ -1,5 +1,5 @@
-﻿using Downgrooves.Domain;
-using Downgrooves.Domain.ITunes;
+﻿using Downgrooves.Model;
+using Downgrooves.Model.ITunes;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Services.Interfaces;
 using Microsoft.Extensions.Hosting;
@@ -54,8 +54,8 @@ namespace Downgrooves.WorkerService
 
                     foreach (var artist in artists)
                     {
-                        await _apiService.GetResultsFromApi(_appConfig.ITunes.CollectionLookupUrl, Domain.ApiData.ApiDataType.iTunesCollection, artist.Name);
-                        await _apiService.GetResultsFromApi(_appConfig.ITunes.TracksLookupUrl, Domain.ApiData.ApiDataType.iTunesTrack, artist.Name);
+                        await _apiService.GetResultsFromApi(_appConfig.ITunes.CollectionLookupUrl, ApiData.ApiDataType.iTunesCollection, artist.Name);
+                        await _apiService.GetResultsFromApi(_appConfig.ITunes.TracksLookupUrl, ApiData.ApiDataType.iTunesTrack, artist.Name);
                     }
 
                     await DownloadCollectionsArtwork();
@@ -82,11 +82,11 @@ namespace Downgrooves.WorkerService
         {
             var imageFiles = GetImageFiles($@"{_appConfig.ArtworkBasePath}\collections");
             var collections = await _itunesService.Get<ITunesCollection>("itunes/collections");
-            var collectionFiles = collections.Select(x => $"{x.CollectionId}.jpg");
+            var collectionFiles = collections.Select(x => $"{x.Id}.jpg");
             var newFiles = collectionFiles.Except(imageFiles).ToList();
             if (newFiles != null && newFiles.Count > 0)
             {
-                var download = collections.Where(x => newFiles.Contains($"{x.CollectionId}.jpg")).ToList();
+                var download = collections.Where(x => newFiles.Contains($"{x.Id}.jpg"));
                 await _artworkService.DownloadArtwork(download);
                 _logger.LogInformation($"Downloaded {newFiles.Count} new artwork files");
             }
@@ -96,11 +96,11 @@ namespace Downgrooves.WorkerService
         {
             var imageFiles = GetImageFiles($@"{_appConfig.ArtworkBasePath}\tracks");
             var tracks = await _itunesService.Get<ITunesTrack>("itunes/tracks");
-            var trackFiles = tracks.Select(x => $"{x.TrackId}.jpg");
+            var trackFiles = tracks.Select(x => $"{x.Id}.jpg");
             var newFiles = trackFiles.Except(imageFiles).ToList();
             if (newFiles != null && newFiles.Count > 0)
             {
-                var download = tracks.Where(x => newFiles.Contains($"{x.TrackId}.jpg")).ToList();
+                var download = tracks.Where(x => newFiles.Contains($"{x.Id}.jpg"));
                 await _artworkService.DownloadArtwork(download);
                 _logger.LogInformation($"Downloaded {newFiles.Count} new artwork files");
             }

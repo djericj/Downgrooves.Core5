@@ -1,4 +1,4 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Model;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -23,50 +23,34 @@ namespace Downgrooves.Service
 
         public async Task<ApiData> Add(ApiData data)
         {
-            try
+            var exists = await GetApiData(data.DataType, data.Artist);
+            if (exists != null && exists.Data == data.Data)
             {
-                var exists = await GetApiData(data.DataType, data.Artist);
-                if (exists != null && exists.Data == data.Data)
-                {
-                    _logger.LogInformation($"Data for {data.Artist} {data.DataType} is unchanged.");
-                    exists.IsChanged = false;
-                    exists.LastUpdate = DateTime.Now;
-                    _unitOfWork.ApiData.UpdateState(exists);
-                    await _unitOfWork.CompleteAsync();
-                    return data;
-                }
-                else
-                {
-                    _logger.LogInformation($"Data for {data.Artist} {data.DataType} HAS changed.");
-                    await _unitOfWork.ApiData.Remove(exists);
-                    data.IsChanged = true;
-                    data.LastUpdate = DateTime.Now;
-                    await _unitOfWork.ApiData.AddAsync(data);
-                    await _unitOfWork.CompleteAsync();
-                    await ReloadData(data);
-                    return data;
-                }
+                _logger.LogInformation($"Data for {data.Artist} {data.DataType} is unchanged.");
+                exists.IsChanged = false;
+                exists.LastUpdate = DateTime.Now;
+                _unitOfWork.ApiData.UpdateState(exists);
+                await _unitOfWork.CompleteAsync();
+                return data;
             }
-            catch (Exception ex)
+            else
             {
-                _logger.LogError($"Exception in Downgrooves.Service.ApiDataService.Add {ex.Message} {ex.StackTrace}");
-                throw;
+                _logger.LogInformation($"Data for {data.Artist} {data.DataType} HAS changed.");
+                await _unitOfWork.ApiData.Remove(exists);
+                data.IsChanged = true;
+                data.LastUpdate = DateTime.Now;
+                await _unitOfWork.ApiData.AddAsync(data);
+                await _unitOfWork.CompleteAsync();
+                await ReloadData(data);
+                return data;
             }
         }
 
         public async Task<ApiData> Update(ApiData data)
         {
-            try
-            {
-                _unitOfWork.ApiData.Update(data);
-                await _unitOfWork.CompleteAsync();
-                return data;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in Downgrooves.Service.ApiDataService.Update {ex.Message} {ex.StackTrace}");
-                throw;
-            }
+            _unitOfWork.ApiData.Update(data);
+            await _unitOfWork.CompleteAsync();
+            return data;
         }
 
         public async Task<ApiData> GetApiData(ApiData.ApiDataType dataType, string artist)

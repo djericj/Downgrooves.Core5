@@ -1,4 +1,4 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Model;
 using Downgrooves.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +31,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (System.Exception ex)
             {
-                _logger.LogError($"Exception in {nameof(ITunesController)}.GetApiData {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(ApiDataController)}.{nameof(GetApiData)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -45,7 +45,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (System.Exception ex)
             {
-                _logger.LogError($"Exception in {nameof(ITunesController)}.Add {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(ApiDataController)}.{nameof(Add)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }
@@ -59,7 +59,7 @@ namespace Downgrooves.WebApi.Controllers
             }
             catch (System.Exception ex)
             {
-                _logger.LogError($"Exception in {nameof(ITunesController)}.Update {ex.Message} {ex.StackTrace}");
+                _logger.LogError($"Exception in {nameof(ApiDataController)}.{nameof(Update)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }

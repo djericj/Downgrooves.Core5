@@ -1,4 +1,4 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Model;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 

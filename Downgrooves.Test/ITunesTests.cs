@@ -1,10 +1,8 @@
-﻿using Downgrooves.Domain.ITunes;
+﻿using Downgrooves.Model.ITunes;
 using Downgrooves.Service.Interfaces;
-using Downgrooves.WebApi.Config;
 using Downgrooves.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;

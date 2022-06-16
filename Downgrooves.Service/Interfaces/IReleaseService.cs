@@ -1,5 +1,6 @@
-﻿using Downgrooves.Domain;
-using Downgrooves.Domain.ITunes;
+﻿using Downgrooves.Model;
+using Downgrooves.Persistence.Entites;
+using Downgrooves.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -10,8 +11,6 @@ namespace Downgrooves.Service.Interfaces
     public interface IReleaseService
     {
         Task<Release> Add(Release release);
-
-        Task<IEnumerable<Release>> AddRange(IEnumerable<Release> releases);
 
         Task<ReleaseTrack> AddTrack(ReleaseTrack releaseTrack);
 
@@ -34,7 +33,7 @@ namespace Downgrooves.Service.Interfaces
 
         Task RemoveTracks(IEnumerable<int> ids);
 
-        Task<Release> Update(Release collection);
+        Task<Release> Update(Release release);
 
         Task<ReleaseTrack> UpdateTrack(ReleaseTrack releaseTrack);
 
