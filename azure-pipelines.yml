@@ -29,17 +29,7 @@ steps:
     packageType: sdk
     version: '5.0.x'
 
-- task: NuGetAuthenticate@1
-  inputs:
-    nuGetServiceConnections: 'NEPTUNE'
-- task: NuGetToolInstaller@1
-
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
-    feedsToUse: 'config'
-    nugetConfigPath: 'NuGet.config'
-    externalFeedCredentials: 'NEPTUNE'
+- script: nuget restore -ApiKey 3MLnUWJV2HgHwTjEpBwvrNzypp77AzCrekC8Z5nkEVy5ykcTZqWsa5SnY2bnwGya
 
 - task: DotNetCoreCLI@2
   displayName: Test
