@@ -23,11 +23,6 @@ namespace Downgrooves.Persistence
         public DbSet<User> Users { get; set; }
         public DbSet<Video> Videos { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.EnableSensitiveDataLogging();
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ApiData>().ToTable("apiData");
