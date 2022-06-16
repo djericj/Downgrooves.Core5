@@ -54,9 +54,12 @@ namespace Downgrooves.WorkerService
 
                     foreach (var artist in artists)
                     {
+                        _logger.LogInformation($"{nameof(ProcessWorker)} getting {artist.Name}.");
                         await _apiService.GetResultsFromApi(_appConfig.ITunes.CollectionLookupUrl, ApiData.ApiDataType.iTunesCollection, artist.Name);
                         await _apiService.GetResultsFromApi(_appConfig.ITunes.TracksLookupUrl, ApiData.ApiDataType.iTunesTrack, artist.Name);
                     }
+
+                    _logger.LogInformation($"{nameof(ProcessWorker)} getting any new artwork.");
 
                     await DownloadCollectionsArtwork();
                     await DownloadTracksArtwork();
