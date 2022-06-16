@@ -28,6 +28,9 @@ steps:
   inputs:
     packageType: sdk
     version: '5.0.x'
+- task: NuGetToolInstaller@1
+  inputs:
+    versionSpec: '*'
 
 - script: nuget restore -ApiKey 3MLnUWJV2HgHwTjEpBwvrNzypp77AzCrekC8Z5nkEVy5ykcTZqWsa5SnY2bnwGya
 
