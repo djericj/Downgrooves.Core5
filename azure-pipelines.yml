@@ -14,8 +14,10 @@ trigger:
     - 'Downgrooves.Persistence'
     - 'Downgrooves.Domain'
 
-pool:
-  vmImage: 'windows-latest'
+pool: 
+  name: Default
+  demands:
+  - agent.name -equals NEPTUNE
 
 variables:
   buildPlatform: 'Any CPU'
