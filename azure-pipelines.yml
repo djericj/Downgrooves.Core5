@@ -29,6 +29,19 @@ steps:
     packageType: sdk
     version: '5.0.x'
 
+- task: NuGetAuthenticate@0
+  inputs:
+    nuGetServiceConnections: 'NEPTUNE'
+
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+    feedsToUse: 'config'
+    nugetConfigPath: 'NuGet.config'
+    externalFeedCredentials: 'NEPTUNE'
+
 - task: DotNetCoreCLI@2
   displayName: Test
   inputs:
