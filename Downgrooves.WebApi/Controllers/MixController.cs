@@ -260,6 +260,8 @@ namespace Downgrooves.WebApi.Controllers
         public static Mix SetBasePath(this Mix mix, string basePath)
         {
             mix.BasePath = basePath;
+            mix.ArtworkUrl = $"{basePath}/images/mixes/{mix.ArtworkUrl}";
+            mix.AudioUrl = $"{basePath}/mp3/{mix.AudioUrl}";
             return mix;
         }
     }

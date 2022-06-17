@@ -295,6 +295,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             if (release == null) return null;
             release.BasePath = basePath;
+            release.ArtworkUrl = $"{basePath}/images/artwork/collections/{release.ArtworkUrl}";
             return release;
         }
     }

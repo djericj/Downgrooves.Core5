@@ -288,6 +288,8 @@ namespace Downgrooves.WebApi.Controllers
         public static Video SetBasePath(this Video video, string basePath)
         {
             video.BasePath = basePath;
+            video.ArtworkUrl = $"{basePath}/images/artwork/videos/{video.SourceSystemId}/high.jpg";
+            video.VideoUrl = $"https://youtu.be/{video.SourceSystemId}";
             return video;
         }
     }
