@@ -47,6 +47,11 @@ steps:
   inputs:
     command: test
     workingDirectory: $(Build.SourcesDirectory)
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    command: 'build'
+    projects: '''**/Downgrooves.WebApi/Downgrooves.WebApi.csproj'''
 
 - task: DotNetCoreCLI@2
   displayName: Publish
