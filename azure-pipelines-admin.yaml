@@ -45,7 +45,12 @@ steps:
   inputs:
     command: 'build'
     projects: '**/Downgrooves.Admin/Downgrooves.Admin.csproj'
-
+- task: PowerShell@2
+  displayName: 'Copy appsettings.json'
+  inputs:
+    targetType: inline
+    script: Copy-Item -Path "$(build.artifactstagingdirectory)/Downgrooves.Admin/bin/$(buildConfiguration)/net6.0/wwwroot/appsettings.Production.json" -Destination "$(build.artifactstagingdirectory)/Downgrooves.Admin/bin/$(buildConfiguration)/net6.0/wwwroot/appsettings.json"
+        
 - task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
@@ -56,12 +61,7 @@ steps:
     zipAfterPublish: true
     workingDirectory: $(Build.SourcesDirectory)
 
-- task: PowerShell@2
-  displayName: 'Copy appsettings.json'
-  inputs:
-    targetType: inline
-    script: Copy-Item -Path "$(build.artifactstagingdirectory)/Downgrooves.Admin/bin/$(buildConfiguration)/net6.0/wwwroot/appsettings.Production.json" -Destination "$(build.artifactstagingdirectory)/Downgrooves.Admin/bin/$(buildConfiguration)/net6.0/wwwroot/appsettings.json"
-        
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
