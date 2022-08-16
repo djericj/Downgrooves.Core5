@@ -1,4 +1,4 @@
-﻿using Downgrooves.Model;
+﻿using Downgrooves.Domain;
 using Downgrooves.Service.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using System;

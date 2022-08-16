@@ -1,4 +1,4 @@
-﻿using Downgrooves.Model.ITunes;
+﻿using Downgrooves.Domain.ITunes;
 using Downgrooves.WorkerService.Base;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Services.Interfaces;

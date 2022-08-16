@@ -1,6 +1,6 @@
-﻿using Downgrooves.Model;
+﻿using Downgrooves.Domain;
 using Downgrooves.Service.Interfaces;
-using Downgrooves.Utilities;
+
 using Downgrooves.WebApi.Config;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

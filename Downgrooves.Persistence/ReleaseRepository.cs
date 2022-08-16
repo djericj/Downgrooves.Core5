@@ -5,9 +5,8 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System;
-using Downgrooves.Model;
-using Downgrooves.Persistence.Entites;
-using Downgrooves.Utilities;
+using Downgrooves.Domain;
+using Downgrooves.Domain.ITunes;
 
 namespace Downgrooves.Persistence
 {

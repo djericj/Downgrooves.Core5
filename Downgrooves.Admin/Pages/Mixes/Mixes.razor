@@ -1,0 +1,43 @@
+﻿@page "/mixes"
+@inherits MixesModel
+
+@using Downgrooves.Admin.ViewModels
+@using Downgrooves.Admin.Controls
+@using Newtonsoft.Json
+
+<Breadcrumbs Crumbs="@BreadcrumbItems"/>
+
+<div class="float-right">
+    <NavLink class="btn btn-primary" href="/mix">Add new mix</NavLink>
+</div>
+<h3 class="pb-2">Mixes</h3>
+<hr class="w-100 mb-4"/>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Artist</th>
+            <th scope="col">Title</th>
+            <th scope="col">Date</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var mix in mixes.OrderByDescending(x => x.CreateDate))
+        {
+            var editLink = $"/mix/{mix.Id}";
+            <tr>
+                <th scope="row">@mix.Id</th>
+                <td>@mix.Artist</td>
+                <td>@mix.Title</td>
+                <td>@mix.CreateDate.ToShortDateString()</td>
+                <td>
+                    <NavLink class="btn btn-sm btn-light" href="@($"/mix/{mix.Id}")">
+                        <i class="fa fa-pencil"></i>
+                    </NavLink>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,5 +1,4 @@
-﻿using Downgrooves.Model.ITunes;
-using Downgrooves.Persistence.Entites;
+﻿using Downgrooves.Domain.ITunes;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Configuration;

@@ -1,4 +1,4 @@
-﻿using Downgrooves.Model;
+﻿using Downgrooves.Domain;
 using Downgrooves.WorkerService.Base;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Services.Interfaces;
@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Downgrooves.WorkerService.Services
@@ -23,19 +24,48 @@ namespace Downgrooves.WorkerService.Services
             return JObject.Parse(data);
         }
 
-        public async Task<ApiData> GetResultsFromApi(string url, ApiData.ApiDataType type, string artist)
+        public async Task<List<ApiData>> GetResultsFromApi(string url, ApiData.ApiDataTypes type, string artist)
         {
-            var data = await GetString(url.Replace("{searchTerm}", artist));
-            var obj = JObject.Parse(data);
-            var apiData = new ApiData();
-            apiData.DataType = type;
-            apiData.Artist = artist;
-            apiData.Url = url;
-            apiData.Total = Convert.ToInt32(obj["resultCount"]);
-            apiData.Data = obj["results"].ToString();
-            apiData.LastUpdate = DateTime.Now;
-            await AddApiData(apiData);
-            return apiData;
+            List<ApiData> responses = new List<ApiData>();
+            int limit = 200;
+            int offset = 0;
+
+            url = url.Replace("{searchTerm}", artist);
+            url = url.Replace("{limit}", limit.ToString());
+
+            while (true)
+            {
+                if (offset > 0)
+                    url += $"&offset={offset}";
+
+                var data = await GetString(url);
+                var obj = JObject.Parse(data);
+                var resultCount = Convert.ToInt32(obj["resultCount"]);
+
+                if (resultCount == 0)
+                    break;
+
+                var apiData = new ApiData();
+                apiData.ApiDataType = type;
+                apiData.Artist = artist;
+                apiData.Url = url;
+                apiData.Total = resultCount;
+                apiData.Data = obj["results"].ToString();
+                apiData.LastUpdate = DateTime.Now;
+
+                apiData = await AddApiData(apiData);
+                responses.Add(apiData);
+
+                if (resultCount > offset)
+                {
+                    offset += 100;
+                    System.Threading.Thread.Sleep(5000);
+                }
+                else
+                    break;
+            }
+
+            return responses;
         }
 
         public async Task<ApiData> AddApiData(ApiData apiData)

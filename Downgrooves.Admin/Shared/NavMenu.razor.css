@@ -1,0 +1,180 @@
+.navbar-toggler {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.top-row {
+    height: 3.5rem;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.navbar-brand {
+    font-size: 1.1rem;
+}
+
+/* logo */
+
+.logo-box {
+    padding: 30px 30px;
+    background: #212529;
+    text-align: center;
+}
+
+.logo h1 {
+    margin: 0px;
+    font-family: "Crete Round", serif;
+    letter-spacing: 0.13em;
+}
+
+.logo a {
+    color: #111;
+}
+
+.logo p {
+    font-style: italic;
+    font-family: "Crete Round", serif;
+    font-size: 12px;
+}
+
+.logo-img {
+    margin-right: 10px;
+    height: 60px;
+    transform: scaleX(-1);
+}
+
+.logo-text {
+    font-family: "Lobster", cursive;
+    font-size: 2.6em;
+    color: #c3bab9;
+    text-shadow: -1px -1px 0 #615655, 1px -1px 0 #615655, -1px 1px 0 #615655, 1px 1px 0 #615655;
+}
+
+@media (max-width: 480px) {
+    .logo-box img {
+        margin: 0 auto;
+    }
+}
+
+.fa {
+    width: 2rem;
+    font-size: 1.1rem;
+    vertical-align: text-top;
+    top: -2px;
+}
+
+.identity {
+    font-size: 80%;
+    padding: 10px;
+    text-align: center;
+    border-top: solid 1px #696969;
+    border-bottom: solid 1px #696969;
+    background-color: rgba(255,255,255,0.1);
+}
+
+.nav-item {
+    font-size: 13px;
+}
+
+    .nav-item:first-of-type {
+        padding-top: 1rem;
+    }
+
+    .nav-item:last-of-type {
+        padding-bottom: 1rem;
+    }
+
+    .nav-item ::deep a,
+    .nav-item ::deep button {
+        color: #d7d7d7;
+        align-items: center;
+        line-height: 2rem;
+        font-size: 100%;
+        text-transform: uppercase;
+        width: 100%;
+        text-align: left;
+    }
+
+    .nav-item svg {
+        padding-right: 10px;
+    }
+
+    .nav-item ::deep a.active {
+        background-color: #336699;
+        color: white;
+    }
+
+    .nav-item ::deep a:hover,
+    .nav-item ::deep button:hover {
+        background-color: rgba(255,255,255,0.1);
+        color: white;
+    }
+
+/* memnu */
+ul.nav {
+    padding: 0;
+    margin: 0;
+}
+
+    ul.nav > li {
+        list-style: none;
+        position: relative;
+        width: 100%;
+    }
+
+        ul.nav > li > a,
+        ul.drop-down li a {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            padding: 14px 24px 14px 30px;
+            color: #fff;
+            font-size: 13px;
+            text-transform: uppercase;
+            font-family: "Raleway", sans-serif;
+            font-weight: 500;
+            text-decoration: none;
+            line-height: 20px;
+            background-color: #242b2e;
+            transition: all 0.5s linear;
+            -moz-transition: all 0.5s linear;
+            -webkit-transition: all 0.5s linear;
+            -o-transition: all 0.5s linear;
+        }
+
+            ul.nav > li > a > fa-icon {
+                vertical-align: middle;
+                font-size: 15px;
+                width: 30px;
+                padding-right: 10px;
+            }
+
+    ul.nav li a span {
+        position: relative;
+        z-index: 2;
+        vertical-align: middle;
+    }
+
+    ul.nav li a:hover:after,
+    ul.nav li a.active:after {
+        width: 100%;
+    }
+
+    ul.nav li {
+        width: 100%;
+    }
+
+.social-media {
+    position: fixed;
+    bottom: 60px;
+    width: 251px;
+}
+
+@media (min-width: 641px) {
+    .navbar-toggler {
+        display: none;
+    }
+
+    .collapse {
+        /* Never collapse the sidebar for wide screens */
+        display: block;
+    }
+}

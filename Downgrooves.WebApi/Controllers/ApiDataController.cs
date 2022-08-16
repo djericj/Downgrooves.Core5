@@ -1,4 +1,4 @@
-﻿using Downgrooves.Model;
+﻿using Downgrooves.Domain;
 using Downgrooves.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +23,7 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("/data/{type}/artist/{artist}")]
-        public async Task<IActionResult> GetApiData(ApiData.ApiDataType dataType, string artist)
+        public async Task<IActionResult> GetApiData(ApiData.ApiDataTypes dataType, string artist)
         {
             try
             {

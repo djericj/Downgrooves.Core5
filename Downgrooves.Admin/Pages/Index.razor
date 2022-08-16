@@ -1,0 +1,37 @@
+﻿@page "/"
+@inherits IndexModel
+
+<AuthorizeView>
+    <Authorized>
+    <h4>Logs</h4>
+    <table class="table table-sm table-striped w-100">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Message</th>
+                <th scope="col">Time</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach(var log in logs)
+        {
+            <tr>
+                <th scope="row">@log.Id</th>
+                <td>@log.RenderedMessage</td>
+                <td>@log.TimeStamp</td>
+            </tr>
+            @*<tr>
+                <td colspan="4">
+                    @log.Properties
+                </td>
+            </tr>*@
+            @*<tr>
+                <td colspan="4">
+                    @log.Exception
+                </td>
+            </tr>*@
+        }
+        </tbody>
+    </table>
+    </Authorized>
+</AuthorizeView>

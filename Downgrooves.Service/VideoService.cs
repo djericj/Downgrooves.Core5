@@ -1,7 +1,7 @@
-﻿using Downgrooves.Model;
+﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
-using Downgrooves.Utilities;
+
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;

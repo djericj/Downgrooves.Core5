@@ -1,14 +1,12 @@
-﻿using Downgrooves.Model;
+﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Linq;
-using Downgrooves.Persistence.Entites;
-using Downgrooves.Utilities;
+using Downgrooves.Domain.ITunes;
 
 namespace Downgrooves.Service
 {

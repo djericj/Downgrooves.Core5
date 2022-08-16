@@ -1,5 +1,5 @@
-﻿using Downgrooves.Model;
-using Downgrooves.Utilities;
+﻿using Downgrooves.Domain;
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

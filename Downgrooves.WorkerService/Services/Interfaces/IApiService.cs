@@ -1,5 +1,6 @@
-﻿using Downgrooves.Model;
+﻿using Downgrooves.Domain;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Downgrooves.WorkerService.Services.Interfaces
@@ -8,7 +9,7 @@ namespace Downgrooves.WorkerService.Services.Interfaces
     {
         Task<JObject> Lookup(string url);
 
-        Task<ApiData> GetResultsFromApi(string url, ApiData.ApiDataType type, string artist);
+        Task<List<ApiData>> GetResultsFromApi(string url, ApiData.ApiDataTypes type, string artist);
 
         Task<ApiData> AddApiData(ApiData data);
 

@@ -1,5 +1,5 @@
-﻿using Downgrooves.Persistence.Interfaces;
-using Downgrooves.Utilities;
+﻿using Downgrooves.Domain;
+using Downgrooves.Persistence.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

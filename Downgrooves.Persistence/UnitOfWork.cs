@@ -2,9 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using Downgrooves.Persistence.Entites;
-using Downgrooves.Model;
-using Downgrooves.Model.ITunes;
+using Downgrooves.Domain;
+using Downgrooves.Domain.ITunes;
 
 namespace Downgrooves.Persistence
 {

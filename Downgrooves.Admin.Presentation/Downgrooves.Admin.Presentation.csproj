@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Downgrooves.Admin.Service\Downgrooves.Admin.Service.csproj" />
+    <ProjectReference Include="..\Downgrooves.Admin\Downgrooves.Admin.csproj" />
+    <ProjectReference Include="..\Downgrooves.Domain\Downgrooves.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

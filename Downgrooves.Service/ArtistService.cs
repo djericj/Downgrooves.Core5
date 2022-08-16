@@ -1,4 +1,4 @@
-﻿using Downgrooves.Model;
+﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
 using System.Collections.Generic;

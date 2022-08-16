@@ -1,6 +1,5 @@
-﻿using Downgrooves.Model;
-using Downgrooves.Persistence.Entites;
-using Downgrooves.Utilities;
+﻿using Downgrooves.Domain;
+using Downgrooves.Domain.ITunes;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;

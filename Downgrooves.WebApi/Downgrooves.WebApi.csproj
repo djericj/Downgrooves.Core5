@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Downgrooves.Model" Version="5.0.8" />
     <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
@@ -29,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Downgrooves.Domain\Downgrooves.Domain.csproj" />
     <ProjectReference Include="..\Downgrooves.Service\Downgrooves.Service.csproj" />
   </ItemGroup>
 

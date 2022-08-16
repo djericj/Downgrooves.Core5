@@ -1,4 +1,4 @@
-﻿using Downgrooves.Model.ITunes;
+﻿using Downgrooves.Domain.ITunes;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

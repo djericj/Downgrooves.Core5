@@ -1,4 +1,4 @@
-﻿using Downgrooves.Model.ITunes;
+﻿using Downgrooves.Domain.ITunes;
 using Downgrooves.Service.Interfaces;
 using Downgrooves.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;

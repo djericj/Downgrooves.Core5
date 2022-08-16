@@ -1,6 +1,6 @@
-﻿using Downgrooves.Model;
+﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
-using Downgrooves.Utilities;
+
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;

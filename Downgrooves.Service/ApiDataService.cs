@@ -1,4 +1,4 @@
-﻿using Downgrooves.Model;
+﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -23,10 +23,10 @@ namespace Downgrooves.Service
 
         public async Task<ApiData> Add(ApiData data)
         {
-            var exists = await GetApiData(data.DataType, data.Artist);
-            if (exists != null && exists.Data == data.Data)
+            var exists = await GetApiData(data.ApiDataType, data.Artist);
+            if (exists != null && exists.Data == data.Data && exists.Total == data.Total)
             {
-                _logger.LogInformation($"Data for {data.Artist} {data.DataType} is unchanged.");
+                _logger.LogInformation($"Data for {data.Artist} {data.ApiDataType} is unchanged.");
                 exists.IsChanged = false;
                 exists.LastUpdate = DateTime.Now;
                 _unitOfWork.ApiData.UpdateState(exists);
@@ -35,13 +35,13 @@ namespace Downgrooves.Service
             }
             else
             {
-                _logger.LogInformation($"Data for {data.Artist} {data.DataType} HAS changed.");
-                await _unitOfWork.ApiData.Remove(exists);
+                _logger.LogInformation($"Data for {data.Artist} {data.ApiDataType} HAS changed.");
+                if (exists != null && exists.Total == data.Total)
+                    await _unitOfWork.ApiData.Remove(exists);
                 data.IsChanged = true;
                 data.LastUpdate = DateTime.Now;
                 await _unitOfWork.ApiData.AddAsync(data);
                 await _unitOfWork.CompleteAsync();
-                await ReloadData(data);
                 return data;
             }
         }
@@ -53,9 +53,9 @@ namespace Downgrooves.Service
             return data;
         }
 
-        public async Task<ApiData> GetApiData(ApiData.ApiDataType dataType, string artist)
+        public async Task<ApiData> GetApiData(ApiData.ApiDataTypes dataType, string artist)
         {
-            var apiData = await _unitOfWork.ApiData.FindAsync(x => (int)x.DataType == (int)dataType && x.Artist == artist);
+            var apiData = await _unitOfWork.ApiData.FindAsync(x => (int)x.ApiDataType == (int)dataType && x.Artist == artist);
             return apiData.FirstOrDefault();
         }
 

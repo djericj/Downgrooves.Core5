@@ -1,4 +1,4 @@
-﻿using Downgrooves.Model;
+﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;

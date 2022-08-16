@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
-using Downgrooves.Model;
+using Downgrooves.Domain;
 using System.Collections.Generic;
 
 namespace Downgrooves.WebApi.Controllers

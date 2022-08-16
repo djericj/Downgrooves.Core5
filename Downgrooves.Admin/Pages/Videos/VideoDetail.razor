@@ -1,0 +1,87 @@
+﻿@page "/video/{VideoId:int?}"
+
+@using Downgrooves.Domain
+@using Downgrooves.Admin.ViewModels
+@using Newtonsoft.Json
+
+@inherits VideoDetailModel
+
+
+<EditForm Model="@VideoViewModel" OnValidSubmit="@Save">
+    <div class="float-right ">
+        <NavLink class="btn btn-outline-light" href="/videos">Cancel</NavLink>
+        <button class="btn btn-primary" type="submit">Save</button>
+    </div>
+    <h3 class="pb-2">Video Detail</h3>
+    <hr class="w-100 mb-4"/>
+
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+
+    <div class="form-group">
+        <label>Title:</label>
+        <InputText @bind-Value="VideoViewModel.Title" class="form-control" />
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group">
+                <label>ETag:</label>
+                <InputText @bind-Value="VideoViewModel.ETag" class="@(IsNew ? "form-control" : "form-control-plaintext")" />
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group row ">
+                <label>Url:</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">https://youtu.be/</span>
+                  </div>
+                  <InputText @bind-Value="VideoViewModel.SourceSystemId" class="form-control"/>
+                </div>
+            </div>
+        </div>            
+    </div>
+    <div class="form-group">
+        <label>Published:</label>
+        <input type="date" @bind="VideoViewModel.PublishedAt" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Description:</label>
+        <InputTextArea @bind-Value="VideoViewModel.Description" class="form-control" rows="4" />
+    </div>
+    @if (!IsNew && VideoViewModel.Thumbnails != null && VideoViewModel.Thumbnails.Any())
+    {
+        <h4>Thumbnails</h4>
+        <hr class="w-100"/>
+        <div class="row">
+            <div class="col-4">
+                <img src="@VideoViewModel.DefaultImage" class="img-fluid"/>
+            </div>
+            <div class="col-8">
+                <table class="table">
+            @foreach (var img in VideoViewModel?.Thumbnails)
+                {
+                    <tr>
+                        <td>Size: @(img.Width) x @(img.Height)</td>
+                        <td>
+                            <div class="float-right">
+                            <button href="/video/@VideoViewModel.SourceSystemId"><i class="fa fa-pencil"></i></button>
+                            <button onclick="(() => videosViewModel.Remove(video.Id))"><i class="fa fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </table>
+            </div>
+        </div>
+    }
+    <hr class="w-100"/>
+    <div class="float-right py-2">
+        <NavLink class="btn btn-outline-light" href="/videos">Cancel</NavLink>
+        <button class="btn btn-primary" type="submit">Save</button>
+    </div>
+</EditForm>
+
+<div class="py-2">
+    <button class="btn btn-danger" @onclick="Delete">Delete Record</button>
+</div>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Downgrooves.Persistence.Entites
+namespace Downgrooves.Domain
 {
     public class Log
     {

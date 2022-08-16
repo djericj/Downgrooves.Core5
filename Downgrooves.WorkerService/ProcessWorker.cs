@@ -1,5 +1,5 @@
-﻿using Downgrooves.Model;
-using Downgrooves.Model.ITunes;
+﻿using Downgrooves.Domain;
+using Downgrooves.Domain.ITunes;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Services.Interfaces;
 using Microsoft.Extensions.Hosting;
@@ -55,8 +55,8 @@ namespace Downgrooves.WorkerService
                     foreach (var artist in artists)
                     {
                         _logger.LogInformation($"{nameof(ProcessWorker)} getting {artist.Name}.");
-                        await _apiService.GetResultsFromApi(_appConfig.ITunes.CollectionLookupUrl, ApiData.ApiDataType.iTunesCollection, artist.Name);
-                        await _apiService.GetResultsFromApi(_appConfig.ITunes.TracksLookupUrl, ApiData.ApiDataType.iTunesTrack, artist.Name);
+                        await _apiService.GetResultsFromApi(_appConfig.ITunes.CollectionLookupUrl, ApiData.ApiDataTypes.iTunesCollection, artist.Name);
+                        await _apiService.GetResultsFromApi(_appConfig.ITunes.TracksLookupUrl, ApiData.ApiDataTypes.iTunesTrack, artist.Name);
                     }
 
                     _logger.LogInformation($"{nameof(ProcessWorker)} getting any new artwork.");
@@ -79,6 +79,13 @@ namespace Downgrooves.WorkerService
             {
                 _hostApplicationLifetime.StopApplication();
             }
+        }
+
+        private async Task GetApiDataForArtist(Artist artist)
+        {
+            _logger.LogInformation($"{nameof(ProcessWorker)} getting {artist.Name}.");
+            await _apiService.GetResultsFromApi(_appConfig.ITunes.CollectionLookupUrl, ApiData.ApiDataTypes.iTunesCollection, artist.Name);
+            await _apiService.GetResultsFromApi(_appConfig.ITunes.TracksLookupUrl, ApiData.ApiDataTypes.iTunesTrack, artist.Name);
         }
 
         private async Task DownloadCollectionsArtwork()

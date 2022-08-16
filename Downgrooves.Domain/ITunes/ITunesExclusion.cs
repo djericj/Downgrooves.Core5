@@ -1,4 +1,4 @@
-﻿namespace Downgrooves.Persistence.Entites
+﻿namespace Downgrooves.Domain.ITunes
 {
     /// <summary>
     /// A row in the iTunesExclusion table.
