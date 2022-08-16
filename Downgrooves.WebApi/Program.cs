@@ -18,11 +18,6 @@ namespace Downgrooves.WebApi
                 .Enrich.WithMachineName()
                 .WriteTo.Console(theme: AnsiConsoleTheme.Literate, applyThemeToRedirectedOutput: true)
                 .CreateBootstrapLogger();
-            Serilog.Debugging.SelfLog.Enable(msg =>
-            {
-                Console.WriteLine(msg);
-                Debugger.Break();
-            });
 
             try
             {

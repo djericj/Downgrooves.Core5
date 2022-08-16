@@ -86,7 +86,7 @@ namespace Downgrooves.Service
 
         public async Task<Mix> Update(Mix mix)
         {
-            _unitOfWork.Mixes.UpdateState(mix);
+            _unitOfWork.Mixes.UpdateMix(mix);
             await _unitOfWork.CompleteAsync();
             return mix;
         }

@@ -141,12 +141,6 @@ namespace Downgrooves.WebApi
                 .Enrich.WithMachineName()
                 .CreateLogger();
 
-            Serilog.Debugging.SelfLog.Enable(msg =>
-            {
-                Console.WriteLine(msg);
-                Debugger.Break();
-            });
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
