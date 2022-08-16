@@ -2,6 +2,10 @@
 # Build and test ASP.NET Core projects targeting .NET Core.
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
  branches:
@@ -11,31 +15,55 @@ trigger:
   include:
     - 'Downgrooves.Admin'
 
-pool:
-  vmImage: ubuntu-latest
+pool: 
+  name: Default
+  demands:
+  - agent.name -equals NEPTUNE
 
 variables:
+  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)
-  displayName: 'dotnet build $(buildConfiguration)'
+- task: UseDotNet@2
+  inputs:
+    packageType: sdk
+    version: '5.0.x'
+
+- task: NuGetAuthenticate@1
+
+- task: NuGetToolInstaller@1
+  inputs:
+    checkLatest: true
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+    feedsToUse: 'config'
+    nugetConfigPath: 'NuGet.config'
+    externalFeedCredentials: 'NEPTUNE'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Publishing App...'
+  displayName: Test
+  inputs:
+    command: test
+    workingDirectory: $(Build.SourcesDirectory)
+
+- task: DotNetCoreCLI@2
+  displayName: Publish
   inputs:
     command: publish
     publishWebProjects: false
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: false
-    
+    projects: '**/Downgrooves.WebApi/Downgrooves.WebApi.csproj'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: true
+    workingDirectory: $(Build.SourcesDirectory)
+
 - task: PowerShell@2
   displayName: 'Copy appsettings.json'
   inputs:
     targetType: inline
     script: Copy-Item -Path "$(build.artifactstagingdirectory)/Downgrooves.Admin/wwwroot/appsettings.Production.json" -Destination "$(build.artifactstagingdirectory)/Downgrooves.Admin/wwwroot/appsettings.json"
-          
-
         
 - task: PublishBuildArtifacts@1
   inputs:
