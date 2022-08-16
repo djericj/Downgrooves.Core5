@@ -52,7 +52,6 @@ steps:
   displayName: Publish
   inputs:
     command: publish
-    publishWebProjects: true
     projects: '**/Downgrooves.WebApi/*.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: true
