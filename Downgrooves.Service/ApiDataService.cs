@@ -3,6 +3,7 @@ using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -25,31 +26,50 @@ namespace Downgrooves.Service
         {
             var exists = await GetApiData(data.ApiDataType, data.Artist);
 
-            if (exists != null && exists.Data == data.Data && exists.Total == data.Total)
+            if (exists != null && exists.Any())
             {
-                _logger.LogInformation($"Data for {data.Artist} {data.ApiDataType} is unchanged.");
-                exists.IsChanged = false;
-                exists.LastUpdate = DateTime.Now;
-                _unitOfWork.ApiData.UpdateState(exists);
-                await _unitOfWork.CompleteAsync();
-                return data;
+                foreach (var item in exists)
+                {
+                    if (item.Data == data.Data && item.Total == data.Total && item.ApiDataType == data.ApiDataType)
+                    {
+                        _logger.LogInformation($"Data for {data.Artist} {data.ApiDataType} is unchanged.");
+                    }
+                    else if (item.Total != data.Total && item.ApiDataType == data.ApiDataType)
+                    {
+                        data = await AddNew(data);
+                    }
+                    else
+                    {
+                        data = await UpdateState(data);
+                    }
+                }
             }
             else
             {
-                if (exists == null)
-                    _logger.LogInformation($"Data for {data.Artist} {data.ApiDataType} is NEW.");
-                else
-                    _logger.LogInformation($"Data for {data.Artist} {data.ApiDataType} HAS changed.");
-
-                if (exists != null && exists.Total == data.Total)
-                    await _unitOfWork.ApiData.Remove(exists);
-
-                data.IsChanged = true;
-                data.LastUpdate = DateTime.Now;
-                await _unitOfWork.ApiData.AddAsync(data);
-                await _unitOfWork.CompleteAsync();
-                return data;
+                data = await AddNew(data);
             }
+
+            return data;
+        }
+
+        private async Task<ApiData> AddNew(ApiData data)
+        {
+            _logger.LogInformation($"Data for {data.Artist} {data.ApiDataType} is NEW.");
+            data.IsChanged = true;
+            data.LastUpdate = DateTime.Now;
+            await _unitOfWork.ApiData.AddAsync(data);
+            await _unitOfWork.CompleteAsync();
+            return data;
+        }
+
+        private async Task<ApiData> UpdateState(ApiData data)
+        {
+            _logger.LogInformation($"Data for {data.Artist} {data.ApiDataType} HAS changed.");
+            data.IsChanged = true;
+            data.LastUpdate = DateTime.Now;
+            _unitOfWork.ApiData.UpdateState(data);
+            await _unitOfWork.CompleteAsync();
+            return data;
         }
 
         public async Task<ApiData> Update(ApiData data)
@@ -59,10 +79,9 @@ namespace Downgrooves.Service
             return data;
         }
 
-        public async Task<ApiData> GetApiData(ApiData.ApiDataTypes dataType, string artist)
+        public async Task<IEnumerable<ApiData>> GetApiData(ApiData.ApiDataTypes dataType, string artist)
         {
-            var apiData = await _unitOfWork.ApiData.FindAsync(x => (int)x.ApiDataType == (int)dataType && x.Artist == artist);
-            return apiData.FirstOrDefault();
+            return await _unitOfWork.ApiData.FindAsync(x => (int)x.ApiDataType == (int)dataType && x.Artist == artist);
         }
 
         public async Task ReloadData(ApiData data)
