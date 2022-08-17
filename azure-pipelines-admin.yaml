@@ -41,23 +41,12 @@ steps:
     restoreSolution: '$(solution)'
 
 - task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    command: 'build'
-    projects: '**/Downgrooves.Admin/Downgrooves.Admin.csproj'
-- task: PowerShell@2
-  displayName: 'Copy appsettings.json'
-  inputs:
-    targetType: inline
-    script: Copy-Item -Path "$(build.artifactstagingdirectory)/Downgrooves.Admin/bin/$(buildConfiguration)/net6.0/wwwroot/appsettings.Production.json" -Destination "$(build.artifactstagingdirectory)/Downgrooves.Admin/bin/$(buildConfiguration)/net6.0/wwwroot/appsettings.json"
-        
-- task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
     command: publish
     publishWebProjects: false
     projects: '**/Downgrooves.Admin/Downgrooves.Admin.csproj'
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    arguments: ' --self-contained --runtime linux-x64 --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: true
     workingDirectory: $(Build.SourcesDirectory)
 
