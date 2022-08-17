@@ -41,18 +41,12 @@ steps:
     restoreSolution: '$(solution)'
 
 - task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    command: 'build'
-    projects: '**/Downgrooves.Admin/Downgrooves.Admin.csproj'
-
-- task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
     command: publish
     publishWebProjects: false
     projects: '**/Downgrooves.Admin/Downgrooves.Admin.csproj'
-    arguments: ' --self-contained --runtime linux-musl-x64 --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    arguments: ' --self-contained --runtime linux-x64 --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: true
     workingDirectory: $(Build.SourcesDirectory)
 
