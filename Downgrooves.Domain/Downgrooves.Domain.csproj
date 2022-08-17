@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	  <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 	  <PackageId>Downgrooves.Domain</PackageId>
 	  <Version>5.0.1</Version>
 	  <Authors>Eric Rydberg</Authors>

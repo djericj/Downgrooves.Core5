@@ -26,7 +26,7 @@ namespace Downgrooves.WorkerService.Services
 
         public async Task<List<ApiData>> GetResultsFromApi(string url, ApiData.ApiDataTypes type, string artist)
         {
-            List<ApiData> responses = new List<ApiData>();
+            List<ApiData> responses = new();
             int limit = 200;
             int offset = 0;
 
@@ -45,13 +45,15 @@ namespace Downgrooves.WorkerService.Services
                 if (resultCount == 0)
                     break;
 
-                var apiData = new ApiData();
-                apiData.ApiDataType = type;
-                apiData.Artist = artist;
-                apiData.Url = url;
-                apiData.Total = resultCount;
-                apiData.Data = obj["results"].ToString();
-                apiData.LastUpdate = DateTime.Now;
+                var apiData = new ApiData
+                {
+                    ApiDataType = type,
+                    Artist = artist,
+                    Url = url,
+                    Total = resultCount,
+                    Data = obj["results"].ToString(),
+                    LastUpdate = DateTime.Now
+                };
 
                 apiData = await AddApiData(apiData);
                 responses.Add(apiData);

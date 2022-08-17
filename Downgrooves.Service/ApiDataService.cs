@@ -13,7 +13,7 @@ namespace Downgrooves.Service
     public class ApiDataService : IApiDataService
     {
         private readonly ILogger<IApiDataService> _logger;
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ApiDataService(ILogger<IApiDataService> logger, IUnitOfWork unitOfWork)
         {
@@ -79,14 +79,14 @@ namespace Downgrooves.Service
             return await _unitOfWork.ExecuteNonQueryAsync(sql);
         }
 
-        private string GetEmbeddedResource(string fileName)
+        private static string GetEmbeddedResource(string fileName)
         {
             var assembly = Assembly.GetExecutingAssembly();
             string resourceName = assembly.GetManifestResourceNames().Single(str => str.EndsWith(fileName));
 
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            using (StreamReader reader = new StreamReader(stream))
-                return reader.ReadToEnd();
+            using Stream stream = assembly.GetManifestResourceStream(resourceName);
+            using StreamReader reader = new(stream);
+            return reader.ReadToEnd();
         }
     }
 }

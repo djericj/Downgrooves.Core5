@@ -66,7 +66,7 @@ namespace Downgrooves.WorkerService
 
                     _logger.LogInformation($"{nameof(ProcessWorker)} finished.");
 
-                    await Task.Delay(_appConfig.PollInterval * 1000);
+                    await Task.Delay(_appConfig.PollInterval * 1000, CancellationToken.None);
                 }
             }
             catch (Exception ex)
@@ -116,7 +116,7 @@ namespace Downgrooves.WorkerService
             }
         }
 
-        private IEnumerable<string> GetImageFiles(string path)
+        private static IEnumerable<string> GetImageFiles(string path)
         {
             var dir = new DirectoryInfo(path);
             return dir.GetFiles("*.jpg").ToList().Select(x => x.Name);

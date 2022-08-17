@@ -11,8 +11,8 @@ namespace Downgrooves.Service
 {
     public class ITunesService : IITunesService
     {
-        private IConfiguration _configuration;
-        private IUnitOfWork _unitOfWork;
+        private readonly IConfiguration _configuration;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ITunesService(IConfiguration configuration, IUnitOfWork unitOfWork)
         {
@@ -82,8 +82,10 @@ namespace Downgrooves.Service
         public async Task<IEnumerable<ITunesLookupResultItem>> Lookup(int Id)
         {
             var client = new RestClient(_configuration["AppConfig:ITunesLookupUrl"]);
-            var request = new RestRequest();
-            request.RequestFormat = DataFormat.Json;
+            var request = new RestRequest
+            {
+                RequestFormat = DataFormat.Json
+            };
 
             request.AddParameter("country", "us", ParameterType.UrlSegment);
             request.AddParameter("id", Id);

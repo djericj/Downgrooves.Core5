@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using Downgrooves.Domain;
 using Downgrooves.Domain.ITunes;
+using System;
 
 namespace Downgrooves.Persistence
 {
@@ -47,22 +48,20 @@ namespace Downgrooves.Persistence
 
         public async Task<int> ExecuteNonQueryAsync(string query)
         {
-            using (var command = _context.Database.GetDbConnection().CreateCommand())
-            {
-                command.CommandText = query;
-                command.CommandType = CommandType.Text;
+            using var command = _context.Database.GetDbConnection().CreateCommand();
+            command.CommandText = query;
+            command.CommandType = CommandType.Text;
 
-                await _context.Database.OpenConnectionAsync();
+            await _context.Database.OpenConnectionAsync();
 
-                return await command.ExecuteNonQueryAsync();
-            }
+            return await command.ExecuteNonQueryAsync();
         }
 
         public void Complete() => _context.SaveChanges();
 
         public async Task CompleteAsync() => await _context.SaveChangesAsync();
 
-        public void Dispose() => _context.Dispose();
+        public void Dispose() => GC.SuppressFinalize(this);
 
         public async Task DisposeAsync() => await _context.DisposeAsync();
     }

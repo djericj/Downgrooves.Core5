@@ -9,7 +9,7 @@ namespace Downgrooves.Service
 {
     public class MixService : IMixService
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         public MixService(IUnitOfWork unitOfWork)
         {
