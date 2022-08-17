@@ -23,7 +23,7 @@
                 <div class="pb-3">
                     <section class="hover-bg">
                         
-                        <button type="button" onclick="@(() => DeleteImage())" class="invisible-button">
+                        <button type="button" @onclick="DeleteImage" class="invisible-button">
                             <div class="hover-text">
                                 <i class="fas fa-trash-alt" data-fa-transform="grow-60"></i>
                                 <h4>Delete</h4>
@@ -37,7 +37,7 @@
             {
                 <div class="uploadControls">
                 <InputFile id="fileUpload" OnChange="OnImageInputFileChange" />    
-                <button type="button" onclick="@(() => UploadImage())">Upload Image</button>
+                <button type="button" @onclick="UploadImage">Upload Image</button>
                 </div>
             }
         </div>
@@ -100,7 +100,7 @@
                     <audio controls src="@MixViewModel.AudioUrl" style="width: 100%"/>    
                 </div>
                 <div class="col-1">
-                    <button type="button" class="btn btn-danger mt-2" onclick="@(() => DeleteAudio())"><i class="fas fa-trash-alt" data-fa-transform="grow-6"></i></button>
+                    <button type="button" class="btn btn-danger mt-2" @onclick="DeleteAudio"><i class="fas fa-trash-alt" data-fa-transform="grow-6"></i></button>
                 </div>
             </div>           
         } else
@@ -111,7 +111,7 @@
                 <p>@(_uploadedBytes / 1024)KB / @(_fileStream?.Length / 1024)KB</p>
                 @* Show the percentage of uploaded amount of of the total *@
                 <p>Percentage: @_percentage %</p>
-                <button type="button" onclick="@(() => UploadAudio())">Upload Audio</button>
+                <button type="button" @onclick="UploadAudio">Upload Audio</button>
             </div>
         }
     </div>
@@ -163,7 +163,7 @@
                 <td>
                     <div class="float-right">
                     <NavLink class="btn btn-light btn-sm" href="@($"/mix/{MixViewModel.MixId}/track/{track.Id}")"><i class="fa fa-pencil"></i></NavLink>
-                    <button class="btn btn-danger btn-sm" onclick="@(() => DeleteTrack(track.Id))"><i class="fa fa-trash"></i></button>
+                    <button class="btn btn-danger btn-sm" @onclick="() => DeleteTrack(track.Id)"><i class="fa fa-trash"></i></button>
                     </div>
                 </td>
             </tr>
