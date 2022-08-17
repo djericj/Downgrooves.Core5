@@ -22,7 +22,7 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("/data/{type}/artist/{artist}")]
+        [Route("/data/{dataType}/artist/{artist}")]
         public async Task<IActionResult> GetApiData(ApiData.ApiDataTypes dataType, string artist)
         {
             try
