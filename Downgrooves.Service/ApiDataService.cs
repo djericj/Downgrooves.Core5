@@ -24,6 +24,7 @@ namespace Downgrooves.Service
         public async Task<ApiData> Add(ApiData data)
         {
             var exists = await GetApiData(data.ApiDataType, data.Artist);
+
             if (exists != null && exists.Data == data.Data && exists.Total == data.Total)
             {
                 _logger.LogInformation($"Data for {data.Artist} {data.ApiDataType} is unchanged.");
@@ -35,9 +36,14 @@ namespace Downgrooves.Service
             }
             else
             {
-                _logger.LogInformation($"Data for {data.Artist} {data.ApiDataType} HAS changed.");
+                if (exists == null)
+                    _logger.LogInformation($"Data for {data.Artist} {data.ApiDataType} is NEW.");
+                else
+                    _logger.LogInformation($"Data for {data.Artist} {data.ApiDataType} HAS changed.");
+
                 if (exists != null && exists.Total == data.Total)
                     await _unitOfWork.ApiData.Remove(exists);
+
                 data.IsChanged = true;
                 data.LastUpdate = DateTime.Now;
                 await _unitOfWork.ApiData.AddAsync(data);

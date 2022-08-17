@@ -12,6 +12,7 @@ namespace Downgrooves.Domain
         public ApiDataTypes ApiDataType { get; set; }
         public int Id { get; set; }
         public bool IsChanged { get; set; }
+        public bool IsProcessed { get; set; }
         public DateTime LastUpdate { get; set; }
         public int Total { get; set; }
         public string Url { get; set; }
