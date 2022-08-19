@@ -8,8 +8,8 @@ namespace Downgrooves.Admin.ViewModels
 {
     public class ReleaseTrackViewModel : BaseViewModel, IViewModel
     {
-        private IApiService<ReleaseTrack> _service;
-        private IApiService<Release> _releaseService;
+        private readonly IApiService<ReleaseTrack> _service;
+        private readonly IApiService<Release> _releaseService;
 
         [Required(ErrorMessage = "Artist name is required.")]
         public string ArtistName { get; set; }
@@ -43,31 +43,31 @@ namespace Downgrooves.Admin.ViewModels
             _releaseService = releaseService;
         }
 
-        public async Task Add()
+        public void Add()
         {
             var releaseTrack = CreateReleaseTrack(this);
-            MapToViewModel(await _service.Add(releaseTrack, ApiEndpoint.ReleaseTrack));
+            MapToViewModel(_service.Add(releaseTrack, ApiEndpoint.ReleaseTrack));
         }
 
-        public async Task GetRelease(int id)
+        public void GetRelease(int id)
         {
-            Release = await _releaseService.Get(id, ApiEndpoint.Release);
+            Release = _releaseService.Get(id, ApiEndpoint.Release);
         }
 
-        public async Task GetReleaseTrack(int id)
+        public void GetReleaseTrack(int id)
         {
-            MapToViewModel(await _service.Get(id, ApiEndpoint.ReleaseTrack));
+            MapToViewModel(_service.Get(id, ApiEndpoint.ReleaseTrack));
         }
 
-        public async Task Update()
+        public void Update()
         {
             var releaseTrack = CreateReleaseTrack(this);
-            MapToViewModel(await _service.Update(releaseTrack, ApiEndpoint.ReleaseTrack));
+            MapToViewModel(_service.Update(releaseTrack, ApiEndpoint.ReleaseTrack));
         }
 
-        public async Task Remove(int id)
+        public void Remove(int id)
         {
-            await _service.Remove(id, ApiEndpoint.ReleaseTrack);
+            _service.Remove(id, ApiEndpoint.ReleaseTrack);
         }
 
         private ReleaseTrack CreateReleaseTrack(ReleaseTrackViewModel viewModel)
@@ -86,7 +86,7 @@ namespace Downgrooves.Admin.ViewModels
             };
         }
 
-        private async void MapToViewModel(ReleaseTrack releaseTrack)
+        private void MapToViewModel(ReleaseTrack releaseTrack)
         {
             ArtistName = releaseTrack.ArtistName;
             Id = releaseTrack.Id;
@@ -97,7 +97,7 @@ namespace Downgrooves.Admin.ViewModels
             TrackId = releaseTrack.TrackId;
             TrackNumber = releaseTrack.TrackNumber;
             TrackTimeInMilliseconds = releaseTrack.TrackTimeInMilliseconds;
-            Release = await _releaseService.Get(ReleaseId, ApiEndpoint.Release);
+            Release = _releaseService.Get(ReleaseId, ApiEndpoint.Release);
         }
     }
 }

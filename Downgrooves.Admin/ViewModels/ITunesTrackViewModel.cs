@@ -58,34 +58,34 @@ namespace Downgrooves.Admin.ViewModels
         [Required(ErrorMessage = null)]
         public string IsStreamable { get; set; }
 
-        public async Task AddTrack()
+        public void AddTrack()
         {
             var track = CreateTrack(this);
-            MapToViewModel(await _service.Add(track, ApiEndpoint.ITunesTrack));
+            MapToViewModel(_service.Add(track, ApiEndpoint.ITunesTrack));
         }
 
-        public async Task<IEnumerable<ITunesTrack>> GetTracks()
+        public IEnumerable<ITunesTrack> GetTracks()
         {
-            return await _service.GetAll(ApiEndpoint.ITunesTracks);
+            return _service.GetAll(ApiEndpoint.ITunesTracks);
         }
 
-        public async Task GetTrack(int id)
+        public void GetTrack(int id)
         {
-            MapToViewModel(await _service.Get(id, ApiEndpoint.ITunesTrack));
+            MapToViewModel(_service.Get(id, ApiEndpoint.ITunesTrack));
         }
 
-        public async Task UpdateTrack()
+        public void UpdateTrack()
         {
             var track = CreateTrack(this);
-            MapToViewModel(await _service.Update(track, ApiEndpoint.ITunesTrack));
+            MapToViewModel(_service.Update(track, ApiEndpoint.ITunesTrack));
         }
 
-        public async Task Remove(int id)
+        public void Remove(int id)
         {
-            await _service.Remove(id, ApiEndpoint.ITunesTrack);
+            _service.Remove(id, ApiEndpoint.ITunesTrack);
         }
 
-        private ITunesTrack CreateTrack(ITunesTrackViewModel viewModel)
+        private static ITunesTrack CreateTrack(ITunesTrackViewModel viewModel)
         {
             return new ITunesTrack()
             {

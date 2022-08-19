@@ -4,20 +4,26 @@
     <TargetFramework>net5.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <UserSecretsId>a8517675-5ccd-46f4-8f39-f088272446ce</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="Moq" Version="4.18.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.3" />
     <PackageReference Include="coverlet.collector" Version="3.0.2" />
+    <PackageReference Include="NSubstitute" Version="4.4.0" />
+    <PackageReference Include="RestSharp" Version="107.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Downgrooves.Domain\Downgrooves.Domain.csproj" />
     <ProjectReference Include="..\Downgrooves.Service\Downgrooves.Service.csproj" />
     <ProjectReference Include="..\Downgrooves.WebApi\Downgrooves.WebApi.csproj" />
+    <ProjectReference Include="..\Downgrooves.WorkerService\Downgrooves.WorkerService.csproj" />
   </ItemGroup>
 
 </Project>

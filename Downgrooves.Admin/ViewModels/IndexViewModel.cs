@@ -7,16 +7,16 @@ namespace Downgrooves.Admin.ViewModels
 {
     public class IndexViewModel : BaseViewModel
     {
-        private IApiService<Log> _logService;
+        private readonly IApiService<Log> _logService;
 
         public IndexViewModel(IApiService<Log> logService)
         {
             _logService = logService;
         }
 
-        public async Task<IEnumerable<Log>> GetLogs()
+        public IEnumerable<Log> GetLogs()
         {
-            return await _logService.GetAll(ApiEndpoint.Logs);
+            return _logService.GetAll(ApiEndpoint.Logs);
         }
     }
 }

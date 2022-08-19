@@ -1,17 +1,16 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
+using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 
 namespace Downgrooves.Service
 {
-    public class UserService : IUserService
+    public class UserService : ServiceBase, IUserService
     {
-        private IUnitOfWork _unitOfWork;
-
-        public UserService(IUnitOfWork unitOfWork)
+        public UserService(IConfiguration configuration, IUnitOfWork unitOfWork) : base(configuration, unitOfWork)
         {
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<User> Authenticate(string userName, string password)

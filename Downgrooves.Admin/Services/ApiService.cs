@@ -1,52 +1,69 @@
 ﻿using Downgrooves.Admin.Services.Interfaces;
-using Downgrooves.Domain;
+using Downgrooves.Framework.Api;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Admin.Services
 {
-    public class ApiService<T> : ApiServiceBase, IApiService<T> where T : class
+    public class ApiService<T> : ApiBase, IApiService<T> where T : class
     {
-        public ApiService(IOptions<AppConfig> config, HttpClient httpClient) : base(config, httpClient)
+        public ApiService(IOptions<AppConfig> config, ILogger<ApiService<T>> logger) : base(logger)
         {
+            Token = config.Value.Token;
         }
 
-        public async Task<T> Add(T entity, string endpoint, CancellationToken token = default)
+        public string Token { get; private set; }
+
+        public string ApiUrl { get; set; }
+
+        public T Add(T entity, string endpoint)
         {
-            return await PostAsync<T>(endpoint, entity, cancel: token);
+            var response = ApiPost<T>(GetUri(endpoint), Token, entity);
+            return JsonConvert.DeserializeObject<T>(response.Content);
         }
 
-        public async Task<IEnumerable<T>> AddRange(IEnumerable<T> entities, string endpoint, CancellationToken token = default)
+        public IEnumerable<T> AddRange(IEnumerable<T> entities, string endpoint)
         {
-            return await PostAsync<IEnumerable<T>>(endpoint, entities, cancel: token);
+            var response = ApiPost<IEnumerable<T>>(GetUri(endpoint), Token, entities);
+            return JsonConvert.DeserializeObject<IEnumerable<T>>(response.Content);
         }
 
-        public async Task<T> Get(int id, string endpoint, CancellationToken token = default)
+        public T Get(int id, string endpoint)
         {
-            return await GetAsync<T>($"{endpoint}/{id}", cancel: token);
+            var response = ApiGet(GetUri($"{endpoint}/{id}"), Token);
+            return JsonConvert.DeserializeObject<T>(response.Content);
         }
 
-        public async Task<IEnumerable<T>> GetAll(string endpoint, CancellationToken token = default)
+        public IEnumerable<T> GetAll(string endpoint)
         {
-            return await GetAsync<IEnumerable<T>>(endpoint, cancel: token);
+            var response = ApiGet(GetUri(endpoint), Token);
+            return JsonConvert.DeserializeObject<IEnumerable<T>>(response.Content);
         }
 
-        public async Task<T> Remove(int id, string endpoint, CancellationToken token = default)
+        public T Remove(int id, string endpoint)
         {
-            return await DeleteAsync<T>($"{endpoint}/{id}", id, cancel: token);
+            var response = ApiDelete<T>(GetUri($"{endpoint}/{id}"), Token, id);
+            return JsonConvert.DeserializeObject<T>(response.Content);
         }
 
-        public async Task<T> Update(T entity, string endpoint, CancellationToken token = default)
+        public T Update(T entity, string endpoint)
         {
-            return await PutAsync<T>(endpoint, entity, cancel: token);
+            var response = ApiPut<T>(GetUri(endpoint), Token, entity);
+            return JsonConvert.DeserializeObject<T>(response.Content);
         }
 
-        public async Task<IEnumerable<T>> UpdateRange(IEnumerable<T> entities, string endpoint, CancellationToken token = default)
+        public IEnumerable<T> UpdateRange(IEnumerable<T> entities, string endpoint)
         {
-            return await PutAsync<IEnumerable<T>>(endpoint, entities, cancel: token);
+            var response = ApiPut<IEnumerable<T>>(GetUri(endpoint), Token, entities);
+            return JsonConvert.DeserializeObject<IEnumerable<T>>(response.Content);
+        }
+
+        public Uri GetUri(string path)
+        {
+            return new Uri($"{ApiUrl}/{path}");
         }
     }
 }

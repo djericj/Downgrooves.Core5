@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Downgrooves.Domain\Downgrooves.Domain.csproj" />
+    <ProjectReference Include="..\Downgrooves.Framework\Downgrooves.Framework.csproj" />
     <ProjectReference Include="..\Downgrooves.Persistence\Downgrooves.Persistence.csproj" />
   </ItemGroup>
 

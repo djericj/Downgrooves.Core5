@@ -1,19 +1,17 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
+using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
-
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Downgrooves.Service
 {
-    public class MixService : IMixService
+    public class MixService : ServiceBase, IMixService
     {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public MixService(IUnitOfWork unitOfWork)
+        public MixService(IConfiguration configuration, IUnitOfWork unitOfWork) : base(configuration, unitOfWork)
         {
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<Mix> Add(Mix mix)

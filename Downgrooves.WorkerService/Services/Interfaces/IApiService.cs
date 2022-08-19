@@ -1,18 +1,19 @@
 ﻿using Downgrooves.Domain;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Downgrooves.WorkerService.Services.Interfaces
 {
-    public interface IApiService
+    public interface IApiDataService
     {
-        Task<JObject> Lookup(string url);
+        JObject Lookup(string url);
 
-        Task<List<ApiData>> GetResultsFromApi(string url, ApiData.ApiDataTypes type, string artist);
+        List<ApiData> GetResultsFromApi(string url, ApiData.ApiDataTypes type, string artist);
 
-        Task<ApiData> AddApiData(ApiData data);
+        ApiData AddApiData(ApiData data);
 
-        Task<ApiData> UpdateApiData(ApiData data);
+        IEnumerable<ApiData> GetApiData(ApiData.ApiDataTypes dataType, string artist);
+
+        ApiData UpdateApiData(ApiData data);
     }
 }

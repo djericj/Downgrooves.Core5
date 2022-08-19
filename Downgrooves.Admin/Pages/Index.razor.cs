@@ -16,7 +16,7 @@ namespace Downgrooves.Admin.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            logs = await IndexViewModel.GetLogs();
+            logs = IndexViewModel.GetLogs();
             await base.OnInitializedAsync();
         }
     }

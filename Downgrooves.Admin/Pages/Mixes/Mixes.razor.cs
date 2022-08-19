@@ -17,7 +17,7 @@ namespace Downgrooves.Admin.Pages.Mixes
         protected override async Task OnInitializedAsync()
         {
             BreadcrumbItems.Add(new Breadcrumb($"/mixes", "Mixes"));
-            mixes = await MixViewModel.GetMixes();
+            mixes = MixViewModel.GetMixes();
             await base.OnInitializedAsync();
         }
     }

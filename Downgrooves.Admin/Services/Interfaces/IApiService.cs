@@ -1,23 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Downgrooves.Admin.Services.Interfaces
 {
     public interface IApiService<T> where T : class
     {
-        Task<T> Add(T entity, string endpoint, CancellationToken token = default);
+        T Add(T entity, string endpoint);
 
-        Task<IEnumerable<T>> AddRange(IEnumerable<T> entities, string endpoint, CancellationToken token = default);
+        IEnumerable<T> AddRange(IEnumerable<T> entities, string endpoint);
 
-        Task<T> Get(int id, string endpoint, CancellationToken token = default);
+        T Get(int id, string endpoint);
 
-        Task<IEnumerable<T>> GetAll(string endpoint, CancellationToken token = default);
+        IEnumerable<T> GetAll(string endpoint);
 
-        Task<T> Remove(int id, string endpoint, CancellationToken token = default);
+        T Remove(int id, string endpoint);
 
-        Task<T> Update(T entity, string endpoint, CancellationToken token = default);
+        T Update(T entity, string endpoint);
 
-        Task<IEnumerable<T>> UpdateRange(IEnumerable<T> entity, string endpoint, CancellationToken token = default);
+        IEnumerable<T> UpdateRange(IEnumerable<T> entities, string endpoint);
+
+        Uri GetUri(string path);
     }
 }

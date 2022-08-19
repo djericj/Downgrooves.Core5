@@ -8,7 +8,7 @@ namespace Downgrooves.Admin.ViewModels
 {
     public class MixTrackViewModel : BaseViewModel, IViewModel
     {
-        private IApiService<MixTrack> _mixTrackService;
+        private readonly IApiService<MixTrack> _mixTrackService;
 
         [Required(ErrorMessage = null)]
         public string Artist { get; set; }
@@ -32,24 +32,24 @@ namespace Downgrooves.Admin.ViewModels
             _mixTrackService = mixTrackService;
         }
 
-        public async Task Add()
+        public void Add()
         {
             var mix = CreateMixTrack(this);
-            MapToViewModel(await _mixTrackService.Add(mix, ApiEndpoint.MixTrack));
+            MapToViewModel(_mixTrackService.Add(mix, ApiEndpoint.MixTrack));
         }
 
-        public async Task Update()
+        public void Update()
         {
             var mix = CreateMixTrack(this);
-            MapToViewModel(await _mixTrackService.Update(mix, ApiEndpoint.MixTrack));
+            MapToViewModel(_mixTrackService.Update(mix, ApiEndpoint.MixTrack));
         }
 
-        public async Task Remove(int id)
+        public void Remove(int id)
         {
-            await _mixTrackService.Remove(id, ApiEndpoint.MixTrack);
+            _mixTrackService.Remove(id, ApiEndpoint.MixTrack);
         }
 
-        private MixTrack CreateMixTrack(MixTrackViewModel mixTrackViewModel)
+        private static MixTrack CreateMixTrack(MixTrackViewModel mixTrackViewModel)
         {
             return new MixTrack()
             {

@@ -53,7 +53,6 @@ namespace Downgrooves.Admin
             builder.Services.AddScoped<IApiService<ITunesTrack>, ApiService<ITunesTrack>>();
             builder.Services.AddScoped<IApiService<Genre>, ApiService<Genre>>();
             builder.Services.AddScoped<IApiService<Domain.Log>, ApiService<Domain.Log>>();
-            builder.Services.AddScoped<IMixService, MixService>();
             builder.Services.AddScoped<IApiService<MixTrack>, ApiService<MixTrack>>();
             builder.Services.AddScoped<IApiService<Release>, ApiService<Release>>();
             builder.Services.AddScoped<IApiService<ReleaseTrack>, ApiService<ReleaseTrack>>();

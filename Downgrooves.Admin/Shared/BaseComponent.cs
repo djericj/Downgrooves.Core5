@@ -33,9 +33,9 @@ namespace Downgrooves.Admin.Shared
             try
             {
                 if (IsNew)
-                    await ViewModel.Add();
+                    ViewModel.Add();
                 else
-                    await ViewModel.Update();
+                    ViewModel.Update();
 
                 ToastService.ShowSuccess($"{(IsNew ? "Added" : "Updated")} successfully.");
                 var json = JsonConvert.SerializeObject(ViewModel);
@@ -60,7 +60,7 @@ namespace Downgrooves.Admin.Shared
                 if (!await JsRuntime.InvokeAsync<bool>("confirm", new object[] { "Are you sure you want to delete this item?" }))
                     return;
 
-                await ViewModel.Remove(Id.Value);
+                ViewModel.Remove(Id.Value);
                 NavigationManager.NavigateTo(RedirectUrl);
             }
             catch (Exception ex)
@@ -70,7 +70,7 @@ namespace Downgrooves.Admin.Shared
             }
         }
 
-        public string FormatRelativeTime(DateTime dateTimeValue)
+        public static string FormatRelativeTime(DateTime dateTimeValue)
         {
             const int SECOND = 1;
             const int MINUTE = 60 * SECOND;

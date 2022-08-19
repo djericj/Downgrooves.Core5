@@ -1,5 +1,6 @@
 ﻿using Downgrooves.Domain.ITunes;
 using Downgrooves.Persistence.Interfaces;
+using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -9,15 +10,10 @@ using System.Threading.Tasks;
 
 namespace Downgrooves.Service
 {
-    public class ITunesService : IITunesService
+    public class ITunesService : ServiceBase, IITunesService
     {
-        private readonly IConfiguration _configuration;
-        private readonly IUnitOfWork _unitOfWork;
-
-        public ITunesService(IConfiguration configuration, IUnitOfWork unitOfWork)
+        public ITunesService(IConfiguration configuration, IUnitOfWork unitOfWork) : base(configuration, unitOfWork)
         {
-            _configuration = configuration;
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<ITunesCollection> AddCollection(ITunesCollection item)

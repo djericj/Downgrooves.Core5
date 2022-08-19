@@ -1,25 +1,24 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
+using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Downgrooves.Service
 {
-    public class ApiDataService : IApiDataService
+    public class ApiDataService : ServiceBase, IApiDataService
     {
         private readonly ILogger<IApiDataService> _logger;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public ApiDataService(ILogger<IApiDataService> logger, IUnitOfWork unitOfWork)
+        public ApiDataService(IConfiguration configuration, ILogger<IApiDataService> logger, IUnitOfWork unitOfWork) :
+            base(configuration, unitOfWork)
         {
             _logger = logger;
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<ApiData> Add(ApiData data)
@@ -97,21 +96,6 @@ namespace Downgrooves.Service
             var result = await ExecuteSql(sql.Replace("@artistName", $"'{artist}'"));
             if (result == 0)
                 _logger.LogWarning($"ExecuteSql {fileName} affected 0 rows.");
-        }
-
-        private async Task<int> ExecuteSql(string sql)
-        {
-            return await _unitOfWork.ExecuteNonQueryAsync(sql);
-        }
-
-        private static string GetEmbeddedResource(string fileName)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            string resourceName = assembly.GetManifestResourceNames().Single(str => str.EndsWith(fileName));
-
-            using Stream stream = assembly.GetManifestResourceStream(resourceName);
-            using StreamReader reader = new(stream);
-            return reader.ReadToEnd();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Downgrooves.Admin.Pages.Videos
         protected override async Task OnInitializedAsync()
         {
             if (Id.HasValue)
-                await VideoViewModel.GetVideo(Id.Value);
+                VideoViewModel.GetVideo(Id.Value);
             await base.OnInitializedAsync();
         }
     }

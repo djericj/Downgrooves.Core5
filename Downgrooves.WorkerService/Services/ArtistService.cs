@@ -1,5 +1,4 @@
 ﻿using Downgrooves.Domain;
-using Downgrooves.WorkerService.Base;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Services.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -8,24 +7,23 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace Downgrooves.WorkerService.Services
 {
-    public class ArtistService : ApiBase, IArtistService
+    public class ArtistService : ApiService, IArtistService
     {
         private readonly ILogger<ArtistService> _logger;
 
-        public ArtistService(IOptions<AppConfig> config, ILogger<ArtistService> logger) : base(config)
+        public ArtistService(IOptions<AppConfig> config, ILogger<ArtistService> logger) : base(config, logger)
         {
             _logger = logger;
         }
 
-        public async Task<IEnumerable<Artist>> GetArtists()
+        public IEnumerable<Artist> GetArtists()
         {
             try
             {
-                var response = await ApiGet($"artists");
+                var response = ApiGet(GetUri("artists"), Token);
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     return JsonConvert.DeserializeObject<Artist[]>(response.Content);

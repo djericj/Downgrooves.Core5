@@ -7,16 +7,15 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Linq;
 using Downgrooves.Domain.ITunes;
+using Downgrooves.Service.Base;
+using Microsoft.Extensions.Configuration;
 
 namespace Downgrooves.Service
 {
-    public class ReleaseService : IReleaseService
+    public class ReleaseService : ServiceBase, IReleaseService
     {
-        private IUnitOfWork _unitOfWork;
-
-        public ReleaseService(IUnitOfWork unitOfWork)
+        public ReleaseService(IConfiguration configuration, IUnitOfWork unitOfWork) : base(configuration, unitOfWork)
         {
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<Release> Add(Release release)

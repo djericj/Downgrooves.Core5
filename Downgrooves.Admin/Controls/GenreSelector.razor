@@ -21,7 +21,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        Genres = await genreService.GetAll(ApiEndpoint.Genres);
+        Genres = genreService.GetAll(ApiEndpoint.Genres);
         await base.OnInitializedAsync();
     }
 }

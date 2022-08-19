@@ -9,7 +9,7 @@ namespace Downgrooves.WebApi.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("data")]
+    [Route("/data")]
     public class ApiDataController : ControllerBase
     {
         private readonly ILogger<ApiDataController> _logger;
@@ -37,7 +37,7 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(ApiData data)
+        public async Task<IActionResult> Add([FromBody] ApiData data)
         {
             try
             {

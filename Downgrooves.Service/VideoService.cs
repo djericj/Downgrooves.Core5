@@ -1,20 +1,17 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
+using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
-
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Downgrooves.Service
 {
-    public class VideoService : IVideoService
+    public class VideoService : ServiceBase, IVideoService
     {
-        private IUnitOfWork _unitOfWork;
-
-        public VideoService(IUnitOfWork unitOfWork)
+        public VideoService(IConfiguration configuration, IUnitOfWork unitOfWork) : base(configuration, unitOfWork)
         {
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<Video> AddVideo(Video video)

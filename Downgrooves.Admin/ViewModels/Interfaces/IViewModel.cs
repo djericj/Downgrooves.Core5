@@ -4,10 +4,10 @@ namespace Downgrooves.Admin.ViewModels.Interfaces
 {
     public interface IViewModel
     {
-        Task Add();
+        void Add();
 
-        Task Update();
+        void Update();
 
-        Task Remove(int id);
+        void Remove(int id);
     }
 }

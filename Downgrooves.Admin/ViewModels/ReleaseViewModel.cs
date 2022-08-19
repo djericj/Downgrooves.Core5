@@ -9,8 +9,8 @@ namespace Downgrooves.Admin.ViewModels
 {
     public class ReleaseViewModel : BaseViewModel, IViewModel
     {
-        private IApiService<Release> _releaseService;
-        private IApiService<ReleaseTrack> _releaseTrackService;
+        private readonly IApiService<Release> _releaseService;
+        private readonly IApiService<ReleaseTrack> _releaseTrackService;
 
         public int CollectionId { get; set; }
 
@@ -68,39 +68,39 @@ namespace Downgrooves.Admin.ViewModels
             _releaseTrackService = releaseTrackService;
         }
 
-        public async Task Add()
+        public void Add()
         {
             var release = CreateRelease(this);
-            MapToViewModel(await _releaseService.Add(release, ApiEndpoint.Release));
+            MapToViewModel(_releaseService.Add(release, ApiEndpoint.Release));
         }
 
-        public async Task<IEnumerable<Release>> GetReleases()
+        public IEnumerable<Release> GetReleases()
         {
-            return await _releaseService.GetAll(ApiEndpoint.Releases);
+            return _releaseService.GetAll(ApiEndpoint.Releases);
         }
 
-        public async Task GetRelease(int id)
+        public void GetRelease(int id)
         {
-            MapToViewModel(await _releaseService.Get(id, ApiEndpoint.Release));
+            MapToViewModel(_releaseService.Get(id, ApiEndpoint.Release));
         }
 
-        public async Task Update()
+        public void Update()
         {
             var release = CreateRelease(this);
-            MapToViewModel(await _releaseService.Update(release, ApiEndpoint.Release));
+            MapToViewModel(_releaseService.Update(release, ApiEndpoint.Release));
         }
 
-        public async Task Remove(int id)
+        public void Remove(int id)
         {
-            await _releaseService.Remove(id, ApiEndpoint.Release);
+            _releaseService.Remove(id, ApiEndpoint.Release);
         }
 
-        public async Task RemoveTrack(int id)
+        public void RemoveTrack(int id)
         {
-            await _releaseTrackService.Remove(id, ApiEndpoint.ReleaseTrack);
+            _releaseTrackService.Remove(id, ApiEndpoint.ReleaseTrack);
         }
 
-        private Release CreateRelease(ReleaseViewModel viewModel)
+        private static Release CreateRelease(ReleaseViewModel viewModel)
         {
             return new Release()
             {

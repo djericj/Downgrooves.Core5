@@ -1,18 +1,17 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
+using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Downgrooves.Service
 {
-    public class LogService : ILogService
+    public class LogService : ServiceBase, ILogService
     {
-        private IUnitOfWork _unitOfWork;
-
-        public LogService(IUnitOfWork unitOfWork)
+        public LogService(IConfiguration configuration, IUnitOfWork unitOfWork) : base(configuration, unitOfWork)
         {
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<IEnumerable<Log>> GetLogs() => await _unitOfWork.Logs.GetAllAsync();

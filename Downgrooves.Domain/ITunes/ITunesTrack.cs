@@ -1,15 +1,22 @@
-﻿namespace Downgrooves.Domain.ITunes
+﻿using Newtonsoft.Json;
+using System;
+
+namespace Downgrooves.Domain.ITunes
 {
     /// <summary>
     /// A track item from the iTunes API
     /// </summary>
+    [Serializable]
     public class ITunesTrack : ITunesItem
     {
         public string ArtworkUrl30 { get; set; }
         public int CollectionId { get; set; }
         public int DiscCount { get; set; }
         public int DiscNumber { get; set; }
-        public int Id { get; set; } // TrackId
+
+        [JsonProperty("TrackId")]
+        public new int Id { get; set; } // TrackId
+
         public string IsStreamable { get; set; }
         public string Kind { get; set; }
         public string PreviewUrl { get; set; }

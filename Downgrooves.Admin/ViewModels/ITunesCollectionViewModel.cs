@@ -1,7 +1,6 @@
 ﻿using Downgrooves.Admin.Services.Interfaces;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using Downgrooves.Domain.ITunes;
 
 namespace Downgrooves.Admin.ViewModels
@@ -21,34 +20,34 @@ namespace Downgrooves.Admin.ViewModels
         [Required(ErrorMessage = null)]
         public string Copyright { get; set; }
 
-        public async Task AddCollection()
+        public void AddCollection()
         {
             var collection = CreateCollection(this);
-            MapToViewModel(await _service.Add(collection, ApiEndpoint.ITunesCollection));
+            MapToViewModel(_service.Add(collection, ApiEndpoint.ITunesCollection));
         }
 
-        public async Task<IEnumerable<ITunesCollection>> GetCollections()
+        public IEnumerable<ITunesCollection> GetCollections()
         {
-            return await _service.GetAll(ApiEndpoint.ITunesCollections);
+            return _service.GetAll(ApiEndpoint.ITunesCollections);
         }
 
-        public async Task GetCollection(int id)
+        public void GetCollection(int id)
         {
-            MapToViewModel(await _service.Get(id, ApiEndpoint.ITunesCollection));
+            MapToViewModel(_service.Get(id, ApiEndpoint.ITunesCollection));
         }
 
-        public async Task UpdateCollection()
+        public void UpdateCollection()
         {
             var collection = CreateCollection(this);
-            MapToViewModel(await _service.Update(collection, ApiEndpoint.ITunesCollection));
+            MapToViewModel(_service.Update(collection, ApiEndpoint.ITunesCollection));
         }
 
-        public async Task Remove(int id)
+        public void Remove(int id)
         {
-            await _service.Remove(id, ApiEndpoint.ITunesCollection);
+            _service.Remove(id, ApiEndpoint.ITunesCollection);
         }
 
-        private ITunesCollection CreateCollection(ITunesCollectionViewModel viewModel)
+        private static ITunesCollection CreateCollection(ITunesCollectionViewModel viewModel)
         {
             return new ITunesCollection()
             {

@@ -10,7 +10,7 @@ namespace Downgrooves.Admin.ViewModels
 {
     public class VideoViewModel : BaseViewModel, IViewModel
     {
-        private IApiService<Video> _service;
+        private readonly IApiService<Video> _service;
 
         [Required(ErrorMessage = "Publish date is required.")]
         [DataType(DataType.Date, ErrorMessage = "Publish date must be a date.")]
@@ -39,34 +39,34 @@ namespace Downgrooves.Admin.ViewModels
             _service = service;
         }
 
-        public async Task Add()
+        public void Add()
         {
             var video = CreateVideo(this);
-            MapToViewModel(await _service.Add(video, ApiEndpoint.Video));
+            MapToViewModel(_service.Add(video, ApiEndpoint.Video));
         }
 
-        public async Task<IEnumerable<Video>> GetVideos()
+        public IEnumerable<Video> GetVideos()
         {
-            return await _service.GetAll(ApiEndpoint.Videos);
+            return _service.GetAll(ApiEndpoint.Videos);
         }
 
-        public async Task GetVideo(int id)
+        public void GetVideo(int id)
         {
-            MapToViewModel(await _service.Get(id, ApiEndpoint.Video));
+            MapToViewModel(_service.Get(id, ApiEndpoint.Video));
         }
 
-        public async Task Update()
+        public void Update()
         {
             var video = CreateVideo(this);
-            MapToViewModel(await _service.Update(video, ApiEndpoint.Video));
+            MapToViewModel(_service.Update(video, ApiEndpoint.Video));
         }
 
-        public async Task Remove(int id)
+        public void Remove(int id)
         {
-            await _service.Remove(id, ApiEndpoint.Video);
+            _service.Remove(id, ApiEndpoint.Video);
         }
 
-        private Video CreateVideo(VideoViewModel videoViewModel)
+        private static Video CreateVideo(VideoViewModel videoViewModel)
         {
             return new Video()
             {

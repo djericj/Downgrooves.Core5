@@ -16,11 +16,13 @@ namespace Downgrooves.Domain.ITunes
         public string ArtworkUrl100 { get; set; }
         public double? CollectionPrice { get; set; }
         public string CollectionExplicitness { get; set; }
-        public int TrackCount { get; set; }
         public string Country { get; set; }
         public string Currency { get; set; }
+        public int Id { get; set; }
         public DateTime? ReleaseDate { get; set; }
         public string PrimaryGenreName { get; set; }
         public int? SourceArtistId { get; set; }
+        public int TrackCount { get; set; }
+        public string WrapperType { get; set; }
     }
 }

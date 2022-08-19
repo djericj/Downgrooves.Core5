@@ -41,19 +41,19 @@ namespace Downgrooves.Admin.Pages.Mixes
             BreadcrumbItems.Add(new Breadcrumb($"/mixes", "Mixes"));
             if (Id.HasValue)
             {
-                await MixViewModel.GetMix(Id.Value);
+                MixViewModel.GetMix(Id.Value);
                 BreadcrumbItems.Add(new Breadcrumb($"/mix/{Id}", MixViewModel.Title));
             }
             await base.OnInitializedAsync();
         }
 
-        protected async Task AddTrack()
+        protected void AddTrack()
         {
             try
             {
                 MixTrackViewModel.MixId = Id.Value;
-                await MixTrackViewModel.Add();
-                await MixViewModel.GetMix(Id.Value);
+                MixTrackViewModel.Add();
+                MixViewModel.GetMix(Id.Value);
                 StateHasChanged();
                 ToastService.ShowSuccess("Track added successfully!");
             }
@@ -64,12 +64,12 @@ namespace Downgrooves.Admin.Pages.Mixes
             }
         }
 
-        protected async Task DeleteTrack(int id)
+        protected void DeleteTrack(int id)
         {
             try
             {
-                await MixTrackViewModel.Remove(id);
-                await MixViewModel.GetMix(Id.Value);
+                MixTrackViewModel.Remove(id);
+                MixViewModel.GetMix(Id.Value);
                 StateHasChanged();
                 ToastService.ShowSuccess("Track deleted successfully!");
             }
@@ -80,34 +80,34 @@ namespace Downgrooves.Admin.Pages.Mixes
             }
         }
 
-        protected async void DeleteImage()
+        protected async Task DeleteImage()
         {
             if (!await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete the image?"))
                 return;
 
-            await MixViewModel.RemoveArtwork();
+            //MixViewModel.RemoveArtwork();
             this.StateHasChanged();
         }
 
-        protected async void UploadImage()
+        protected void UploadImage()
         {
-            var data = await Read(ArtworkFile.OpenReadStream());
+            var data = Read(ArtworkFile.OpenReadStream());
             var mediaFile = new MediaFile()
             {
                 FileName = ArtworkFile.Name,
                 Data = data
             };
-            await MixViewModel.AddArtwork(mediaFile);
+            MixViewModel.AddArtwork(mediaFile);
             MixViewModel.ArtworkUrl = ArtworkFile.Name;
-            await MixViewModel.Update();
-            await MixViewModel.GetMix(Id.Value);
+            MixViewModel.Update();
+            MixViewModel.GetMix(Id.Value);
             StateHasChanged();
         }
 
-        protected async Task<byte[]> Read(Stream stream)
+        protected static byte[] Read(Stream stream)
         {
-            MemoryStream ms = new MemoryStream();
-            await stream.CopyToAsync(ms);
+            MemoryStream ms = new();
+            stream.CopyToAsync(ms);
             stream.Close();
 
             var data = ms.ToArray();
@@ -121,24 +121,24 @@ namespace Downgrooves.Admin.Pages.Mixes
             this.StateHasChanged();
         }
 
-        protected async void DeleteAudio()
+        protected async Task DeleteAudio()
         {
             if (!await JsRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete the audio?"))
                 return;
 
-            await MixViewModel.RemoveAudio();
+            MixViewModel.RemoveAudio();
             this.StateHasChanged();
         }
 
-        protected async void UploadAudio()
+        protected void UploadAudio()
         {
             MixViewModel.AudioUrl = AudioFile.Name;
-            await MixViewModel.Update();
-            await MixViewModel.GetMix(Id.Value);
+            MixViewModel.Update();
+            MixViewModel.GetMix(Id.Value);
             StateHasChanged();
         }
 
-        protected async Task OnAudioInputFileChange(InputFileChangeEventArgs e)
+        protected void OnAudioInputFileChange(InputFileChangeEventArgs e)
         {
             const long CHUNKSIZE = 1024 * 400; // subjective
 
@@ -158,13 +158,13 @@ namespace Downgrooves.Admin.Pages.Mixes
                         chunkSize = totalBytes - _uploadedBytes;
                     }
                     var chunk = new byte[chunkSize];
-                    await inStream.ReadAsync(chunk, 0, chunk.Length);
+                    inStream.ReadAsync(chunk, 0, chunk.Length);
                     // upload this fragment
                     using var formFile = new MultipartFormDataContent();
                     var fileContent = new StreamContent(new MemoryStream(chunk));
                     formFile.Add(fileContent, "file", file.Name);
                     // post
-                    await MixViewModel.AddAudioChunk(fragment, formFile);
+                    //MixViewModel.AddAudioChunk(fragment, formFile);
                     // Update our progress data and UI
                     _uploadedBytes += chunkSize;
                     _percentage = _uploadedBytes * 100 / totalBytes;
@@ -173,7 +173,7 @@ namespace Downgrooves.Admin.Pages.Mixes
                     {// upload complete
                         _uploading = false;
                     }
-                    await InvokeAsync(StateHasChanged);
+                    InvokeAsync(StateHasChanged);
                 }
             }
             AudioFile = file;

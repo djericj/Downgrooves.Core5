@@ -53,10 +53,11 @@ namespace Downgrooves.WorkerService
                 {
                     services.Configure<AppConfig>(hostContext.Configuration.GetSection("AppConfig"));
                     services.AddLogging();
-                    services.AddSingleton<IApiService, ApiService>();
+                    services.AddSingleton<IApiDataService, ApiDataService>();
                     services.AddSingleton<IArtistService, ArtistService>();
                     services.AddSingleton<IArtworkService, ArtworkService>();
                     services.AddSingleton<IITunesService, ITunesService>();
+                    services.AddSingleton<IReleaseService, ReleaseService>();
                     services.AddHostedService<ProcessWorker>();
                 });
     }
