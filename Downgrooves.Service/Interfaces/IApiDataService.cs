@@ -6,12 +6,12 @@ namespace Downgrooves.Service.Interfaces
 {
     public interface IApiDataService
     {
-        Task<IEnumerable<ApiData>> GetApiData(ApiData.ApiDataTypes dataType, string artist);
+        IEnumerable<ApiData> GetApiData(ApiData.ApiDataTypes dataType, string artist);
 
-        Task<ApiData> Add(ApiData data);
+        ApiData Add(ApiData apiData);
 
-        Task<ApiData> Update(ApiData data);
+        ApiData Update(ApiData apiData);
 
-        Task ReloadData(ApiData data);
+        void ReloadData(ApiData apiData);
     }
 }

@@ -17,8 +17,8 @@ namespace Downgrooves.Test
     public class VideoTests
     {
         private Mock<IOptions<AppConfig>> _appConfigMock;
-        private Mock<IVideoService> _service = new Mock<IVideoService>();
-        private Mock<ILogger<VideoController>> _mockLogger = new Mock<ILogger<VideoController>>();
+        private readonly Mock<IVideoService> _service = new();
+        private readonly Mock<ILogger<VideoController>> _mockLogger = new();
 
         [TestInitialize]
         public void Init()
@@ -36,12 +36,12 @@ namespace Downgrooves.Test
             var video = GetTestVideos().FirstOrDefault();
             video.Id = 3;
             video.PublishedAt = now;
-            _service.Setup(x => x.AddVideo(video).Result).Returns(video);
+            _service.Setup(x => x.AddVideo(video)).Returns(video);
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.Add(video).Result;
+            var output = videoController.Add(video);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as Video;
 
@@ -60,12 +60,12 @@ namespace Downgrooves.Test
             var now = DateTime.Now;
             // Arrange
             var videos = GetTestVideos();
-            _service.Setup(x => x.AddVideos(videos).Result).Returns(videos);
+            _service.Setup(x => x.AddVideos(videos)).Returns(videos);
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.AddVideos(videos).Result;
+            var output = videoController.AddVideos(videos);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<Video>;
 
@@ -81,12 +81,12 @@ namespace Downgrooves.Test
         {
             // Arrange
 
-            _service.Setup(x => x.GetVideo(1).Result).Returns(GetTestVideos().Where(x => x.Id == 1).FirstOrDefault());
+            _service.Setup(x => x.GetVideo(1)).Returns(GetTestVideos().Where(x => x.Id == 1).FirstOrDefault());
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.GetVideo(1).Result;
+            var output = videoController.GetVideo(1);
 
             // Assert
 
@@ -99,12 +99,12 @@ namespace Downgrooves.Test
         {
             // Arrange
 
-            _service.Setup(x => x.GetVideos().Result).Returns(GetTestVideos());
+            _service.Setup(x => x.GetVideos()).Returns(GetTestVideos());
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.GetVideos().Result;
+            var output = videoController.GetVideos();
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<Video>;
 
@@ -126,7 +126,7 @@ namespace Downgrooves.Test
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.Remove(video.Id).Result;
+            var output = videoController.Remove(video.Id);
             var okResult = output as OkResult;
 
             // Assert
@@ -142,12 +142,12 @@ namespace Downgrooves.Test
             // Arrange
             var video = GetTestVideos().FirstOrDefault();
             video.PublishedAt = now;
-            _service.Setup(x => x.UpdateVideo(video).Result).Returns(video);
+            _service.Setup(x => x.UpdateVideo(video)).Returns(video);
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.UpdateVideo(video).Result;
+            var output = videoController.UpdateVideo(video);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as Video;
 
@@ -165,12 +165,12 @@ namespace Downgrooves.Test
             // Arrange
             var thumbnail = GetTestThumbnails().FirstOrDefault();
             thumbnail.Id = 3;
-            _service.Setup(x => x.AddThumbnail(3, thumbnail).Result).Returns(thumbnail);
+            _service.Setup(x => x.AddThumbnail(3, thumbnail)).Returns(thumbnail);
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.AddThumbnail(3, thumbnail).Result;
+            var output = videoController.AddThumbnail(3, thumbnail);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as Thumbnail;
 
@@ -187,12 +187,12 @@ namespace Downgrooves.Test
         {
             // Arrange
             var thumbnails = GetTestThumbnails();
-            _service.Setup(x => x.AddThumbnails(3, thumbnails).Result).Returns(thumbnails);
+            _service.Setup(x => x.AddThumbnails(3, thumbnails)).Returns(thumbnails);
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.AddThumbnails(3, thumbnails).Result;
+            var output = videoController.AddThumbnails(3, thumbnails);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<Thumbnail>;
 
@@ -208,12 +208,12 @@ namespace Downgrooves.Test
         {
             // Arrange
             var video = new Video() { Id = 1 };
-            _service.Setup(x => x.GetThumbnails(3).Result).Returns(GetTestThumbnails());
+            _service.Setup(x => x.GetThumbnails(3)).Returns(GetTestThumbnails());
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.GetThumbnails(3).Result;
+            var output = videoController.GetThumbnails(3);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<Thumbnail>;
 
@@ -228,12 +228,12 @@ namespace Downgrooves.Test
         {
             // Arrange
             var video = new Video() { Id = 1 };
-            _service.Setup(x => x.GetThumbnail(1).Result).Returns(GetTestThumbnails().Where(x => x.Id == 1).FirstOrDefault());
+            _service.Setup(x => x.GetThumbnail(1)).Returns(GetTestThumbnails().Where(x => x.Id == 1).FirstOrDefault());
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.GetThumbnail(1).Result;
+            var output = videoController.GetThumbnail(1);
 
             // Assert
 
@@ -253,7 +253,7 @@ namespace Downgrooves.Test
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.RemoveThumbnail(thumbnail.Id).Result;
+            var output = videoController.RemoveThumbnail(thumbnail.Id);
             var okResult = output as OkResult;
 
             // Assert
@@ -272,7 +272,7 @@ namespace Downgrooves.Test
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.RemoveThumbnails(3, thumbnails.Select(x => x.Id)).Result;
+            var output = videoController.RemoveThumbnails(3, thumbnails.Select(x => x.Id));
             var okResult = output as OkResult;
 
             // Assert
@@ -286,12 +286,12 @@ namespace Downgrooves.Test
         {
             // Arrange
             var thumbnail = GetTestThumbnails().FirstOrDefault();
-            _service.Setup(x => x.UpdateThumbnail(3, thumbnail).Result).Returns(thumbnail);
+            _service.Setup(x => x.UpdateThumbnail(3, thumbnail)).Returns(thumbnail);
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.UpdateThumbnail(3, thumbnail).Result;
+            var output = videoController.UpdateThumbnail(3, thumbnail);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as Thumbnail;
 
@@ -307,12 +307,12 @@ namespace Downgrooves.Test
         {
             // Arrange
             var thumbnails = GetTestThumbnails();
-            _service.Setup(x => x.UpdateThumbnails(3, thumbnails).Result).Returns(thumbnails);
+            _service.Setup(x => x.UpdateThumbnails(3, thumbnails)).Returns(thumbnails);
 
             // Act
 
             var videoController = new VideoController(_appConfigMock.Object, _service.Object, _mockLogger.Object);
-            var output = videoController.UpdateThumbnails(3, thumbnails).Result;
+            var output = videoController.UpdateThumbnails(3, thumbnails);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<Thumbnail>;
 
@@ -323,39 +323,43 @@ namespace Downgrooves.Test
             Assert.IsNotNull(result);
         }
 
-        private IEnumerable<Video> GetTestVideos()
+        private static IEnumerable<Video> GetTestVideos()
         {
-            var videos = new List<Video>();
-            videos.Add(new Video()
+            var videos = new List<Video>
             {
-                PublishedAt = new DateTime(2016, 7, 2),
-                Id = 1,
-                Title = "Test One"
-            });
-            videos.Add(new Video()
-            {
-                PublishedAt = new DateTime(2016, 7, 1),
-                Id = 2,
-                Title = "Test Two"
-            });
+                new Video()
+                {
+                    PublishedAt = new DateTime(2016, 7, 2),
+                    Id = 1,
+                    Title = "Test One"
+                },
+                new Video()
+                {
+                    PublishedAt = new DateTime(2016, 7, 1),
+                    Id = 2,
+                    Title = "Test Two"
+                }
+            };
             return videos;
         }
 
-        private IEnumerable<Thumbnail> GetTestThumbnails()
+        private static IEnumerable<Thumbnail> GetTestThumbnails()
         {
-            var thumbnail = new List<Thumbnail>();
-            thumbnail.Add(new Thumbnail()
+            var thumbnail = new List<Thumbnail>
             {
-                VideoId = 3,
-                Id = 1,
-                Url = "Test One"
-            });
-            thumbnail.Add(new Thumbnail()
-            {
-                VideoId = 3,
-                Id = 2,
-                Url = "Test Two"
-            });
+                new Thumbnail()
+                {
+                    VideoId = 3,
+                    Id = 1,
+                    Url = "Test One"
+                },
+                new Thumbnail()
+                {
+                    VideoId = 3,
+                    Id = 2,
+                    Url = "Test Two"
+                }
+            };
             return thumbnail;
         }
     }

@@ -4,7 +4,6 @@ using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Service
 {
@@ -14,92 +13,90 @@ namespace Downgrooves.Service
         {
         }
 
-        public async Task<Mix> Add(Mix mix)
+        public Mix Add(Mix mix)
         {
-            await _unitOfWork.Mixes.AddMixAsync(mix);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Mixes.AddMix(mix);
+            _unitOfWork.Complete();
             return mix;
         }
 
-        public async Task<MixTrack> AddTrack(MixTrack mixTrack)
+        public MixTrack AddTrack(MixTrack mixTrack)
         {
             _unitOfWork.MixTracks.Add(mixTrack);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Complete();
             return mixTrack;
         }
 
-        public async Task<IEnumerable<MixTrack>> AddTracks(IEnumerable<MixTrack> mixTracks)
+        public IEnumerable<MixTrack> AddTracks(IEnumerable<MixTrack> mixTracks)
         {
             _unitOfWork.MixTracks.AddRange(mixTracks);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Complete();
             return mixTracks;
         }
 
-        public async Task<IEnumerable<Mix>> GetMixes()
+        public IEnumerable<Mix> GetMixes()
         {
-            return await _unitOfWork.Mixes.GetAllAsync();
+            return _unitOfWork.Mixes.GetAll();
         }
 
-        public async Task<IEnumerable<Mix>> GetMixes(PagingParameters parameters)
+        public IEnumerable<Mix> GetMixes(PagingParameters parameters)
         {
-            return await _unitOfWork.Mixes.GetMixes(parameters);
+            return _unitOfWork.Mixes.GetMixes(parameters);
         }
 
-        public async Task<IEnumerable<Mix>> GetMixesByCategory(string category)
+        public IEnumerable<Mix> GetMixesByCategory(string category)
         {
-            return await _unitOfWork.Mixes.FindAsync(x => x.Category.ToUpper().Equals(category.ToUpper()));
+            return _unitOfWork.Mixes.Find(x => x.Category.ToUpper().Equals(category.ToUpper()));
         }
 
-        public async Task<IEnumerable<Mix>> GetMixesByGenre(string genre)
+        public IEnumerable<Mix> GetMixesByGenre(string genre)
         {
-            return await _unitOfWork.Mixes.FindAsync(x => x.Genre.Name == genre);
+            return _unitOfWork.Mixes.Find(x => x.Genre.Name == genre);
         }
 
-        public async Task<Mix> GetMix(int id)
+        public Mix GetMix(int id)
         {
-            return await _unitOfWork.Mixes.GetMix(id);
+            return _unitOfWork.Mixes.GetMix(id);
         }
 
-        public async Task Remove(int id)
+        public void Remove(int id)
         {
-            var mix = await _unitOfWork.Mixes.GetAsync(id);
-            await _unitOfWork.Mixes.Remove(mix);
-            await _unitOfWork.CompleteAsync();
-            return;
+            var mix = _unitOfWork.Mixes.Get(id);
+            _unitOfWork.Mixes.Remove(mix);
+            _unitOfWork.Complete();
         }
 
-        public async Task RemoveTrack(int id)
+        public void RemoveTrack(int id)
         {
-            var track = await _unitOfWork.MixTracks.GetAsync(id);
-            await _unitOfWork.MixTracks.Remove(track);
-            await _unitOfWork.CompleteAsync();
-            return;
+            var track = _unitOfWork.MixTracks.Get(id);
+            _unitOfWork.MixTracks.Remove(track);
+            _unitOfWork.Complete();
         }
 
-        public async Task RemoveTracks(IEnumerable<int> ids)
+        public void RemoveTracks(IEnumerable<int> ids)
         {
             foreach (var item in ids)
-                await RemoveTrack(item);
+                RemoveTrack(item);
         }
 
-        public async Task<Mix> Update(Mix mix)
+        public Mix Update(Mix mix)
         {
             _unitOfWork.Mixes.UpdateMix(mix);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Complete();
             return mix;
         }
 
-        public async Task<MixTrack> UpdateTrack(MixTrack mixTrack)
+        public MixTrack UpdateTrack(MixTrack mixTrack)
         {
             _unitOfWork.MixTracks.UpdateState(mixTrack);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Complete();
             return mixTrack;
         }
 
-        public async Task<IEnumerable<MixTrack>> UpdateTracks(IEnumerable<MixTrack> mixTracks)
+        public IEnumerable<MixTrack> UpdateTracks(IEnumerable<MixTrack> mixTracks)
         {
             foreach (var item in mixTracks)
-                await UpdateTrack(item);
+                UpdateTrack(item);
             return mixTracks;
         }
     }

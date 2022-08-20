@@ -27,11 +27,11 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetArtists()
+        public IActionResult GetArtists()
         {
             try
             {
-                return Ok(await _service.GetArtists());
+                return Ok(_service.GetArtists());
             }
             catch (System.Exception ex)
             {
@@ -42,11 +42,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("releases")]
-        public async Task<IActionResult> GetArtistsAndReleases()
+        public IActionResult GetArtistsAndReleases()
         {
             try
             {
-                var artists = await _service.GetArtistsAndReleases() as List<Artist>;
+                var artists = _service.GetArtistsAndReleases() as List<Artist>;
                 artists.ForEach(x => x.Releases.SetBasePath(_appConfig.CdnUrl));
                 return Ok(artists);
             }

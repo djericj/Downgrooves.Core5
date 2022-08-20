@@ -1,6 +1,5 @@
 ﻿using Downgrooves.Persistence.Interfaces;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -31,26 +30,20 @@ namespace Downgrooves.Persistence
             _context.Set<Release>().Add(release);
         }
 
-        public async Task AddReleaseAsync(Release release)
+        public override IEnumerable<Release> Find(Expression<Func<Release, bool>> predicate)
         {
-            _context.Entry(release.Artist).State = EntityState.Unchanged;
-            await _context.Set<Release>().AddAsync(release);
+            return _query.Where(predicate).ToList();
         }
 
-        public override async Task<IEnumerable<Release>> FindAsync(Expression<Func<Release, bool>> predicate)
-        {
-            return await _query.Where(predicate).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Release>> GetReleases(string artistName = null)
+        public IEnumerable<Release> GetReleases(string artistName = null)
         {
             if (artistName != null)
                 _query = _query.Where(x => EF.Functions.Like(x.ArtistName, $"%{artistName}%"));
 
-            return await _query.ToListAsync();
+            return _query.ToList();
         }
 
-        public async Task<IEnumerable<Release>> GetReleases(PagingParameters parameters, string artistName = null,
+        public IEnumerable<Release> GetReleases(PagingParameters parameters, string artistName = null,
             int artistId = 0, bool isOriginal = false, bool isRemix = false)
         {
             if (artistName != null)
@@ -65,7 +58,7 @@ namespace Downgrooves.Persistence
             if (isRemix)
                 _query = _query.Where(x => x.IsRemix);
 
-            return await GetAllAsync(_query, parameters);
+            return GetAll(_query, parameters);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Domain.ITunes;
 using System;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Persistence.Interfaces
 {
@@ -23,10 +22,8 @@ namespace Downgrooves.Persistence.Interfaces
         IUserRepository Users { get; }
         IVideoRepository Videos { get; }
 
-        Task<int> ExecuteNonQueryAsync(string query);
+        int ExecuteNonQuery(string query);
 
         void Complete();
-
-        Task CompleteAsync();
     }
 }

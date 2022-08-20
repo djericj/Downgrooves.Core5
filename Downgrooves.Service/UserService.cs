@@ -3,7 +3,6 @@ using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Service
 {
@@ -13,9 +12,9 @@ namespace Downgrooves.Service
         {
         }
 
-        public async Task<User> Authenticate(string userName, string password)
+        public User Authenticate(string userName, string password)
         {
-            return await _unitOfWork.Users.Authenticate(userName, password);
+            return _unitOfWork.Users.Authenticate(userName, password);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Downgrooves.WorkerService.Services
         {
             var apiUrl = ApiUrl;
             if (apiUrl.EndsWith("/"))
-                apiUrl = apiUrl.Substring(0, apiUrl.Length - 1);
+                apiUrl = apiUrl[0..^1];
             return new Uri($"{apiUrl}/{path}");
         }
     }

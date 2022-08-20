@@ -10,8 +10,6 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Test
 {
@@ -19,8 +17,8 @@ namespace Downgrooves.Test
     public class ReleaseTests
     {
         private Mock<IOptions<AppConfig>> _appConfigMock;
-        private Mock<IReleaseService> _service = new Mock<IReleaseService>();
-        private Mock<ILogger<ReleaseController>> _mockLogger = new Mock<ILogger<ReleaseController>>();
+        private readonly Mock<IReleaseService> _service = new();
+        private readonly Mock<ILogger<ReleaseController>> _mockLogger = new();
 
         [TestInitialize]
         public void Init()
@@ -38,12 +36,12 @@ namespace Downgrooves.Test
             var release = GetTestReleases().FirstOrDefault();
             release.Id = 3;
             release.ReleaseDate = now;
-            _service.Setup(x => x.Add(release).Result).Returns(release);
+            _service.Setup(x => x.Add(release)).Returns(release);
 
             // Act
 
             var releaseController = new ReleaseController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
-            var output = releaseController.Add(release).Result;
+            var output = releaseController.Add(release);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as Release;
 
@@ -63,12 +61,12 @@ namespace Downgrooves.Test
             var track = GetTestTracks().FirstOrDefault();
             track.Id = 3;
             track.Price = 1.00;
-            _service.Setup(x => x.AddTrack(track).Result).Returns(track);
+            _service.Setup(x => x.AddTrack(track)).Returns(track);
 
             // Act
 
             var releaseController = new ReleaseController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
-            var output = releaseController.AddTrack(track).Result;
+            var output = releaseController.AddTrack(track);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as ReleaseTrack;
 
@@ -91,12 +89,12 @@ namespace Downgrooves.Test
                 item.Price = 1.00;
                 tracks.Add(item);
             }
-            _service.Setup(x => x.AddTracks(tracks).Result).Returns(tracks);
+            _service.Setup(x => x.AddTracks(tracks)).Returns(tracks);
 
             // Act
 
             var releaseController = new ReleaseController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
-            var output = releaseController.AddTracks(tracks).Result;
+            var output = releaseController.AddTracks(tracks);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<ReleaseTrack>;
 
@@ -114,12 +112,12 @@ namespace Downgrooves.Test
         {
             // Arrange
 
-            _service.Setup(x => x.GetReleases("Downgrooves").Result).Returns(GetTestReleases());
+            _service.Setup(x => x.GetReleases("Downgrooves")).Returns(GetTestReleases());
 
             // Act
 
             var releaseController = new ReleaseController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
-            var output = releaseController.GetReleases("Downgrooves").Result;
+            var output = releaseController.GetReleases("Downgrooves");
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<Release>;
 
@@ -134,12 +132,12 @@ namespace Downgrooves.Test
         {
             // Arrange
 
-            _service.Setup(x => x.GetReleases(x => x.Id == 1).Result).Returns(GetTestReleases().Where(x => x.Id == 1));
+            _service.Setup(x => x.GetReleases(x => x.Id == 1)).Returns(GetTestReleases().Where(x => x.Id == 1));
 
             // Act
 
             var releaseController = new ReleaseController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
-            var output = releaseController.GetRelease(1).Result;
+            var output = releaseController.GetRelease(1);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as Release;
 
@@ -154,12 +152,12 @@ namespace Downgrooves.Test
         {
             // Arrange
 
-            _service.Setup(x => x.GetReleaseTrack(1).Result).Returns(GetTestTracks().Where(x => x.Id == 1).FirstOrDefault());
+            _service.Setup(x => x.GetReleaseTrack(1)).Returns(GetTestTracks().Where(x => x.Id == 1).FirstOrDefault());
 
             // Act
 
             var releaseController = new ReleaseController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
-            var output = releaseController.GetReleaseTrack(1).Result;
+            var output = releaseController.GetReleaseTrack(1);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as ReleaseTrack;
 
@@ -181,7 +179,7 @@ namespace Downgrooves.Test
             // Act
 
             var releaseController = new ReleaseController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
-            var output = releaseController.Remove(release.Id).Result;
+            var output = releaseController.Remove(release.Id);
             var okResult = output as OkResult;
 
             // Assert
@@ -202,7 +200,7 @@ namespace Downgrooves.Test
             // Act
 
             var releaseController = new ReleaseController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
-            var output = releaseController.RemoveTrack(track.Id).Result;
+            var output = releaseController.RemoveTrack(track.Id);
             var okResult = output as OkResult;
 
             // Assert
@@ -221,7 +219,7 @@ namespace Downgrooves.Test
             // Act
 
             var releaseController = new ReleaseController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
-            var output = releaseController.RemoveTracks(tracks.Select(x => x.Id)).Result;
+            var output = releaseController.RemoveTracks(tracks.Select(x => x.Id));
             var okResult = output as OkResult;
 
             // Assert
@@ -237,12 +235,12 @@ namespace Downgrooves.Test
             // Arrange
             var release = GetTestReleases().FirstOrDefault();
             release.ReleaseDate = now;
-            _service.Setup(x => x.Update(release).Result).Returns(release);
+            _service.Setup(x => x.Update(release)).Returns(release);
 
             // Act
 
             var releaseController = new ReleaseController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
-            var output = releaseController.Update(release).Result;
+            var output = releaseController.Update(release);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as Release;
 
@@ -260,12 +258,12 @@ namespace Downgrooves.Test
             // Arrange
             var track = GetTestTracks().FirstOrDefault();
             track.TrackNumber = 10;
-            _service.Setup(x => x.UpdateTrack(track).Result).Returns(track);
+            _service.Setup(x => x.UpdateTrack(track)).Returns(track);
 
             // Act
 
             var releaseController = new ReleaseController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
-            var output = releaseController.UpdateTrack(track).Result;
+            var output = releaseController.UpdateTrack(track);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as ReleaseTrack;
 
@@ -287,12 +285,12 @@ namespace Downgrooves.Test
                 item.TrackNumber = 10;
                 tracks.Add(item);
             }
-            _service.Setup(x => x.UpdateTracks(tracks).Result).Returns(tracks);
+            _service.Setup(x => x.UpdateTracks(tracks)).Returns(tracks);
 
             // Act
 
             var releaseController = new ReleaseController(_appConfigMock.Object, _mockLogger.Object, _service.Object);
-            var output = releaseController.UpdateTracks(tracks).Result;
+            var output = releaseController.UpdateTracks(tracks);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<ReleaseTrack>;
 
@@ -305,39 +303,43 @@ namespace Downgrooves.Test
                 Assert.AreEqual(item.TrackNumber, 10);
         }
 
-        private IEnumerable<Release> GetTestReleases()
+        private static IEnumerable<Release> GetTestReleases()
         {
-            var releases = new List<Release>();
-            releases.Add(new Release()
+            var releases = new List<Release>
             {
-                ReleaseDate = new DateTime(2016, 7, 1),
-                Id = 1,
-                Title = "Test One"
-            });
-            releases.Add(new Release()
-            {
-                ReleaseDate = new DateTime(2016, 7, 1),
-                Id = 2,
-                Title = "Test Two"
-            });
+                new Release()
+                {
+                    ReleaseDate = new DateTime(2016, 7, 1),
+                    Id = 1,
+                    Title = "Test One"
+                },
+                new Release()
+                {
+                    ReleaseDate = new DateTime(2016, 7, 1),
+                    Id = 2,
+                    Title = "Test Two"
+                }
+            };
             return releases;
         }
 
-        private IEnumerable<ReleaseTrack> GetTestTracks()
+        private static IEnumerable<ReleaseTrack> GetTestTracks()
         {
-            var tracks = new List<ReleaseTrack>();
-            tracks.Add(new ReleaseTrack()
+            var tracks = new List<ReleaseTrack>
             {
-                Price = 1.00,
-                Id = 1,
-                Title = "Test One"
-            });
-            tracks.Add(new ReleaseTrack()
-            {
-                Price = 2.00,
-                Id = 2,
-                Title = "Test Two"
-            });
+                new ReleaseTrack()
+                {
+                    Price = 1.00,
+                    Id = 1,
+                    Title = "Test One"
+                },
+                new ReleaseTrack()
+                {
+                    Price = 2.00,
+                    Id = 2,
+                    Title = "Test Two"
+                }
+            };
             return tracks;
         }
     }

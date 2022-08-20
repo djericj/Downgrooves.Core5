@@ -50,8 +50,8 @@ namespace Downgrooves.WorkerService
                         foreach (var artist in artists)
                         {
                             _logger.LogInformation($"{nameof(ProcessWorker)} getting {artist.Name}.");
-                            _apiDataService.GetResultsFromApi(_appConfig.ITunes.CollectionLookupUrl, ApiData.ApiDataTypes.iTunesCollection, artist.Name);
-                            _apiDataService.GetResultsFromApi(_appConfig.ITunes.TracksLookupUrl, ApiData.ApiDataTypes.iTunesTrack, artist.Name);
+                            _apiDataService.UpdateDataFromITunesApi(_appConfig.ITunes.CollectionLookupUrl, ApiData.ApiDataTypes.iTunesCollection, artist.Name);
+                            _apiDataService.UpdateDataFromITunesApi(_appConfig.ITunes.TracksLookupUrl, ApiData.ApiDataTypes.iTunesTrack, artist.Name);
                         }
 
                         _releaseService.ProcessData();

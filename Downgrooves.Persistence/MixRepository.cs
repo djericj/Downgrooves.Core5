@@ -1,10 +1,8 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Persistence.Interfaces;
-
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Persistence
 {
@@ -24,12 +22,6 @@ namespace Downgrooves.Persistence
             _context.Set<Mix>().Add(mix);
         }
 
-        public async Task AddMixAsync(Mix mix)
-        {
-            _context.Entry(mix.Genre).State = EntityState.Unchanged;
-            await _context.Set<Mix>().AddAsync(mix);
-        }
-
         public void UpdateMix(Mix mix)
         {
             _context.Entry(mix.Genre).State = EntityState.Unchanged;
@@ -38,22 +30,22 @@ namespace Downgrooves.Persistence
 
         public DowngroovesDbContext DowngroovesDbContext { get => _context as DowngroovesDbContext; }
 
-        public async Task<Mix> GetMix(int id)
+        public Mix GetMix(int id)
         {
-            return await Task.Run(() => _query
+            return _query
                     .Include(x => x.Tracks)
                     .Include(x => x.Genre)
-                    .FirstOrDefault(x => x.Id == id));
+                    .FirstOrDefault(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<Mix>> GetMixes(PagingParameters parameters)
+        public IEnumerable<Mix> GetMixes(PagingParameters parameters)
         {
             _query = _query
                 .Include(x => x.Tracks)
                 .Include(x => x.Genre)
                 .OrderBy(x => x.Title);
 
-            return await GetAllAsync(_query, parameters);
+            return GetAll(_query, parameters);
         }
     }
 }

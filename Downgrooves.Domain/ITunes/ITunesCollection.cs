@@ -13,6 +13,6 @@ namespace Downgrooves.Domain.ITunes
         public string Copyright { get; set; }
 
         [JsonProperty("CollectionId")]
-        public new int Id { get; set; } // CollectionId
+        public int Id { get; set; } // CollectionId
     }
 }

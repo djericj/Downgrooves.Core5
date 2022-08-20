@@ -8,7 +8,7 @@ namespace Downgrooves.WorkerService.Services.Interfaces
     {
         JObject Lookup(string url);
 
-        List<ApiData> GetResultsFromApi(string url, ApiData.ApiDataTypes type, string artist);
+        List<ApiData> UpdateDataFromITunesApi(string url, ApiData.ApiDataTypes type, string artist);
 
         ApiData AddApiData(ApiData data);
 

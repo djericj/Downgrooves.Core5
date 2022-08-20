@@ -15,7 +15,7 @@ namespace Downgrooves.Domain.ITunes
         public int DiscNumber { get; set; }
 
         [JsonProperty("TrackId")]
-        public new int Id { get; set; } // TrackId
+        public int Id { get; set; } // TrackId
 
         public string IsStreamable { get; set; }
         public string Kind { get; set; }

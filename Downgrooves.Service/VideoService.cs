@@ -4,7 +4,6 @@ using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Service
 {
@@ -14,99 +13,99 @@ namespace Downgrooves.Service
         {
         }
 
-        public async Task<Video> AddVideo(Video video)
+        public Video AddVideo(Video video)
         {
             _unitOfWork.Videos.Add(video);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Complete();
             return video;
         }
 
-        public async Task<IEnumerable<Video>> AddVideos(IEnumerable<Video> videos)
+        public IEnumerable<Video> AddVideos(IEnumerable<Video> videos)
         {
             _unitOfWork.Videos.AddRange(videos);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Complete();
             return videos;
         }
 
-        public async Task<Video> GetVideo(int id)
+        public Video GetVideo(int id)
         {
-            return await _unitOfWork.Videos.GetVideo(id);
+            return _unitOfWork.Videos.GetVideo(id);
         }
 
-        public async Task<IEnumerable<Video>> GetVideos()
+        public IEnumerable<Video> GetVideos()
         {
-            return await _unitOfWork.Videos.GetAllAsync();
+            return _unitOfWork.Videos.GetAll();
         }
 
-        public async Task<IEnumerable<Video>> GetVideos(PagingParameters parameters)
+        public IEnumerable<Video> GetVideos(PagingParameters parameters)
         {
-            return await _unitOfWork.Videos.GetVideos(parameters);
+            return _unitOfWork.Videos.GetVideos(parameters);
         }
 
-        public async Task Remove(int id)
+        public void Remove(int id)
         {
-            var video = await GetVideo(id);
-            await _unitOfWork.Videos.Remove(video);
-            await _unitOfWork.CompleteAsync();
+            var video = GetVideo(id);
+            _unitOfWork.Videos.Remove(video);
+            _unitOfWork.Complete();
         }
 
-        public async Task<Video> UpdateVideo(Video video)
+        public Video UpdateVideo(Video video)
         {
             _unitOfWork.Videos.UpdateState(video);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Complete();
             return video;
         }
 
-        public async Task<Thumbnail> AddThumbnail(int videoId, Thumbnail thumbnail)
+        public Thumbnail AddThumbnail(int videoId, Thumbnail thumbnail)
         {
             thumbnail.VideoId = videoId;
-            await _unitOfWork.Thumbnails.AddAsync(thumbnail);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Thumbnails.Add(thumbnail);
+            _unitOfWork.Complete();
             return thumbnail;
         }
 
-        public async Task<IEnumerable<Thumbnail>> AddThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails)
+        public IEnumerable<Thumbnail> AddThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails)
         {
             foreach (var thumbnail in thumbnails)
-                await AddThumbnail(videoId, thumbnail);
+                AddThumbnail(videoId, thumbnail);
             return thumbnails;
         }
 
-        public async Task<IEnumerable<Thumbnail>> GetThumbnails(int videoId)
+        public IEnumerable<Thumbnail> GetThumbnails(int videoId)
         {
-            return await _unitOfWork.Thumbnails.FindAsync(x => x.VideoId == videoId);
+            return _unitOfWork.Thumbnails.Find(x => x.VideoId == videoId);
         }
 
-        public async Task<Thumbnail> GetThumbnail(int thumbnailId)
+        public Thumbnail GetThumbnail(int thumbnailId)
         {
-            return await _unitOfWork.Thumbnails.GetAsync(thumbnailId);
+            return _unitOfWork.Thumbnails.Get(thumbnailId);
         }
 
-        public async Task RemoveThumbnail(int thumbnailId)
+        public void RemoveThumbnail(int thumbnailId)
         {
-            var thumbnail = await GetThumbnail(thumbnailId);
-            await _unitOfWork.Thumbnails.Remove(thumbnail);
-            await _unitOfWork.CompleteAsync();
+            var thumbnail = GetThumbnail(thumbnailId);
+            _unitOfWork.Thumbnails.Remove(thumbnail);
+            _unitOfWork.Complete();
         }
 
-        public async Task RemoveThumbnails(IEnumerable<int> ids)
+        public void RemoveThumbnails(IEnumerable<int> ids)
         {
             foreach (var id in ids)
-                await RemoveThumbnail(id);
+                RemoveThumbnail(id);
         }
 
-        public async Task<Thumbnail> UpdateThumbnail(int videoId, Thumbnail thumbnail)
+        public Thumbnail UpdateThumbnail(int videoId, Thumbnail thumbnail)
         {
             thumbnail.VideoId = videoId;
             _unitOfWork.Thumbnails.Update(thumbnail);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Complete();
             return thumbnail;
         }
 
-        public async Task<IEnumerable<Thumbnail>> UpdateThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails)
+        public IEnumerable<Thumbnail> UpdateThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails)
         {
             foreach (var thumbnail in thumbnails)
-                await UpdateThumbnail(videoId, thumbnail);
+                UpdateThumbnail(videoId, thumbnail);
             return thumbnails;
         }
     }

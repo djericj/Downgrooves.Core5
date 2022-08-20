@@ -13,7 +13,8 @@ namespace Downgrooves.Domain
         public int Id { get; set; }
         public bool IsChanged { get; set; }
         public bool IsProcessed { get; set; }
-        public DateTime LastUpdate { get; set; }
+        public DateTime LastUpdated { get; set; }
+        public DateTime LastChecked { get; set; }
         public int Total { get; set; }
         public string Url { get; set; }
     }

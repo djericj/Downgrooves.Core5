@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RestSharp;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Service
 {
@@ -16,66 +15,66 @@ namespace Downgrooves.Service
         {
         }
 
-        public async Task<ITunesCollection> AddCollection(ITunesCollection item)
+        public ITunesCollection AddCollection(ITunesCollection item)
         {
-            await _unitOfWork.ITunesCollection.AddAsync(item);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.ITunesCollection.Add(item);
+            _unitOfWork.Complete();
             return item;
         }
 
-        public async Task<IEnumerable<ITunesCollection>> AddCollections(IEnumerable<ITunesCollection> items)
+        public IEnumerable<ITunesCollection> AddCollections(IEnumerable<ITunesCollection> items)
         {
-            await _unitOfWork.ITunesCollection.AddRangeAsync(items);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.ITunesCollection.AddRange(items);
+            _unitOfWork.Complete();
             return items;
         }
 
-        public async Task<ITunesTrack> AddTrack(ITunesTrack item)
+        public ITunesTrack AddTrack(ITunesTrack item)
         {
-            await _unitOfWork.ITunesTrack.AddAsync(item);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.ITunesTrack.Add(item);
+            _unitOfWork.Complete();
             return item;
         }
 
-        public async Task<IEnumerable<ITunesTrack>> AddTracks(IEnumerable<ITunesTrack> items)
+        public IEnumerable<ITunesTrack> AddTracks(IEnumerable<ITunesTrack> items)
         {
-            await _unitOfWork.ITunesTrack.AddRangeAsync(items);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.ITunesTrack.AddRange(items);
+            _unitOfWork.Complete();
             return items;
         }
 
-        public async Task<IEnumerable<ITunesCollection>> GetCollections(string artistName = null)
+        public IEnumerable<ITunesCollection> GetCollections(string artistName = null)
         {
             if (artistName != null)
-                return await _unitOfWork.ITunesCollection.FindAsync(x => x.ArtistName.Contains(artistName));
+                return _unitOfWork.ITunesCollection.Find(x => x.ArtistName.Contains(artistName));
             else
-                return await _unitOfWork.ITunesCollection.GetAllAsync();
+                return _unitOfWork.ITunesCollection.GetAll();
         }
 
-        public async Task<ITunesCollection> GetCollection(int id)
+        public ITunesCollection GetCollection(int id)
         {
-            return await _unitOfWork.ITunesCollection.GetAsync(id);
+            return _unitOfWork.ITunesCollection.Get(id);
         }
 
-        public async Task<IEnumerable<ITunesTrack>> GetTracks(string artistName = null)
+        public IEnumerable<ITunesTrack> GetTracks(string artistName = null)
         {
             if (artistName != null)
-                return await _unitOfWork.ITunesTrack.FindAsync(x => x.TrackCensoredName.Contains(artistName));
+                return _unitOfWork.ITunesTrack.Find(x => x.TrackCensoredName.Contains(artistName));
             else
-                return await _unitOfWork.ITunesTrack.GetAllAsync();
+                return _unitOfWork.ITunesTrack.GetAll();
         }
 
-        public async Task<ITunesTrack> GetTrack(int id)
+        public ITunesTrack GetTrack(int id)
         {
-            return await _unitOfWork.ITunesTrack.GetAsync(id);
+            return _unitOfWork.ITunesTrack.Get(id);
         }
 
-        public async Task<IEnumerable<ITunesExclusion>> GetExclusions()
+        public IEnumerable<ITunesExclusion> GetExclusions()
         {
-            return await _unitOfWork.ITunesExclusion.GetAllAsync();
+            return _unitOfWork.ITunesExclusion.GetAll();
         }
 
-        public async Task<IEnumerable<ITunesLookupResultItem>> Lookup(int Id)
+        public IEnumerable<ITunesLookupResultItem> Lookup(int Id)
         {
             var client = new RestClient(_configuration["AppConfig:ITunesLookupUrl"]);
             var request = new RestRequest
@@ -87,7 +86,7 @@ namespace Downgrooves.Service
             request.AddParameter("id", Id);
             request.AddParameter("entity", "musicArtist,musicTrack,album,mix,song");
             request.AddParameter("media", "music");
-            var response = await client.ExecuteAsync<ITunesLookupResult>(request);
+            var response = client.ExecuteAsync<ITunesLookupResult>(request).GetAwaiter().GetResult();
             if (!string.IsNullOrEmpty(response.Content))
             {
                 var lookupResult = JsonConvert.DeserializeObject<ITunesLookupResult>(response.Content);
@@ -97,59 +96,57 @@ namespace Downgrooves.Service
             return null;
         }
 
-        public async Task RemoveCollection(int id)
+        public void RemoveCollection(int id)
         {
-            var collection = await _unitOfWork.ITunesCollection.GetAsync(id);
-            await _unitOfWork.ITunesCollection.Remove(collection);
-            await _unitOfWork.CompleteAsync();
-            return;
+            var collection = _unitOfWork.ITunesCollection.Get(id);
+            _unitOfWork.ITunesCollection.Remove(collection);
+            _unitOfWork.Complete();
         }
 
-        public async Task RemoveTrack(int id)
+        public void RemoveTrack(int id)
         {
-            var track = await _unitOfWork.ITunesTrack.GetAsync(id);
-            await _unitOfWork.ITunesTrack.Remove(track);
-            await _unitOfWork.CompleteAsync();
-            return;
+            var track = _unitOfWork.ITunesTrack.Get(id);
+            _unitOfWork.ITunesTrack.Remove(track);
+            _unitOfWork.Complete();
         }
 
-        public async Task RemoveCollections(IEnumerable<int> ids)
+        public void RemoveCollections(IEnumerable<int> ids)
         {
             foreach (var item in ids)
-                await RemoveCollection(item);
+                RemoveCollection(item);
         }
 
-        public async Task RemoveTracks(IEnumerable<int> ids)
+        public void RemoveTracks(IEnumerable<int> ids)
         {
             foreach (var item in ids)
-                await RemoveTrack(item);
+                RemoveTrack(item);
         }
 
-        public async Task<ITunesCollection> UpdateCollection(ITunesCollection item)
+        public ITunesCollection UpdateCollection(ITunesCollection item)
         {
             _unitOfWork.ITunesCollection.UpdateState(item);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Complete();
             return item;
         }
 
-        public async Task<ITunesTrack> UpdateTrack(ITunesTrack item)
+        public ITunesTrack UpdateTrack(ITunesTrack item)
         {
             _unitOfWork.ITunesTrack.UpdateState(item);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Complete();
             return item;
         }
 
-        public async Task<IEnumerable<ITunesCollection>> UpdateCollections(IEnumerable<ITunesCollection> items)
+        public IEnumerable<ITunesCollection> UpdateCollections(IEnumerable<ITunesCollection> items)
         {
             foreach (var item in items)
-                await UpdateCollection(item);
+                UpdateCollection(item);
             return items;
         }
 
-        public async Task<IEnumerable<ITunesTrack>> UpdateTracks(IEnumerable<ITunesTrack> items)
+        public IEnumerable<ITunesTrack> UpdateTracks(IEnumerable<ITunesTrack> items)
         {
             foreach (var item in items)
-                await UpdateTrack(item);
+                UpdateTrack(item);
             return items;
         }
     }

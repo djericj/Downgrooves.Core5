@@ -3,14 +3,13 @@ using Downgrooves.Persistence.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Persistence
 {
     public class ArtistRepository : Repository<Artist>, IArtistRepository
     {
-        private IQueryable<Artist> _query;
-        private new DowngroovesDbContext _context;
+        private readonly IQueryable<Artist> _query;
+        private new readonly DowngroovesDbContext _context;
 
         public ArtistRepository(DowngroovesDbContext context) : base(context)
         {
@@ -19,16 +18,16 @@ namespace Downgrooves.Persistence
                      select artist;
         }
 
-        public async Task<IEnumerable<Artist>> GetArtists()
+        public IEnumerable<Artist> GetArtists()
         {
-            return await Task.Run(() => _query);
+            return _query;
         }
 
-        public async Task<IEnumerable<Artist>> GetArtistsAndReleases()
+        public IEnumerable<Artist> GetArtistsAndReleases()
         {
-            return await _context.Artists
+            return _context.Artists
                 .Include(x => x.Releases).AsNoTracking()
-                .ToListAsync();
+                .ToList();
         }
     }
 }

@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Downgrooves.WorkerService.Services
 {
@@ -22,10 +23,10 @@ namespace Downgrooves.WorkerService.Services
             return JObject.Parse(data);
         }
 
-        public List<ApiData> GetResultsFromApi(string url, ApiData.ApiDataTypes type, string artist)
+        public List<ApiData> UpdateDataFromITunesApi(string url, ApiData.ApiDataTypes type, string artist)
         {
             List<ApiData> responses = new();
-            int limit = 200;
+            int limit = 180;
             int offset = 0;
 
             url = url.Replace("{searchTerm}", artist);
@@ -49,12 +50,44 @@ namespace Downgrooves.WorkerService.Services
                     Artist = artist,
                     Url = url,
                     Total = resultCount,
-                    Data = obj["results"].ToString(),
-                    LastUpdate = DateTime.Now
+                    Data = obj["results"].ToString()
                 };
 
-                apiData = AddApiData(apiData);
-                responses.Add(apiData);
+                var existing = GetApiData(type, artist);
+
+                if (existing != null && existing.Any())
+                {
+                    var exists = false;
+
+                    foreach (var item in existing)
+                    {
+                        exists = item.Total == apiData.Total &&
+                            item.Url == apiData.Url &&
+                            item.ApiDataType == apiData.ApiDataType;
+
+                        if (exists)
+                        {
+                            if (item.Data.Trim() != apiData.Data.Trim())
+                            {
+                                item.LastUpdated = DateTime.Now;
+                                UpdateApiData(item);
+                            }
+                            break;
+                        }
+                    }
+                    if (!exists)
+                    {
+                        apiData.LastUpdated = DateTime.Now;
+                        apiData = AddApiData(apiData);
+                        responses.Add(apiData);
+                    }
+                }
+                else
+                {
+                    apiData.LastUpdated = DateTime.Now;
+                    apiData = AddApiData(apiData);
+                    responses.Add(apiData);
+                }
 
                 if (resultCount > offset)
                 {

@@ -4,7 +4,6 @@ using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Service
 {
@@ -14,6 +13,6 @@ namespace Downgrooves.Service
         {
         }
 
-        public async Task<IEnumerable<Log>> GetLogs() => await _unitOfWork.Logs.GetAllAsync();
+        public IEnumerable<Log> GetLogs() => _unitOfWork.Logs.GetAll();
     }
 }

@@ -18,7 +18,6 @@ namespace Downgrooves.Domain.ITunes
         public string CollectionExplicitness { get; set; }
         public string Country { get; set; }
         public string Currency { get; set; }
-        public int Id { get; set; }
         public DateTime? ReleaseDate { get; set; }
         public string PrimaryGenreName { get; set; }
         public int? SourceArtistId { get; set; }

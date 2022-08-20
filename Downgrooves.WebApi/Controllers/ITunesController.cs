@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Controllers
 {
@@ -24,11 +23,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("collection")]
-        public async Task<IActionResult> AddCollection(ITunesCollection item)
+        public IActionResult AddCollection(ITunesCollection item)
         {
             try
             {
-                return Ok(await _itunesService.AddCollection(item));
+                return Ok(_itunesService.AddCollection(item));
             }
             catch (System.Exception ex)
             {
@@ -39,11 +38,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("collections")]
-        public async Task<IActionResult> AddCollections(IEnumerable<ITunesCollection> items)
+        public IActionResult AddCollections(IEnumerable<ITunesCollection> items)
         {
             try
             {
-                return Ok(await _itunesService.AddCollections(items));
+                return Ok(_itunesService.AddCollections(items));
             }
             catch (System.Exception ex)
             {
@@ -54,11 +53,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("track")]
-        public async Task<IActionResult> AddTrack(ITunesTrack item)
+        public IActionResult AddTrack(ITunesTrack item)
         {
             try
             {
-                return Ok(await _itunesService.AddTrack(item));
+                return Ok(_itunesService.AddTrack(item));
             }
             catch (System.Exception ex)
             {
@@ -69,11 +68,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("tracks")]
-        public async Task<IActionResult> AddTracks(IEnumerable<ITunesTrack> items)
+        public IActionResult AddTracks(IEnumerable<ITunesTrack> items)
         {
             try
             {
-                return Ok(await _itunesService.AddTracks(items));
+                return Ok(_itunesService.AddTracks(items));
             }
             catch (System.Exception ex)
             {
@@ -84,11 +83,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("collections")]
-        public async Task<IActionResult> GetCollections([FromQuery] string artistName = null)
+        public IActionResult GetCollections([FromQuery] string artistName = null)
         {
             try
             {
-                return Ok(await _itunesService.GetCollections(artistName));
+                return Ok(_itunesService.GetCollections(artistName));
             }
             catch (System.Exception ex)
             {
@@ -99,11 +98,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("collection/{id}")]
-        public async Task<IActionResult> GetCollection(int id)
+        public IActionResult GetCollection(int id)
         {
             try
             {
-                return Ok(await _itunesService.GetCollection(id));
+                return Ok(_itunesService.GetCollection(id));
             }
             catch (System.Exception ex)
             {
@@ -114,11 +113,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("exclusions")]
-        public async Task<IActionResult> GetExclusions()
+        public IActionResult GetExclusions()
         {
             try
             {
-                return Ok(await _itunesService.GetExclusions());
+                return Ok(_itunesService.GetExclusions());
             }
             catch (System.Exception ex)
             {
@@ -129,11 +128,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("tracks")]
-        public async Task<IActionResult> GetTracks([FromQuery] string artistName = null)
+        public IActionResult GetTracks([FromQuery] string artistName = null)
         {
             try
             {
-                return Ok(await _itunesService.GetTracks(artistName));
+                return Ok(_itunesService.GetTracks(artistName));
             }
             catch (System.Exception ex)
             {
@@ -144,11 +143,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("track/{id}")]
-        public async Task<IActionResult> GetTrack(int id)
+        public IActionResult GetTrack(int id)
         {
             try
             {
-                return Ok(await _itunesService.GetTrack(id));
+                return Ok(_itunesService.GetTrack(id));
             }
             catch (System.Exception ex)
             {
@@ -159,11 +158,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("collection/{id}")]
-        public async Task<IActionResult> RemoveCollection(int id)
+        public IActionResult RemoveCollection(int id)
         {
             try
             {
-                await _itunesService.RemoveCollection(id);
+                _itunesService.RemoveCollection(id);
                 return Ok();
             }
             catch (System.Exception ex)
@@ -175,11 +174,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("track/{id}")]
-        public async Task<IActionResult> RemoveTrack(int id)
+        public IActionResult RemoveTrack(int id)
         {
             try
             {
-                await _itunesService.RemoveTrack(id);
+                _itunesService.RemoveTrack(id);
                 return Ok();
             }
             catch (System.Exception ex)
@@ -191,11 +190,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("collections")]
-        public async Task<IActionResult> RemoveCollections(IEnumerable<int> ids)
+        public IActionResult RemoveCollections(IEnumerable<int> ids)
         {
             try
             {
-                await _itunesService.RemoveCollections(ids);
+                _itunesService.RemoveCollections(ids);
                 return Ok();
             }
             catch (System.Exception ex)
@@ -207,11 +206,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("tracks")]
-        public async Task<IActionResult> RemoveTracks(IEnumerable<int> ids)
+        public IActionResult RemoveTracks(IEnumerable<int> ids)
         {
             try
             {
-                await _itunesService.RemoveTracks(ids);
+                _itunesService.RemoveTracks(ids);
                 return Ok();
             }
             catch (System.Exception ex)
@@ -223,11 +222,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("collection/{id}")]
-        public async Task<IActionResult> UpdateCollection(ITunesCollection item)
+        public IActionResult UpdateCollection(ITunesCollection item)
         {
             try
             {
-                return Ok(await _itunesService.UpdateCollection(item));
+                return Ok(_itunesService.UpdateCollection(item));
             }
             catch (System.Exception ex)
             {
@@ -238,11 +237,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("collections")]
-        public async Task<IActionResult> UpdateCollections(IEnumerable<ITunesCollection> items)
+        public IActionResult UpdateCollections(IEnumerable<ITunesCollection> items)
         {
             try
             {
-                return Ok(await _itunesService.UpdateCollections(items));
+                return Ok(_itunesService.UpdateCollections(items));
             }
             catch (System.Exception ex)
             {
@@ -253,11 +252,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("track/{id}")]
-        public async Task<IActionResult> UpdateTrack(ITunesTrack item)
+        public IActionResult UpdateTrack(ITunesTrack item)
         {
             try
             {
-                return Ok(await _itunesService.UpdateTrack(item));
+                return Ok(_itunesService.UpdateTrack(item));
             }
             catch (System.Exception ex)
             {
@@ -268,11 +267,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("tracks")]
-        public async Task<IActionResult> UpdateTracks(IEnumerable<ITunesTrack> items)
+        public IActionResult UpdateTracks(IEnumerable<ITunesTrack> items)
         {
             try
             {
-                return Ok(await _itunesService.UpdateTracks(items));
+                return Ok(_itunesService.UpdateTracks(items));
             }
             catch (System.Exception ex)
             {

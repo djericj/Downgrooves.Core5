@@ -3,39 +3,38 @@ using Downgrooves.Domain.ITunes;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Service.Interfaces
 {
     public interface IReleaseService
     {
-        Task<Release> Add(Release release);
+        Release Add(Release release);
 
-        Task<ReleaseTrack> AddTrack(ReleaseTrack releaseTrack);
+        ReleaseTrack AddTrack(ReleaseTrack releaseTrack);
 
-        Task<IEnumerable<ReleaseTrack>> AddTracks(IEnumerable<ReleaseTrack> releaseTracks);
+        IEnumerable<ReleaseTrack> AddTracks(IEnumerable<ReleaseTrack> releaseTracks);
 
         List<ITunesExclusion> GetExclusions();
 
-        Task<IEnumerable<Release>> GetReleases(Expression<Func<Release, bool>> predicate);
+        IEnumerable<Release> GetReleases(Expression<Func<Release, bool>> predicate);
 
-        Task<IEnumerable<Release>> GetReleases(string artistName = null);
+        IEnumerable<Release> GetReleases(string artistName = null);
 
-        Task<IEnumerable<Release>> GetReleases(PagingParameters parameters, string artistName = null,
+        IEnumerable<Release> GetReleases(PagingParameters parameters, string artistName = null,
             int artistId = 0, bool isOriginal = false, bool isRemix = false);
 
-        Task<ReleaseTrack> GetReleaseTrack(int id);
+        ReleaseTrack GetReleaseTrack(int id);
 
-        Task Remove(int id);
+        void Remove(int id);
 
-        Task RemoveTrack(int id);
+        void RemoveTrack(int id);
 
-        Task RemoveTracks(IEnumerable<int> ids);
+        void RemoveTracks(IEnumerable<int> ids);
 
-        Task<Release> Update(Release release);
+        Release Update(Release release);
 
-        Task<ReleaseTrack> UpdateTrack(ReleaseTrack releaseTrack);
+        ReleaseTrack UpdateTrack(ReleaseTrack releaseTrack);
 
-        Task<IEnumerable<ReleaseTrack>> UpdateTracks(IEnumerable<ReleaseTrack> releaseTracks);
+        IEnumerable<ReleaseTrack> UpdateTracks(IEnumerable<ReleaseTrack> releaseTracks);
     }
 }

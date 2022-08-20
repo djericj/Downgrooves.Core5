@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Service.Base
 {
@@ -18,9 +17,9 @@ namespace Downgrooves.Service.Base
             _unitOfWork = unitOfWork;
         }
 
-        protected async Task<int> ExecuteSql(string sql)
+        protected int ExecuteSql(string sql)
         {
-            return await _unitOfWork.ExecuteNonQueryAsync(sql);
+            return _unitOfWork.ExecuteNonQuery(sql);
         }
 
         protected static string GetEmbeddedResource(string fileName)

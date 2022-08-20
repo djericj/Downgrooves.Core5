@@ -6,8 +6,8 @@ namespace Downgrooves.Service.Interfaces
 {
     public interface IArtistService
     {
-        Task<IEnumerable<Artist>> GetArtists();
+        IEnumerable<Artist> GetArtists();
 
-        Task<IEnumerable<Artist>> GetArtistsAndReleases();
+        IEnumerable<Artist> GetArtistsAndReleases();
     }
 }

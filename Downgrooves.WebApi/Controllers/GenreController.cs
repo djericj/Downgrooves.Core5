@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Controllers
 {
@@ -21,11 +20,11 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetGenres()
+        public IActionResult GetGenres()
         {
             try
             {
-                return Ok(await _service.GetGenres());
+                return Ok(_service.GetGenres());
             }
             catch (System.Exception ex)
             {

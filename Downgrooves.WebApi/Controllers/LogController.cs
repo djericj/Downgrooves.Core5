@@ -1,7 +1,6 @@
 ﻿using Downgrooves.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Controllers
 {
@@ -18,6 +17,6 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetLogs() => Ok(await _service.GetLogs());
+        public IActionResult GetLogs() => Ok(_service.GetLogs());
     }
 }

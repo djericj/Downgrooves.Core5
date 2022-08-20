@@ -4,7 +4,6 @@ using Downgrooves.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using System.Linq;
 using Downgrooves.Domain.ITunes;
 using Downgrooves.Service.Base;
@@ -18,89 +17,89 @@ namespace Downgrooves.Service
         {
         }
 
-        public async Task<Release> Add(Release release)
+        public Release Add(Release release)
         {
-            await _unitOfWork.Releases.AddReleaseAsync(release);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Releases.AddRelease(release);
+            _unitOfWork.Complete();
             return release;
         }
 
-        public async Task<ReleaseTrack> AddTrack(ReleaseTrack releaseTrack)
+        public ReleaseTrack AddTrack(ReleaseTrack releaseTrack)
         {
             _unitOfWork.ReleaseTracks.Add(releaseTrack);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Complete();
             return releaseTrack;
         }
 
-        public async Task<IEnumerable<ReleaseTrack>> AddTracks(IEnumerable<ReleaseTrack> releaseTracks)
+        public IEnumerable<ReleaseTrack> AddTracks(IEnumerable<ReleaseTrack> releaseTracks)
         {
             _unitOfWork.ReleaseTracks.AddRange(releaseTracks);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Complete();
             return releaseTracks;
         }
 
         public List<ITunesExclusion> GetExclusions() => _unitOfWork.Releases.Exclusions;
 
-        public async Task<IEnumerable<Release>> GetReleases(Expression<Func<Release, bool>> predicate)
+        public IEnumerable<Release> GetReleases(Expression<Func<Release, bool>> predicate)
         {
-            return await _unitOfWork.Releases.FindAsync(predicate);
+            return _unitOfWork.Releases.Find(predicate);
         }
 
-        public async Task<IEnumerable<Release>> GetReleases(string artistName = null)
+        public IEnumerable<Release> GetReleases(string artistName = null)
         {
-            return await _unitOfWork.Releases.GetReleases(artistName);
+            return _unitOfWork.Releases.GetReleases(artistName);
         }
 
-        public async Task<IEnumerable<Release>> GetReleases(PagingParameters parameters, string artistName = null,
+        public IEnumerable<Release> GetReleases(PagingParameters parameters, string artistName = null,
             int artistId = 0, bool isOriginal = false, bool isRemix = false)
         {
-            return await _unitOfWork.Releases.GetReleases(parameters, artistName, artistId, isOriginal, isRemix);
+            return _unitOfWork.Releases.GetReleases(parameters, artistName, artistId, isOriginal, isRemix);
         }
 
-        public async Task<ReleaseTrack> GetReleaseTrack(int id)
+        public ReleaseTrack GetReleaseTrack(int id)
         {
-            var releaseTrack = await _unitOfWork.ReleaseTracks.FindAsync(x => x.Id == id);
+            var releaseTrack = _unitOfWork.ReleaseTracks.Find(x => x.Id == id);
             return releaseTrack?.FirstOrDefault();
         }
 
-        public async Task Remove(int id)
+        public void Remove(int id)
         {
-            var release = await GetReleases(x => x.Id == id);
-            await _unitOfWork.Releases.Remove(release.FirstOrDefault());
-            await _unitOfWork.CompleteAsync();
+            var release = GetReleases(x => x.Id == id);
+            _unitOfWork.Releases.Remove(release.FirstOrDefault());
+            _unitOfWork.Complete();
         }
 
-        public async Task RemoveTrack(int id)
+        public void RemoveTrack(int id)
         {
-            var track = await GetReleaseTrack(id);
-            await _unitOfWork.ReleaseTracks.Remove(track);
-            await _unitOfWork.CompleteAsync();
+            var track = GetReleaseTrack(id);
+            _unitOfWork.ReleaseTracks.Remove(track);
+            _unitOfWork.Complete();
         }
 
-        public async Task RemoveTracks(IEnumerable<int> ids)
+        public void RemoveTracks(IEnumerable<int> ids)
         {
             foreach (var id in ids)
-                await RemoveTrack(id);
+                RemoveTrack(id);
         }
 
-        public async Task<Release> Update(Release release)
+        public Release Update(Release release)
         {
             _unitOfWork.Releases.UpdateState(release);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Complete();
             return release;
         }
 
-        public async Task<ReleaseTrack> UpdateTrack(ReleaseTrack releaseTrack)
+        public ReleaseTrack UpdateTrack(ReleaseTrack releaseTrack)
         {
             _unitOfWork.ReleaseTracks.UpdateState(releaseTrack);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Complete();
             return releaseTrack;
         }
 
-        public async Task<IEnumerable<ReleaseTrack>> UpdateTracks(IEnumerable<ReleaseTrack> releaseTracks)
+        public IEnumerable<ReleaseTrack> UpdateTracks(IEnumerable<ReleaseTrack> releaseTracks)
         {
             foreach (var item in releaseTracks)
-                await UpdateTrack(item);
+                UpdateTrack(item);
             return releaseTracks;
         }
     }

@@ -1,7 +1,5 @@
 ﻿using Downgrooves.Domain;
-
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Persistence.Interfaces
 {
@@ -9,12 +7,10 @@ namespace Downgrooves.Persistence.Interfaces
     {
         void AddMix(Mix mix);
 
-        Task AddMixAsync(Mix mix);
-
-        Task<Mix> GetMix(int id);
+        Mix GetMix(int id);
 
         void UpdateMix(Mix mix);
 
-        Task<IEnumerable<Mix>> GetMixes(PagingParameters parameters);
+        IEnumerable<Mix> GetMixes(PagingParameters parameters);
     }
 }

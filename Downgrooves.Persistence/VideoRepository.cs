@@ -3,13 +3,12 @@ using Downgrooves.Persistence.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Persistence
 {
     public class VideoRepository : Repository<Video>, IVideoRepository
     {
-        private IQueryable<Video> _videos;
+        private readonly IQueryable<Video> _videos;
 
         public DowngroovesDbContext DowngroovesDbContext { get => _context as DowngroovesDbContext; }
 
@@ -20,19 +19,19 @@ namespace Downgrooves.Persistence
                       select video;
         }
 
-        public async Task<Video> GetVideo(int id)
+        public Video GetVideo(int id)
         {
-            return await _videos.FirstOrDefaultAsync(x => x.Id == id);
+            return _videos.FirstOrDefault(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<Video>> GetVideos()
+        public IEnumerable<Video> GetVideos()
         {
-            return await _videos.ToListAsync();
+            return _videos.ToList();
         }
 
-        public async Task<IEnumerable<Video>> GetVideos(PagingParameters parameters)
+        public IEnumerable<Video> GetVideos(PagingParameters parameters)
         {
-            return await GetAllAsync(_videos, parameters);
+            return GetAll(_videos, parameters);
         }
     }
 }

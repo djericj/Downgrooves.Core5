@@ -47,7 +47,7 @@ namespace Downgrooves.WebApi.Handlers
                 var credentials = Encoding.UTF8.GetString(credentialBytes).Split(new[] { ':' }, 2);
                 var username = credentials[0];
                 var password = credentials[1];
-                user = await _userService.Authenticate(username, password);
+                user = await Task.Run(() => _userService.Authenticate(username, password));
             }
             catch
             {

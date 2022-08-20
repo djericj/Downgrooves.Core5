@@ -4,7 +4,6 @@ using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Service
 {
@@ -14,6 +13,6 @@ namespace Downgrooves.Service
         {
         }
 
-        public async Task<IEnumerable<Genre>> GetGenres() => await _unitOfWork.Genres.GetAllAsync();
+        public IEnumerable<Genre> GetGenres() => _unitOfWork.Genres.GetAll();
     }
 }

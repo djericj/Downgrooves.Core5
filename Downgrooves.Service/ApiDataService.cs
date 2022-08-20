@@ -21,79 +21,78 @@ namespace Downgrooves.Service
             _logger = logger;
         }
 
-        public async Task<ApiData> Add(ApiData data)
+        public ApiData Add(ApiData apiData)
         {
-            var exists = await GetApiData(data.ApiDataType, data.Artist);
+            var existing = GetApiData(apiData.ApiDataType, apiData.Artist);
 
-            if (exists != null && exists.Any())
+            if (existing != null && existing.Any())
             {
-                foreach (var item in exists)
+                var exists = false;
+
+                foreach (var item in existing)
                 {
-                    if (item.Data == data.Data && item.Total == data.Total && item.ApiDataType == data.ApiDataType)
+                    exists = item.Total == apiData.Total &&
+                        item.Url == apiData.Url &&
+                        item.ApiDataType == apiData.ApiDataType;
+
+                    if (exists)
                     {
-                        _logger.LogInformation($"Data for {data.Artist} {data.ApiDataType} is unchanged.");
+                        if (item.Data.Trim() != apiData.Data.Trim())
+                        {
+                            item.LastUpdated = DateTime.Now;
+                            Update(item);
+                        }
+                        break;
                     }
-                    else if (item.Total != data.Total && item.ApiDataType == data.ApiDataType)
-                    {
-                        data = await AddNew(data);
-                    }
-                    else
-                    {
-                        data = await UpdateState(data);
-                    }
+                }
+                if (!exists)
+                {
+                    apiData.LastUpdated = DateTime.Now;
+                    apiData = AddNew(apiData);
                 }
             }
             else
             {
-                data = await AddNew(data);
+                apiData.LastUpdated = DateTime.Now;
+                apiData = AddNew(apiData);
             }
 
-            return data;
+            return apiData;
         }
 
-        private async Task<ApiData> AddNew(ApiData data)
+        private ApiData AddNew(ApiData apiData)
         {
-            _logger.LogInformation($"Data for {data.Artist} {data.ApiDataType} is NEW.");
-            data.IsChanged = true;
-            data.LastUpdate = DateTime.Now;
-            await _unitOfWork.ApiData.AddAsync(data);
-            await _unitOfWork.CompleteAsync();
-            return data;
+            _logger.LogInformation($"Data for {apiData.Artist} {apiData.ApiDataType} is NEW.");
+            apiData.IsChanged = true;
+            apiData.LastUpdated = DateTime.Now;
+            _unitOfWork.ApiData.Add(apiData);
+            _unitOfWork.Complete();
+            return apiData;
         }
 
-        private async Task<ApiData> UpdateState(ApiData data)
+        public ApiData Update(ApiData apiData)
         {
-            _logger.LogInformation($"Data for {data.Artist} {data.ApiDataType} HAS changed.");
-            data.IsChanged = true;
-            data.LastUpdate = DateTime.Now;
-            _unitOfWork.ApiData.UpdateState(data);
-            await _unitOfWork.CompleteAsync();
-            return data;
+            _unitOfWork.ApiData.Update(apiData);
+            _unitOfWork.Complete();
+            return apiData;
         }
 
-        public async Task<ApiData> Update(ApiData data)
+        public IEnumerable<ApiData> GetApiData(ApiData.ApiDataTypes dataType, string artist)
         {
-            _unitOfWork.ApiData.Update(data);
-            await _unitOfWork.CompleteAsync();
-            return data;
+            return _unitOfWork.ApiData.Find(x => (int)x.ApiDataType == (int)dataType && x.Artist == artist);
         }
 
-        public async Task<IEnumerable<ApiData>> GetApiData(ApiData.ApiDataTypes dataType, string artist)
-        {
-            return await _unitOfWork.ApiData.FindAsync(x => (int)x.ApiDataType == (int)dataType && x.Artist == artist);
-        }
-
-        public async Task ReloadData(ApiData data)
+        public void ReloadData(ApiData apiData)
         {
             // reload itunes data
-            await ExecuteSqlFromResource("GetITunesCollections.sql", data.Artist);
-            await ExecuteSqlFromResource("GetITunesTracks.sql", data.Artist);
+            ExecuteSqlFromResource("GetITunesCollections.sql", apiData.Artist);
+            ExecuteSqlFromResource("GetITunesTracks.sql", apiData.Artist);
         }
 
-        public async Task ExecuteSqlFromResource(string fileName, string artist)
+        public void ExecuteSqlFromResource(string fileName, string artist)
         {
             var sql = GetEmbeddedResource(fileName);
-            var result = await ExecuteSql(sql.Replace("@artistName", $"'{artist}'"));
+            var result = ExecuteSql(sql.Replace("@artistName", $"'{artist}'"));
             if (result == 0)
                 _logger.LogWarning($"ExecuteSql {fileName} affected 0 rows.");
         }

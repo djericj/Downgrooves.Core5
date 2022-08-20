@@ -1,45 +1,44 @@
 ﻿using Downgrooves.Domain.ITunes;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Service.Interfaces
 {
     public interface IITunesService
     {
-        Task<ITunesCollection> AddCollection(ITunesCollection item);
+        ITunesCollection AddCollection(ITunesCollection item);
 
-        Task<IEnumerable<ITunesCollection>> AddCollections(IEnumerable<ITunesCollection> items);
+        IEnumerable<ITunesCollection> AddCollections(IEnumerable<ITunesCollection> items);
 
-        Task<ITunesTrack> AddTrack(ITunesTrack item);
+        ITunesTrack AddTrack(ITunesTrack item);
 
-        Task<IEnumerable<ITunesTrack>> AddTracks(IEnumerable<ITunesTrack> items);
+        IEnumerable<ITunesTrack> AddTracks(IEnumerable<ITunesTrack> items);
 
-        Task<IEnumerable<ITunesCollection>> GetCollections(string artistName = null);
+        IEnumerable<ITunesCollection> GetCollections(string artistName = null);
 
-        Task<ITunesCollection> GetCollection(int id);
+        ITunesCollection GetCollection(int id);
 
-        Task<IEnumerable<ITunesTrack>> GetTracks(string artistName = null);
+        IEnumerable<ITunesTrack> GetTracks(string artistName = null);
 
-        Task<ITunesTrack> GetTrack(int id);
+        ITunesTrack GetTrack(int id);
 
-        Task<IEnumerable<ITunesExclusion>> GetExclusions();
+        IEnumerable<ITunesExclusion> GetExclusions();
 
-        Task<IEnumerable<ITunesLookupResultItem>> Lookup(int Id);
+        IEnumerable<ITunesLookupResultItem> Lookup(int Id);
 
-        Task RemoveCollection(int Id);
+        void RemoveCollection(int Id);
 
-        Task RemoveCollections(IEnumerable<int> ids);
+        void RemoveCollections(IEnumerable<int> ids);
 
-        Task RemoveTrack(int Id);
+        void RemoveTrack(int Id);
 
-        Task RemoveTracks(IEnumerable<int> ids);
+        void RemoveTracks(IEnumerable<int> ids);
 
-        Task<ITunesCollection> UpdateCollection(ITunesCollection item);
+        ITunesCollection UpdateCollection(ITunesCollection item);
 
-        Task<ITunesTrack> UpdateTrack(ITunesTrack item);
+        ITunesTrack UpdateTrack(ITunesTrack item);
 
-        Task<IEnumerable<ITunesCollection>> UpdateCollections(IEnumerable<ITunesCollection> items);
+        IEnumerable<ITunesCollection> UpdateCollections(IEnumerable<ITunesCollection> items);
 
-        Task<IEnumerable<ITunesTrack>> UpdateTracks(IEnumerable<ITunesTrack> items);
+        IEnumerable<ITunesTrack> UpdateTracks(IEnumerable<ITunesTrack> items);
     }
 }

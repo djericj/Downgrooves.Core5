@@ -1,5 +1,4 @@
 ﻿using Downgrooves.Persistence.Interfaces;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using Downgrooves.Domain;
@@ -46,23 +45,19 @@ namespace Downgrooves.Persistence
         public IUserRepository Users { get; private set; }
         public IVideoRepository Videos { get; private set; }
 
-        public async Task<int> ExecuteNonQueryAsync(string query)
+        public int ExecuteNonQuery(string query)
         {
             using var command = _context.Database.GetDbConnection().CreateCommand();
             command.CommandText = query;
             command.CommandType = CommandType.Text;
 
-            await _context.Database.OpenConnectionAsync();
+            _context.Database.OpenConnection();
 
-            return await command.ExecuteNonQueryAsync();
+            return command.ExecuteNonQuery();
         }
 
         public void Complete() => _context.SaveChanges();
 
-        public async Task CompleteAsync() => await _context.SaveChangesAsync();
-
         public void Dispose() => GC.SuppressFinalize(this);
-
-        public async Task DisposeAsync() => await _context.DisposeAsync();
     }
 }

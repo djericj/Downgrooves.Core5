@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Controllers
 {
@@ -30,11 +29,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("/video/{id}")]
-        public async Task<IActionResult> GetVideo(int id)
+        public IActionResult GetVideo(int id)
         {
             try
             {
-                var video = await _service.GetVideo(id);
+                var video = _service.GetVideo(id);
                 return Ok(video.SetBasePath(_appConfig.CdnUrl));
             }
             catch (System.Exception ex)
@@ -45,11 +44,11 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetVideos()
+        public IActionResult GetVideos()
         {
             try
             {
-                var videos = await _service.GetVideos();
+                var videos = _service.GetVideos();
                 return Ok(videos.SetBasePath(_appConfig.CdnUrl));
             }
             catch (System.Exception ex)
@@ -61,11 +60,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("paged")]
-        public async Task<IActionResult> GetVideos([FromQuery] PagingParameters parameters)
+        public IActionResult GetVideos([FromQuery] PagingParameters parameters)
         {
             try
             {
-                return Ok(await _service.GetVideos(parameters));
+                return Ok(_service.GetVideos(parameters));
             }
             catch (System.Exception ex)
             {
@@ -76,11 +75,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("/video")]
-        public async Task<IActionResult> Add(Video video)
+        public IActionResult Add(Video video)
         {
             try
             {
-                return Ok(await _service.AddVideo(video));
+                return Ok(_service.AddVideo(video));
             }
             catch (System.Exception ex)
             {
@@ -91,11 +90,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("/videos")]
-        public async Task<IActionResult> AddVideos(IEnumerable<Video> videos)
+        public IActionResult AddVideos(IEnumerable<Video> videos)
         {
             try
             {
-                return Ok(await _service.AddVideos(videos));
+                return Ok(_service.AddVideos(videos));
             }
             catch (System.Exception ex)
             {
@@ -106,11 +105,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("/video/{id}")]
-        public async Task<IActionResult> Remove(int id)
+        public IActionResult Remove(int id)
         {
             try
             {
-                await _service.Remove(id);
+                _service.Remove(id);
                 return Ok();
             }
             catch (System.Exception ex)
@@ -122,12 +121,12 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("/videos")]
-        public async Task<IActionResult> RemoveVideos([FromBody] int[] ids)
+        public IActionResult RemoveVideos([FromBody] int[] ids)
         {
             try
             {
                 foreach (var id in ids)
-                    await _service.Remove(id);
+                    _service.Remove(id);
 
                 return Ok();
             }
@@ -140,11 +139,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("/video/{id}")]
-        public async Task<IActionResult> UpdateVideo(Video video)
+        public IActionResult UpdateVideo(Video video)
         {
             try
             {
-                return Ok(await _service.UpdateVideo(video));
+                return Ok(_service.UpdateVideo(video));
             }
             catch (System.Exception ex)
             {
@@ -155,11 +154,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("/video/{videoId}/thumbnail")]
-        public async Task<IActionResult> AddThumbnail(int videoId, Thumbnail thumbnail)
+        public IActionResult AddThumbnail(int videoId, Thumbnail thumbnail)
         {
             try
             {
-                return Ok(await _service.AddThumbnail(videoId, thumbnail));
+                return Ok(_service.AddThumbnail(videoId, thumbnail));
             }
             catch (Exception ex)
             {
@@ -170,11 +169,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("/video/{videoId}/thumbnails")]
-        public async Task<IActionResult> AddThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails)
+        public IActionResult AddThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails)
         {
             try
             {
-                return Ok(await _service.AddThumbnails(videoId, thumbnails));
+                return Ok(_service.AddThumbnails(videoId, thumbnails));
             }
             catch (Exception ex)
             {
@@ -185,11 +184,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("/video/{videoId}/thumbnails")]
-        public async Task<IActionResult> GetThumbnails(int videoId)
+        public IActionResult GetThumbnails(int videoId)
         {
             try
             {
-                return Ok(await _service.GetThumbnails(videoId));
+                return Ok(_service.GetThumbnails(videoId));
             }
             catch (Exception ex)
             {
@@ -200,11 +199,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("/video/thumbnail/{thumbnailId}")]
-        public async Task<IActionResult> GetThumbnail(int thumbnailId)
+        public IActionResult GetThumbnail(int thumbnailId)
         {
             try
             {
-                return Ok(await _service.GetThumbnail(thumbnailId));
+                return Ok(_service.GetThumbnail(thumbnailId));
             }
             catch (Exception ex)
             {
@@ -215,11 +214,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("/video/thumbnail/{thumbnailId}")]
-        public async Task<IActionResult> RemoveThumbnail(int thumbnailId)
+        public IActionResult RemoveThumbnail(int thumbnailId)
         {
             try
             {
-                await _service.RemoveThumbnail(thumbnailId);
+                _service.RemoveThumbnail(thumbnailId);
                 return Ok();
             }
             catch (Exception ex)
@@ -231,11 +230,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("/video/{videoId}/thumbnails")]
-        public async Task<IActionResult> RemoveThumbnails(int videoId, IEnumerable<int> ids)
+        public IActionResult RemoveThumbnails(int videoId, IEnumerable<int> ids)
         {
             try
             {
-                await _service.RemoveThumbnails(ids);
+                _service.RemoveThumbnails(ids);
                 return Ok();
             }
             catch (Exception ex)
@@ -247,11 +246,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("/video/{videoId}/thumbnail")]
-        public async Task<IActionResult> UpdateThumbnail(int videoId, Thumbnail thumbnail)
+        public IActionResult UpdateThumbnail(int videoId, Thumbnail thumbnail)
         {
             try
             {
-                return Ok(await _service.UpdateThumbnail(videoId, thumbnail));
+                return Ok(_service.UpdateThumbnail(videoId, thumbnail));
             }
             catch (Exception ex)
             {
@@ -262,11 +261,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("/video/{videoId}/thumbnails")]
-        public async Task<IActionResult> UpdateThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails)
+        public IActionResult UpdateThumbnails(int videoId, IEnumerable<Thumbnail> thumbnails)
         {
             try
             {
-                return Ok(await _service.UpdateThumbnails(videoId, thumbnails));
+                return Ok(_service.UpdateThumbnails(videoId, thumbnails));
             }
             catch (Exception ex)
             {

@@ -3,7 +3,6 @@ using Downgrooves.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Controllers
 {
@@ -23,11 +22,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("/data/{dataType}/artist/{artist}")]
-        public async Task<IActionResult> GetApiData(ApiData.ApiDataTypes dataType, string artist)
+        public IActionResult GetApiData(ApiData.ApiDataTypes dataType, string artist)
         {
             try
             {
-                return Ok(await _apiDataService.GetApiData(dataType, artist));
+                return Ok(_apiDataService.GetApiData(dataType, artist));
             }
             catch (System.Exception ex)
             {
@@ -37,11 +36,11 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] ApiData data)
+        public IActionResult Add([FromBody] ApiData data)
         {
             try
             {
-                return Ok(await _apiDataService.Add(data));
+                return Ok(_apiDataService.Add(data));
             }
             catch (System.Exception ex)
             {
@@ -51,11 +50,11 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(ApiData data)
+        public IActionResult Update(ApiData data)
         {
             try
             {
-                return Ok(await _apiDataService.Update(data));
+                return Ok(_apiDataService.Update(data));
             }
             catch (System.Exception ex)
             {

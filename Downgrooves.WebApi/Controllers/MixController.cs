@@ -1,6 +1,5 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Service.Interfaces;
-
 using Downgrooves.WebApi.Config;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Controllers
 {
@@ -30,11 +28,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("/mix")]
-        public async Task<IActionResult> Add(Mix mix)
+        public IActionResult Add(Mix mix)
         {
             try
             {
-                var m = await _service.Add(mix);
+                var m = _service.Add(mix);
                 return Ok(m);
             }
             catch (Exception ex)
@@ -46,11 +44,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("/mix/track")]
-        public async Task<IActionResult> AddTrack(MixTrack mixTrack)
+        public IActionResult AddTrack(MixTrack mixTrack)
         {
             try
             {
-                return Ok(await _service.AddTrack(mixTrack));
+                return Ok(_service.AddTrack(mixTrack));
             }
             catch (Exception ex)
             {
@@ -61,11 +59,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("/mix/tracks")]
-        public async Task<IActionResult> AddTracks(IEnumerable<MixTrack> mixTracks)
+        public IActionResult AddTracks(IEnumerable<MixTrack> mixTracks)
         {
             try
             {
-                return Ok(await _service.AddTracks(mixTracks));
+                return Ok(_service.AddTracks(mixTracks));
             }
             catch (Exception ex)
             {
@@ -75,11 +73,11 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMixes()
+        public IActionResult GetMixes()
         {
             try
             {
-                var mixes = await _service.GetMixes();
+                var mixes = _service.GetMixes();
                 return Ok(mixes.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
@@ -91,11 +89,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("paged")]
-        public async Task<IActionResult> GetMixes([FromQuery] PagingParameters parameters)
+        public IActionResult GetMixes([FromQuery] PagingParameters parameters)
         {
             try
             {
-                var mixes = await _service.GetMixes(parameters);
+                var mixes = _service.GetMixes(parameters);
                 return Ok(mixes.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
@@ -107,11 +105,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("category")]
-        public async Task<IActionResult> GetMixesByCategory(string category)
+        public IActionResult GetMixesByCategory(string category)
         {
             try
             {
-                var mixes = await _service.GetMixesByCategory(category);
+                var mixes = _service.GetMixesByCategory(category);
                 return Ok(mixes.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
@@ -123,11 +121,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("genre")]
-        public async Task<IActionResult> GetMixesByGenre(string genre)
+        public IActionResult GetMixesByGenre(string genre)
         {
             try
             {
-                var mixes = await _service.GetMixesByGenre(genre);
+                var mixes = _service.GetMixesByGenre(genre);
                 return Ok(mixes.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
@@ -139,11 +137,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("/mix/{id}")]
-        public async Task<IActionResult> GetMix(int id)
+        public IActionResult GetMix(int id)
         {
             try
             {
-                var mix = await _service.GetMix(id);
+                var mix = _service.GetMix(id);
                 return Ok(mix.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
@@ -155,11 +153,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("/mix/{id}")]
-        public async Task<IActionResult> Remove(int id)
+        public IActionResult Remove(int id)
         {
             try
             {
-                await _service.Remove(id);
+                _service.Remove(id);
                 return Ok();
             }
             catch (Exception ex)
@@ -171,11 +169,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("/mix/track/{id}")]
-        public async Task<IActionResult> RemoveTrack(int id)
+        public IActionResult RemoveTrack(int id)
         {
             try
             {
-                await _service.RemoveTrack(id);
+                _service.RemoveTrack(id);
                 return Ok();
             }
             catch (Exception ex)
@@ -187,11 +185,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("/mix/tracks")]
-        public async Task<IActionResult> RemoveTracks(IEnumerable<int> ids)
+        public IActionResult RemoveTracks(IEnumerable<int> ids)
         {
             try
             {
-                await _service.RemoveTracks(ids);
+                _service.RemoveTracks(ids);
                 return Ok();
             }
             catch (Exception ex)
@@ -203,11 +201,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("/mix")]
-        public async Task<IActionResult> Update(Mix mix)
+        public IActionResult Update(Mix mix)
         {
             try
             {
-                var m = await _service.Update(mix);
+                var m = _service.Update(mix);
                 return Ok(m);
             }
             catch (Exception ex)
@@ -219,11 +217,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("/mix/track/{id}")]
-        public async Task<IActionResult> UpdateTrack(MixTrack mixTrack)
+        public IActionResult UpdateTrack(MixTrack mixTrack)
         {
             try
             {
-                return Ok(await _service.UpdateTrack(mixTrack));
+                return Ok(_service.UpdateTrack(mixTrack));
             }
             catch (Exception ex)
             {
@@ -234,11 +232,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("/mix/tracks")]
-        public async Task<IActionResult> UpdateTracks(IEnumerable<MixTrack> mixTracks)
+        public IActionResult UpdateTracks(IEnumerable<MixTrack> mixTracks)
         {
             try
             {
-                return Ok(await _service.UpdateTracks(mixTracks));
+                return Ok(_service.UpdateTracks(mixTracks));
             }
             catch (Exception ex)
             {

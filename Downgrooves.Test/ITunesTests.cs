@@ -14,8 +14,8 @@ namespace Downgrooves.Test
     [TestClass]
     public class ITunesTests
     {
-        private Mock<IITunesService> _service = new Mock<IITunesService>();
-        private Mock<ILogger<ITunesController>> _mockLogger = new Mock<ILogger<ITunesController>>();
+        private readonly Mock<IITunesService> _service = new();
+        private readonly Mock<ILogger<ITunesController>> _mockLogger = new();
 
         [TestMethod]
         public void AddCollection()
@@ -25,12 +25,12 @@ namespace Downgrooves.Test
             var collection = GetTestCollections().FirstOrDefault();
             collection.Id = 3;
             collection.ReleaseDate = now;
-            _service.Setup(x => x.AddCollection(collection).Result).Returns(collection);
+            _service.Setup(x => x.AddCollection(collection)).Returns(collection);
 
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.AddCollection(collection).Result;
+            var output = iTunesController.AddCollection(collection);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as ITunesCollection;
 
@@ -49,12 +49,12 @@ namespace Downgrooves.Test
             var now = DateTime.Now;
             // Arrange
             var collections = GetTestCollections();
-            _service.Setup(x => x.AddCollections(collections).Result).Returns(collections);
+            _service.Setup(x => x.AddCollections(collections)).Returns(collections);
 
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.AddCollections(collections).Result;
+            var output = iTunesController.AddCollections(collections);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<ITunesCollection>;
 
@@ -73,12 +73,12 @@ namespace Downgrooves.Test
             var track = GetTestTracks().FirstOrDefault();
             track.Id = 3;
             track.ReleaseDate = now;
-            _service.Setup(x => x.AddTrack(track).Result).Returns(track);
+            _service.Setup(x => x.AddTrack(track)).Returns(track);
 
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.AddTrack(track).Result;
+            var output = iTunesController.AddTrack(track);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as ITunesTrack;
 
@@ -97,12 +97,12 @@ namespace Downgrooves.Test
             var now = DateTime.Now;
             // Arrange
             var tracks = GetTestTracks();
-            _service.Setup(x => x.AddTracks(tracks).Result).Returns(tracks);
+            _service.Setup(x => x.AddTracks(tracks)).Returns(tracks);
 
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.AddTracks(tracks).Result;
+            var output = iTunesController.AddTracks(tracks);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<ITunesTrack>;
 
@@ -118,12 +118,12 @@ namespace Downgrooves.Test
         {
             // Arrange
 
-            _service.Setup(x => x.GetCollections("Downgrooves").Result).Returns(GetTestCollections());
+            _service.Setup(x => x.GetCollections("Downgrooves")).Returns(GetTestCollections());
 
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.GetCollections("Downgrooves").Result;
+            var output = iTunesController.GetCollections("Downgrooves");
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<ITunesCollection>;
 
@@ -138,12 +138,12 @@ namespace Downgrooves.Test
         {
             // Arrange
 
-            _service.Setup(x => x.GetCollection(1).Result).Returns(GetTestCollections().Where(x => x.Id == 1).FirstOrDefault());
+            _service.Setup(x => x.GetCollection(1)).Returns(GetTestCollections().Where(x => x.Id == 1).FirstOrDefault());
 
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.GetCollection(1).Result;
+            var output = iTunesController.GetCollection(1);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as ITunesCollection;
 
@@ -160,12 +160,12 @@ namespace Downgrooves.Test
         {
             // Arrange
 
-            _service.Setup(x => x.GetTracks("Downgrooves").Result).Returns(GetTestTracks());
+            _service.Setup(x => x.GetTracks("Downgrooves")).Returns(GetTestTracks());
 
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.GetTracks("Downgrooves").Result;
+            var output = iTunesController.GetTracks("Downgrooves");
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<ITunesTrack>;
 
@@ -180,12 +180,12 @@ namespace Downgrooves.Test
         {
             // Arrange
 
-            _service.Setup(x => x.GetTrack(1).Result).Returns(GetTestTracks().Where(x => x.Id == 1).FirstOrDefault());
+            _service.Setup(x => x.GetTrack(1)).Returns(GetTestTracks().Where(x => x.Id == 1).FirstOrDefault());
 
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.GetTrack(1).Result;
+            var output = iTunesController.GetTrack(1);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as ITunesTrack;
 
@@ -209,7 +209,7 @@ namespace Downgrooves.Test
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.RemoveCollection(collection.Id).Result;
+            var output = iTunesController.RemoveCollection(collection.Id);
             var okResult = output as OkResult;
 
             // Assert
@@ -230,7 +230,7 @@ namespace Downgrooves.Test
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.RemoveTrack(track.Id).Result;
+            var output = iTunesController.RemoveTrack(track.Id);
             var okResult = output as OkResult;
 
             // Assert
@@ -249,7 +249,7 @@ namespace Downgrooves.Test
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.RemoveCollections(collections.Select(x => x.Id)).Result;
+            var output = iTunesController.RemoveCollections(collections.Select(x => x.Id));
             var okResult = output as OkResult;
 
             // Assert
@@ -268,7 +268,7 @@ namespace Downgrooves.Test
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.RemoveTracks(tracks.Select(x => x.Id)).Result;
+            var output = iTunesController.RemoveTracks(tracks.Select(x => x.Id));
             var okResult = output as OkResult;
 
             // Assert
@@ -284,12 +284,12 @@ namespace Downgrooves.Test
             // Arrange
             var collection = GetTestCollections().FirstOrDefault();
             collection.ReleaseDate = now;
-            _service.Setup(x => x.UpdateCollection(collection).Result).Returns(collection);
+            _service.Setup(x => x.UpdateCollection(collection)).Returns(collection);
 
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.UpdateCollection(collection).Result;
+            var output = iTunesController.UpdateCollection(collection);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as ITunesCollection;
 
@@ -312,12 +312,12 @@ namespace Downgrooves.Test
                 item.ReleaseDate = now;
                 collections.Add(item);
             }
-            _service.Setup(x => x.UpdateCollections(collections).Result).Returns(collections);
+            _service.Setup(x => x.UpdateCollections(collections)).Returns(collections);
 
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.UpdateCollections(collections).Result;
+            var output = iTunesController.UpdateCollections(collections);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<ITunesCollection>;
 
@@ -337,12 +337,12 @@ namespace Downgrooves.Test
             // Arrange
             var track = GetTestTracks().FirstOrDefault();
             track.ReleaseDate = now;
-            _service.Setup(x => x.UpdateTrack(track).Result).Returns(track);
+            _service.Setup(x => x.UpdateTrack(track)).Returns(track);
 
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.UpdateTrack(track).Result;
+            var output = iTunesController.UpdateTrack(track);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as ITunesTrack;
 
@@ -365,12 +365,12 @@ namespace Downgrooves.Test
                 item.ReleaseDate = now;
                 tracks.Add(item);
             }
-            _service.Setup(x => x.UpdateTracks(tracks).Result).Returns(tracks);
+            _service.Setup(x => x.UpdateTracks(tracks)).Returns(tracks);
 
             // Act
 
             var iTunesController = new ITunesController(_mockLogger.Object, _service.Object);
-            var output = iTunesController.UpdateTracks(tracks).Result;
+            var output = iTunesController.UpdateTracks(tracks);
             var okResult = output as OkObjectResult;
             var result = okResult.Value as IEnumerable<ITunesTrack>;
 
@@ -383,39 +383,43 @@ namespace Downgrooves.Test
                 Assert.AreEqual(now, item.ReleaseDate);
         }
 
-        private IEnumerable<ITunesCollection> GetTestCollections()
+        private static IEnumerable<ITunesCollection> GetTestCollections()
         {
-            var collections = new List<ITunesCollection>();
-            collections.Add(new ITunesCollection()
+            var collections = new List<ITunesCollection>
             {
-                ReleaseDate = new DateTime(2016, 7, 1),
-                Id = 1,
-                CollectionCensoredName = "Test One"
-            });
-            collections.Add(new ITunesCollection()
-            {
-                ReleaseDate = new DateTime(2016, 7, 1),
-                Id = 2,
-                CollectionCensoredName = "Test Two"
-            });
+                new ITunesCollection()
+                {
+                    ReleaseDate = new DateTime(2016, 7, 1),
+                    Id = 1,
+                    CollectionCensoredName = "Test One"
+                },
+                new ITunesCollection()
+                {
+                    ReleaseDate = new DateTime(2016, 7, 1),
+                    Id = 2,
+                    CollectionCensoredName = "Test Two"
+                }
+            };
             return collections;
         }
 
-        private IEnumerable<ITunesTrack> GetTestTracks()
+        private static IEnumerable<ITunesTrack> GetTestTracks()
         {
-            var tracks = new List<ITunesTrack>();
-            tracks.Add(new ITunesTrack()
+            var tracks = new List<ITunesTrack>
             {
-                ReleaseDate = new DateTime(2016, 7, 1),
-                Id = 1,
-                TrackCensoredName = "Test One"
-            });
-            tracks.Add(new ITunesTrack()
-            {
-                ReleaseDate = new DateTime(2016, 7, 1),
-                Id = 2,
-                TrackCensoredName = "Test Two"
-            });
+                new ITunesTrack()
+                {
+                    ReleaseDate = new DateTime(2016, 7, 1),
+                    Id = 1,
+                    TrackCensoredName = "Test One"
+                },
+                new ITunesTrack()
+                {
+                    ReleaseDate = new DateTime(2016, 7, 1),
+                    Id = 2,
+                    TrackCensoredName = "Test Two"
+                }
+            };
             return tracks;
         }
     }

@@ -1,6 +1,5 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Service.Interfaces;
-
 using Downgrooves.WebApi.Config;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +8,6 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Controllers
 {
@@ -31,11 +29,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("/release")]
-        public async Task<IActionResult> Add(Release release)
+        public IActionResult Add(Release release)
         {
             try
             {
-                return Ok(await _releaseService.Add(release));
+                return Ok(_releaseService.Add(release));
             }
             catch (Exception ex)
             {
@@ -46,12 +44,12 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("/releases")]
-        public async Task<IActionResult> AddRange(IEnumerable<Release> releases)
+        public IActionResult AddRange(IEnumerable<Release> releases)
         {
             try
             {
                 foreach (var release in releases)
-                    await _releaseService.Add(release);
+                    _releaseService.Add(release);
                 return Ok();
             }
             catch (Exception ex)
@@ -63,11 +61,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("/release/track")]
-        public async Task<IActionResult> AddTrack(ReleaseTrack releaseTrack)
+        public IActionResult AddTrack(ReleaseTrack releaseTrack)
         {
             try
             {
-                return Ok(await _releaseService.AddTrack(releaseTrack));
+                return Ok(_releaseService.AddTrack(releaseTrack));
             }
             catch (Exception ex)
             {
@@ -78,11 +76,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPost]
         [Route("/release/tracks")]
-        public async Task<IActionResult> AddTracks(IEnumerable<ReleaseTrack> releaseTracks)
+        public IActionResult AddTracks(IEnumerable<ReleaseTrack> releaseTracks)
         {
             try
             {
-                return Ok(await _releaseService.AddTracks(releaseTracks));
+                return Ok(_releaseService.AddTracks(releaseTracks));
             }
             catch (Exception ex)
             {
@@ -92,11 +90,11 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetReleases([FromQuery] string artistName = null)
+        public IActionResult GetReleases([FromQuery] string artistName = null)
         {
             try
             {
-                var releases = await _releaseService.GetReleases(artistName);
+                var releases = _releaseService.GetReleases(artistName);
                 return Ok(releases.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
@@ -108,12 +106,12 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("paged")]
-        public async Task<IActionResult> GetReleases([FromQuery] PagingParameters parameters, string artistName = null,
+        public IActionResult GetReleases([FromQuery] PagingParameters parameters, string artistName = null,
             int artistId = 0, bool isOriginal = false, bool isRemix = false)
         {
             try
             {
-                var releases = await _releaseService.GetReleases(parameters, artistName, artistId, isOriginal, isRemix);
+                var releases = _releaseService.GetReleases(parameters, artistName, artistId, isOriginal, isRemix);
                 return Ok(releases.SetBasePath(_appConfig.CdnUrl).ToList());
             }
             catch (Exception ex)
@@ -125,11 +123,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("/release/{id}")]
-        public async Task<IActionResult> GetRelease(int id)
+        public IActionResult GetRelease(int id)
         {
             try
             {
-                var release = await _releaseService.GetReleases(x => x.Id == id);
+                var release = _releaseService.GetReleases(x => x.Id == id);
                 return Ok(release.FirstOrDefault().SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
@@ -141,11 +139,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("/release/track/{id}")]
-        public async Task<IActionResult> GetReleaseTrack(int id)
+        public IActionResult GetReleaseTrack(int id)
         {
             try
             {
-                var track = await _releaseService.GetReleaseTrack(id);
+                var track = _releaseService.GetReleaseTrack(id);
                 return Ok(track);
             }
             catch (Exception ex)
@@ -157,11 +155,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpGet]
         [Route("/release/collection/{collectionId}")]
-        public async Task<IActionResult> GetCollection(int collectionId)
+        public IActionResult GetCollection(int collectionId)
         {
             try
             {
-                var releases = await _releaseService.GetReleases(x => x.CollectionId == collectionId);
+                var releases = _releaseService.GetReleases(x => x.CollectionId == collectionId);
                 return Ok(releases?.FirstOrDefault().SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
@@ -173,11 +171,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("/release/{id}")]
-        public async Task<IActionResult> Remove(int id)
+        public IActionResult Remove(int id)
         {
             try
             {
-                await _releaseService.Remove(id);
+                _releaseService.Remove(id);
                 return Ok();
             }
             catch (Exception ex)
@@ -189,12 +187,12 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("/releases")]
-        public async Task<IActionResult> RemoveReleases(int[] ids)
+        public IActionResult RemoveReleases(int[] ids)
         {
             try
             {
                 foreach (var id in ids)
-                    await _releaseService.Remove(id);
+                    _releaseService.Remove(id);
                 return Ok();
             }
             catch (Exception ex)
@@ -206,11 +204,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("/release/track/{id}")]
-        public async Task<IActionResult> RemoveTrack(int id)
+        public IActionResult RemoveTrack(int id)
         {
             try
             {
-                await _releaseService.RemoveTrack(id);
+                _releaseService.RemoveTrack(id);
                 return Ok();
             }
             catch (Exception ex)
@@ -222,11 +220,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpDelete]
         [Route("/release/tracks")]
-        public async Task<IActionResult> RemoveTracks(IEnumerable<int> ids)
+        public IActionResult RemoveTracks(IEnumerable<int> ids)
         {
             try
             {
-                await _releaseService.RemoveTracks(ids);
+                _releaseService.RemoveTracks(ids);
                 return Ok();
             }
             catch (Exception ex)
@@ -238,11 +236,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("/release/{id}")]
-        public async Task<IActionResult> Update(Release release)
+        public IActionResult Update(Release release)
         {
             try
             {
-                return Ok(await _releaseService.Update(release));
+                return Ok(_releaseService.Update(release));
             }
             catch (Exception ex)
             {
@@ -253,11 +251,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("/release/track/{id}")]
-        public async Task<IActionResult> UpdateTrack(ReleaseTrack releaseTrack)
+        public IActionResult UpdateTrack(ReleaseTrack releaseTrack)
         {
             try
             {
-                return Ok(await _releaseService.UpdateTrack(releaseTrack));
+                return Ok(_releaseService.UpdateTrack(releaseTrack));
             }
             catch (Exception ex)
             {
@@ -268,11 +266,11 @@ namespace Downgrooves.WebApi.Controllers
 
         [HttpPut]
         [Route("/release/tracks")]
-        public async Task<IActionResult> UpdateTracks(IEnumerable<ReleaseTrack> releaseTracks)
+        public IActionResult UpdateTracks(IEnumerable<ReleaseTrack> releaseTracks)
         {
             try
             {
-                return Ok(await _releaseService.UpdateTracks(releaseTracks));
+                return Ok(_releaseService.UpdateTracks(releaseTracks));
             }
             catch (Exception ex)
             {
