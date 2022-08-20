@@ -6,6 +6,8 @@ namespace Downgrooves.WorkerService.Services.Interfaces
 {
     public interface IITunesService
     {
+        void ProcessJsonData();
+
         ITunesCollection AddCollection(ITunesCollection collection);
 
         IEnumerable<ITunesCollection> AddCollections(IEnumerable<ITunesCollection> collections);

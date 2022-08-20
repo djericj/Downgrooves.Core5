@@ -17,6 +17,7 @@ namespace Downgrooves.WorkerService
         private readonly IApiDataService _apiDataService;
         private readonly IArtistService _artistService;
         private readonly IReleaseService _releaseService;
+        private readonly IITunesService _iTunesService;
         private readonly IHostApplicationLifetime _hostApplicationLifetime;
 
         public ProcessWorker(IOptions<AppConfig> config,
@@ -24,12 +25,14 @@ namespace Downgrooves.WorkerService
             IApiDataService apiDataService,
             IArtistService artistService,
             IReleaseService releaseService,
+            IITunesService iTunesService,
             IHostApplicationLifetime hostApplicationLifetime)
         {
             _appConfig = config.Value;
             _logger = logger;
             _apiDataService = apiDataService;
             _artistService = artistService;
+            _iTunesService = iTunesService;
             _releaseService = releaseService;
             _hostApplicationLifetime = hostApplicationLifetime;
         }
@@ -45,16 +48,9 @@ namespace Downgrooves.WorkerService
                     {
                         _logger.LogInformation($"{nameof(ProcessWorker)} ticked at: {DateTimeOffset.Now}");
 
-                        var artists = _artistService.GetArtists();
+                        GetITunesJsonData();
 
-                        foreach (var artist in artists)
-                        {
-                            _logger.LogInformation($"{nameof(ProcessWorker)} getting {artist.Name}.");
-                            _apiDataService.UpdateDataFromITunesApi(_appConfig.ITunes.CollectionLookupUrl, ApiData.ApiDataTypes.iTunesCollection, artist.Name);
-                            _apiDataService.UpdateDataFromITunesApi(_appConfig.ITunes.TracksLookupUrl, ApiData.ApiDataTypes.iTunesTrack, artist.Name);
-                        }
-
-                        _releaseService.ProcessData();
+                        ProcessITunesJsonData();
 
                         _logger.LogInformation($"{nameof(ProcessWorker)} finished.");
 
@@ -72,6 +68,23 @@ namespace Downgrooves.WorkerService
                     _hostApplicationLifetime.StopApplication();
                 }
             }, stoppingToken);
+        }
+
+        private void GetITunesJsonData()
+        {
+            var artists = _artistService.GetArtists();
+
+            foreach (var artist in artists)
+            {
+                _logger.LogInformation($"{nameof(ProcessWorker)} getting {artist.Name}.");
+                _apiDataService.UpdateDataFromITunesApi(_appConfig.ITunes.CollectionLookupUrl, ApiData.ApiDataTypes.iTunesCollection, artist.Name);
+                _apiDataService.UpdateDataFromITunesApi(_appConfig.ITunes.TracksLookupUrl, ApiData.ApiDataTypes.iTunesTrack, artist.Name);
+            }
+        }
+
+        private void ProcessITunesJsonData()
+        {
+            _iTunesService.ProcessJsonData();
         }
     }
 }
