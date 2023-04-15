@@ -25,6 +25,12 @@ namespace Downgrooves.Service.Interfaces
 
         IEnumerable<ITunesLookupResultItem> Lookup(int Id);
 
+        IEnumerable<ITunesLookupLog> GetLookupLog();
+
+        ITunesLookupLog GetLookupLog(int Id);
+
+        ITunesLookupLog AddLookupLog(ITunesLookupLog item);
+
         void RemoveCollection(int Id);
 
         void RemoveCollections(IEnumerable<int> ids);

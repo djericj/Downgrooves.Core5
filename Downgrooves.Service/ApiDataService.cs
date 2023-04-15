@@ -77,6 +77,16 @@ namespace Downgrooves.Service
             return apiData;
         }
 
+        public IEnumerable<ApiData> GetApiData()
+        {
+            return _unitOfWork.ApiData.GetAll();
+        }
+
+        public IEnumerable<ApiData> GetApiData(ApiData.ApiDataTypes dataType)
+        {
+            return _unitOfWork.ApiData.Find(x => (int)x.ApiDataType == (int)dataType);
+        }
+
         public IEnumerable<ApiData> GetApiData(ApiData.ApiDataTypes dataType, string artist)
         {
             return _unitOfWork.ApiData.Find(x => (int)x.ApiDataType == (int)dataType && x.Artist == artist);

@@ -108,6 +108,7 @@ namespace Downgrooves.WebApi
             services.AddDbContext<DowngroovesDbContext>(options =>
             {
                 options.UseSqlite(Configuration.GetConnectionString("DatabaseConnection"), sqlOptions => sqlOptions.CommandTimeout(120));
+                options.EnableSensitiveDataLogging(true);
             }
             );
 

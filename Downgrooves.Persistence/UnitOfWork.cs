@@ -17,6 +17,7 @@ namespace Downgrooves.Persistence
             ApiData = new Repository<ApiData>(context);
             Artists = new ArtistRepository(context);
             ITunesExclusion = new Repository<ITunesExclusion>(context);
+            ITunesLookupLog = new Repository<ITunesLookupLog>(context);
             ITunesCollection = new Repository<ITunesCollection>(context);
             ITunesTrack = new Repository<ITunesTrack>(context);
             Genres = new Repository<Genre>(context);
@@ -34,6 +35,7 @@ namespace Downgrooves.Persistence
         public IArtistRepository Artists { get; private set; }
         public IRepository<ITunesExclusion> ITunesExclusion { get; private set; }
         public IRepository<ITunesCollection> ITunesCollection { get; private set; }
+        public IRepository<ITunesLookupLog> ITunesLookupLog { get; private set; }
         public IRepository<ITunesTrack> ITunesTrack { get; private set; }
         public IRepository<Genre> Genres { get; private set; }
         public IRepository<Log> Logs { get; set; }

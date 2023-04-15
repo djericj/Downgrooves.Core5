@@ -5,6 +5,7 @@ using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RestSharp;
+using System;
 using System.Collections.Generic;
 
 namespace Downgrooves.Service
@@ -94,6 +95,23 @@ namespace Downgrooves.Service
             }
 
             return null;
+        }
+
+        public IEnumerable<ITunesLookupLog> GetLookupLog()
+        {
+            return _unitOfWork.ITunesLookupLog.GetAll();
+        }
+
+        public ITunesLookupLog GetLookupLog(int Id)
+        {
+            return _unitOfWork.ITunesLookupLog.Get(Id);
+        }
+
+        public ITunesLookupLog AddLookupLog(ITunesLookupLog item)
+        {
+            _unitOfWork.ITunesLookupLog.Add(item);
+            _unitOfWork.Complete();
+            return item;
         }
 
         public void RemoveCollection(int id)

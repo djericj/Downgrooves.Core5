@@ -127,6 +127,51 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
+        [Route("lookup")]
+        public IActionResult GetLookup()
+        {
+            try
+            {
+                return Ok(_itunesService.GetLookupLog());
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.{nameof(GetLookup)} {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpGet]
+        [Route("lookup/{id}")]
+        public IActionResult GetLookup(int id)
+        {
+            try
+            {
+                return Ok(_itunesService.GetLookupLog(id));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.{nameof(GetLookup)} {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpPost]
+        [Route("lookup")]
+        public IActionResult AddLookup(ITunesLookupLog item)
+        {
+            try
+            {
+                return Ok(_itunesService.AddLookupLog(item));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ITunesController)}.{nameof(AddLookup)} {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpGet]
         [Route("tracks")]
         public IActionResult GetTracks([FromQuery] string artistName = null)
         {

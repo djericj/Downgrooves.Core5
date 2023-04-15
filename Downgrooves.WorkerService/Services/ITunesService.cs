@@ -4,11 +4,10 @@ using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 
 namespace Downgrooves.WorkerService.Services
 {
@@ -20,6 +19,8 @@ namespace Downgrooves.WorkerService.Services
         private readonly IArtworkService _artworkService;
 
         private readonly string _artworkBasePath;
+        private readonly List<ITunesCollection> _collections;
+        private readonly List<ITunesTrack> _tracks;
 
         public ITunesService(IOptions<AppConfig> config, ILogger<ITunesService> logger, IApiDataService apiDataService,
             IArtistService artistService, IArtworkService artworkService) : base(config, logger)
@@ -29,18 +30,65 @@ namespace Downgrooves.WorkerService.Services
             _artistService = artistService;
             _artworkService = artworkService;
             _artworkBasePath = config.Value.ArtworkBasePath;
+
+            _collections = new List<ITunesCollection>();
+            _tracks = new List<ITunesTrack>();
         }
 
         #region iTunes JSON
 
         public void ProcessJsonData()
         {
-            var artists = _artistService.GetArtists();
+            Process(_apiDataService.GetApiData());
 
-            foreach (var artist in artists)
+            var lookupLog = GetLookupLog();
+            var searchCollections = GetCollections();
+            var searchTracks = GetTracks();
+
+            if (lookupLog != null)
             {
-                ProcessCollections(artist.Name);
-                ProcessTracks(artist.Name);
+                searchCollections = searchCollections.Where(x => lookupLog.All(l => l.CollectionId != x.Id)).GroupBy(x => x.Id).Select(g => g.First());
+                searchTracks = searchTracks.Where(x => lookupLog.All(l => l.CollectionId != x.CollectionId)).GroupBy(x => x.CollectionId).Select(g => g.First());
+            }
+
+            foreach (var item in searchCollections)
+            {
+                _logger.LogInformation($"{nameof(ITunesService)} looking up collection {item.Id}.");
+                var data = _apiDataService.LookupSongs(item.Id);
+                JObject jsonData = JObject.Parse(data);
+                var apiData = new ApiData()
+                {
+                    ApiDataType = ApiData.ApiDataTypes.iTunesLookup,
+                    CollectionId = item.Id,
+                    Data = jsonData.SelectToken("$.results").ToString(),
+                    LastUpdated = System.DateTime.Now,
+                    Url = $"{LookupUrl}?id={item.Id}&entity=song",
+                };
+                Process(new List<ApiData>() { apiData });
+                _apiDataService.AddApiData(apiData);
+                AddLookupLog(item.Id);
+                _logger.LogInformation($"{nameof(ITunesService)} waiting {LookupInterval} seconds.");
+                System.Threading.Thread.Sleep(LookupInterval * 1000);
+            }
+
+            foreach (var item in searchTracks)
+            {
+                _logger.LogInformation($"{nameof(ITunesService)} looking up track in collection {item.CollectionId}.");
+                var data = _apiDataService.LookupSongs(item.CollectionId);
+                JObject jsonData = JObject.Parse(data);
+                var apiData = new ApiData()
+                {
+                    ApiDataType = ApiData.ApiDataTypes.iTunesLookup,
+                    CollectionId = item.CollectionId,
+                    Data = jsonData.SelectToken("$.results").ToString(),
+                    LastUpdated = System.DateTime.Now,
+                    Url = $"{LookupUrl}?id={item.Id}&entity=song",
+                };
+                Process(new List<ApiData>() { apiData });
+                _apiDataService.AddApiData(apiData);
+                AddLookupLog(item.CollectionId);
+                _logger.LogInformation($"{nameof(ITunesService)} waiting {LookupInterval} seconds.");
+                System.Threading.Thread.Sleep(LookupInterval * 1000);
             }
 
             _logger.LogInformation($"{nameof(ProcessWorker)} getting any new artwork.");
@@ -49,128 +97,53 @@ namespace Downgrooves.WorkerService.Services
             DownloadTracksArtwork();
         }
 
-        private void ProcessCollections(string artist)
+        private void Process(IEnumerable<ApiData> dataList)
         {
-            int index = 0;
-
-            _logger.LogInformation($"{nameof(ReleaseService)} getting COLLECTIONS for {artist}.");
-
-            _logger.LogInformation($"/************************* {artist.ToUpper()} ***************************/.");
-            _logger.LogInformation("");
-            _logger.LogInformation("");
-
-            var dataList = _apiDataService.GetApiData(ApiData.ApiDataTypes.iTunesCollection, artist);
-
-            _logger.LogInformation($"{nameof(ReleaseService)} {artist}: {dataList?.Count()} total JSON files to process.");
+            if (dataList == null) return;
 
             var collections = new List<ITunesCollection>();
-
-            foreach (var data in dataList)
-            {
-                index++;
-
-                _logger.LogInformation($"{nameof(ReleaseService)} {artist}: Processing data file #{index}.");
-
-                var collection = JsonConvert.DeserializeObject<IEnumerable<ITunesCollection>>(data.Data);
-                if (collections.Any())
-                {
-                    var newItems = collection.Where(c => collections.All(c2 => c2.Id != c.Id));
-
-                    _logger.LogInformation($"{nameof(ReleaseService)} {artist}: Found {newItems?.Count()} new items in file #{index}.");
-
-                    collections.AddRange(newItems.Where(c => string.Compare(c.WrapperType, "collection", true) == 0 && c.ArtistName.Contains(artist)));
-                }
-                else
-                {
-                    collections.AddRange(collection.Where(c => string.Compare(c.WrapperType, "collection", true) == 0 && c.ArtistName.Contains(artist)));
-                }
-            }
-
-            _logger.LogInformation($"{nameof(ReleaseService)} {artist}: {collections?.Count} TOTAL collections to evaluate.");
-
-            if (collections?.Count > 0)
-            {
-                var existingCollections = GetCollections(new Artist() { Name = artist });
-
-                _logger.LogInformation($"{nameof(ReleaseService)} {artist}: {existingCollections?.Count()} EXISTing collections.");
-
-                var newCollections = collections.Where(c => existingCollections.All(c2 => c2.Id != c.Id));
-
-                _logger.LogInformation($"{nameof(ReleaseService)} {artist}: {newCollections?.Count()} NEW collections.");
-
-                if (newCollections?.Count() > 0)
-                {
-                    var addedCollections = AddCollections(newCollections);
-
-                    _logger.LogInformation($"{nameof(ReleaseService)} {artist}: {addedCollections?.Count()} ADDED collections.");
-                }
-            }
-
-            _logger.LogInformation($"/************************* END ***************************/.");
-            _logger.LogInformation("");
-            _logger.LogInformation("");
-        }
-
-        private void ProcessTracks(string artist)
-        {
-            int index = 0;
-
-            _logger.LogInformation($"{nameof(ReleaseService)} getting TRACKS for {artist}.");
-
-            _logger.LogInformation($"/************************* {artist.ToUpper()} ***************************/.");
-            _logger.LogInformation("");
-            _logger.LogInformation("");
-
-            var dataList = _apiDataService.GetApiData(ApiData.ApiDataTypes.iTunesTrack, artist);
-
-            _logger.LogInformation($"{nameof(ReleaseService)} {artist}: {dataList?.Count()} total JSON files to process.");
-
             var tracks = new List<ITunesTrack>();
 
             foreach (var data in dataList)
             {
-                index++;
+                JArray objData = JArray.Parse(data.Data);
 
-                _logger.LogInformation($"{nameof(ReleaseService)} {artist}: Processing data file #{index}.");
-
-                var track = JsonConvert.DeserializeObject<IEnumerable<ITunesTrack>>(data.Data);
-                if (tracks.Any())
+                var collectionsJson = objData.SelectTokens("$.[?(@.wrapperType == 'collection')]");
+                foreach (var item in collectionsJson)
                 {
-                    var newItems = track.Where(c => tracks.All(c2 => c2.Id != c.Id));
-
-                    _logger.LogInformation($"{nameof(ReleaseService)} {artist}: Found {newItems?.Count()} new items in file #{index}.");
-
-                    tracks.AddRange(newItems.Where(c => string.Compare(c.WrapperType, "track", true) == 0));
+                    collections.Add(item.ToObject<ITunesCollection>());
                 }
-                else
+
+                var tracksJson = objData.SelectTokens("$.[?(@.wrapperType == 'track')]");
+                foreach (var item in tracksJson)
                 {
-                    tracks.AddRange(track.Where(c => string.Compare(c.WrapperType, "track", true) == 0));
+                    tracks.Add(item.ToObject<ITunesTrack>());
                 }
             }
 
-            _logger.LogInformation($"{nameof(ReleaseService)} {artist}: {tracks?.Count} TOTAL tracks to evaluate.");
+            if (collections?.Count > 0)
+            {
+                var existingCollections = GetCollections();
+                var newCollections = _collections.Where(c => existingCollections.All(c2 => c2.Id != c.Id));
+
+                if (newCollections?.Count() > 0)
+                {
+                    _logger.LogInformation($"{nameof(ITunesService)} processing collections {string.Join(",", newCollections.Select(s => s.Id))}.");
+                    AddCollections(newCollections);
+                }
+            }
 
             if (tracks?.Count > 0)
             {
                 var existingTracks = GetTracks();
-
-                _logger.LogInformation($"{nameof(ReleaseService)} {artist}: {existingTracks?.Count()} EXISTing tracks.");
-
-                var newTracks = tracks.Where(c => existingTracks.All(c2 => c2.Id != c.Id && c2.CollectionId != c.CollectionId));
-
-                _logger.LogInformation($"{nameof(ReleaseService)} {artist}: {newTracks?.Count()} NEW tracks.");
+                var newTracks = _tracks.Where(c => existingTracks.All(c2 => c2.Id != c.Id)).GroupBy(g => g.Id).Select(s => s.First());
 
                 if (newTracks?.Count() > 0)
                 {
-                    var addedTracks = AddTracks(newTracks);
-
-                    _logger.LogInformation($"{nameof(ReleaseService)} {artist}: {addedTracks?.Count()} ADDED tracks.");
+                    _logger.LogInformation($"{nameof(ITunesService)} processing tracks {string.Join(",", newTracks.Select(s => s.Id))}.");
+                    AddTracks(newTracks);
                 }
             }
-
-            _logger.LogInformation($"/************************* END ***************************/.");
-            _logger.LogInformation("");
-            _logger.LogInformation("");
         }
 
         private void DownloadCollectionsArtwork()
@@ -210,6 +183,22 @@ namespace Downgrooves.WorkerService.Services
         #endregion iTunes JSON
 
         #region Downgrooves iTunes API
+
+        public IEnumerable<ITunesLookupLog> GetLookupLog()
+        {
+            return Get<IEnumerable<ITunesLookupLog>>("itunes/lookup");
+        }
+
+        public ITunesLookupLog GetLookupLog(int id)
+        {
+            return Get<ITunesLookupLog>($"itunes/lookup/{id}");
+        }
+
+        public ITunesLookupLog AddLookupLog(int id)
+        {
+            var item = new ITunesLookupLog() { CollectionId = id, LastUpdated = System.DateTime.Now };
+            return Add("itunes/lookup", item);
+        }
 
         #region Collections
 
@@ -298,72 +287,6 @@ namespace Downgrooves.WorkerService.Services
         }
 
         #endregion Tracks
-
-        #region Generics
-
-        private T Add<T>(string resource, T items)
-        {
-            var response = ApiPost<T>(GetUri(resource), Token, items);
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                if (response.Content != null && response.Content != "[]")
-                {
-                    return JsonConvert.DeserializeObject<T>(response.Content);
-                }
-            }
-            else
-                _logger.LogError($"Error adding itunes items.  {response.Content}");
-            return default;
-        }
-
-        private T Get<T>(string resource, Artist artist = null)
-        {
-            if (artist != null)
-                resource += $"?artistName={artist.Name}";
-            var response = ApiGet(GetUri(resource), Token);
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                if (response.Content != null && response.Content != "[]")
-                {
-                    return JsonConvert.DeserializeObject<T>(response.Content);
-                }
-            }
-            else
-                _logger.LogError($"Error getting existing itunes items.  {response.Content}");
-            return default;
-        }
-
-        private T Update<T>(string resource, T items)
-        {
-            var response = ApiPut<T>(GetUri(resource), Token, items);
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                if (response.Content != null && response.Content != "[]")
-                {
-                    return JsonConvert.DeserializeObject<T>(response.Content);
-                }
-            }
-            else
-                _logger.LogError($"Error updating itunes items.  {response.Content}");
-            return default;
-        }
-
-        private T Delete<T>(string resource, T items)
-        {
-            var response = ApiDelete<T>(GetUri(resource), Token, items);
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                if (response.Content != null && response.Content != "[]")
-                {
-                    return JsonConvert.DeserializeObject<T>(response.Content);
-                }
-            }
-            else
-                _logger.LogError($"Error updating itunes items.  {response.Content}");
-            return default;
-        }
-
-        #endregion Generics
 
         #endregion Downgrooves iTunes API
     }

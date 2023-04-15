@@ -10,6 +10,7 @@ namespace Downgrooves.Persistence.Interfaces
         IArtistRepository Artists { get; }
         IRepository<ITunesExclusion> ITunesExclusion { get; }
         IRepository<ITunesCollection> ITunesCollection { get; }
+        IRepository<ITunesLookupLog> ITunesLookupLog { get; }
         IRepository<ITunesTrack> ITunesTrack { get; }
         IRepository<Genre> Genres { get; }
         IRepository<Log> Logs { get; }

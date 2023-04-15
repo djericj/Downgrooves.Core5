@@ -11,4 +11,8 @@
     <PackageReference Include="RestSharp" Version="107.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Downgrooves.Domain\Downgrooves.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

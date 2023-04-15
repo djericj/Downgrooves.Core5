@@ -48,7 +48,9 @@ namespace Downgrooves.WorkerService
                     {
                         _logger.LogInformation($"{nameof(ProcessWorker)} ticked at: {DateTimeOffset.Now}");
 
-                        GetITunesJsonData();
+                        //_releaseService.ProcessReleases();
+
+                        //GetITunesJsonData();
 
                         ProcessITunesJsonData();
 
@@ -77,8 +79,8 @@ namespace Downgrooves.WorkerService
             foreach (var artist in artists)
             {
                 _logger.LogInformation($"{nameof(ProcessWorker)} getting {artist.Name}.");
-                _apiDataService.UpdateDataFromITunesApi(_appConfig.ITunes.CollectionLookupUrl, ApiData.ApiDataTypes.iTunesCollection, artist.Name);
-                _apiDataService.UpdateDataFromITunesApi(_appConfig.ITunes.TracksLookupUrl, ApiData.ApiDataTypes.iTunesTrack, artist.Name);
+                _apiDataService.UpdateDataFromITunesApi(_appConfig.ITunes.CollectionSearchUrl, ApiData.ApiDataTypes.iTunesCollection, artist.Name);
+                _apiDataService.UpdateDataFromITunesApi(_appConfig.ITunes.TracksSearchUrl, ApiData.ApiDataTypes.iTunesTrack, artist.Name);
             }
         }
 

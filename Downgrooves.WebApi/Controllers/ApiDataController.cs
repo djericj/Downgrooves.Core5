@@ -21,6 +21,35 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet]
+        public IActionResult GetApiData()
+        {
+            try
+            {
+                return Ok(_apiDataService.GetApiData());
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ApiDataController)}.{nameof(GetApiData)} {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpGet]
+        [Route("/data/{dataType}")]
+        public IActionResult GetApiData(ApiData.ApiDataTypes dataType)
+        {
+            try
+            {
+                return Ok(_apiDataService.GetApiData(dataType));
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError($"Exception in {nameof(ApiDataController)}.{nameof(GetApiData)} {ex.Message} {ex.StackTrace}");
+                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+            }
+        }
+
+        [HttpGet]
         [Route("/data/{dataType}/artist/{artist}")]
         public IActionResult GetApiData(ApiData.ApiDataTypes dataType, string artist)
         {

@@ -23,6 +23,11 @@ namespace Downgrooves.WorkerService.Services
             return JObject.Parse(data);
         }
 
+        public string LookupSongs(int id)
+        {
+            return GetString($"{LookupUrl}?id={id}&entity=song");
+        }
+
         public List<ApiData> UpdateDataFromITunesApi(string url, ApiData.ApiDataTypes type, string artist)
         {
             List<ApiData> responses = new();
@@ -106,6 +111,22 @@ namespace Downgrooves.WorkerService.Services
             var response = ApiPost<ApiData>(GetUri("data"), Token, apiData);
             if (response.IsSuccessful && !string.IsNullOrEmpty(response.Content))
                 return JsonConvert.DeserializeObject<ApiData>(response.Content);
+            return null;
+        }
+
+        public IEnumerable<ApiData> GetApiData()
+        {
+            var response = ApiGet(GetUri($"data"), Token);
+            if (response.IsSuccessful && !string.IsNullOrEmpty(response.Content))
+                return JsonConvert.DeserializeObject<IEnumerable<ApiData>>(response.Content);
+            return null;
+        }
+
+        public IEnumerable<ApiData> GetApiData(ApiData.ApiDataTypes dataType)
+        {
+            var response = ApiGet(GetUri($"data/{dataType}"), Token);
+            if (response.IsSuccessful && !string.IsNullOrEmpty(response.Content))
+                return JsonConvert.DeserializeObject<IEnumerable<ApiData>>(response.Content);
             return null;
         }
 

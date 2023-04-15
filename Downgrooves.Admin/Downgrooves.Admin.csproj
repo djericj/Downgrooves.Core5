@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Downgrooves.Domain\Downgrooves.Domain.csproj" />
-    <ProjectReference Include="..\Downgrooves.Framework\Downgrooves.Framework.csproj" />
   </ItemGroup>
     <ItemGroup>
 	    <TrimmerRootAssembly Include="Microsoft.Authentication.WebAssembly.Msal" />

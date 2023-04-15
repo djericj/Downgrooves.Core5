@@ -14,6 +14,7 @@ namespace Downgrooves.Persistence
         public DbSet<Artist> Artists { get; set; }
         public DbSet<ITunesExclusion> ITunesExclusions { get; set; }
         public DbSet<ITunesCollection> ITunesCollections { get; set; }
+        public DbSet<ITunesLookupLog> ITunesLookupLog { get; set; }
         public DbSet<ITunesTrack> ITunesTracks { get; set; }
         public DbSet<Log> Logs { get; set; }
         public DbSet<Mix> Mixes { get; set; }
@@ -29,6 +30,7 @@ namespace Downgrooves.Persistence
             modelBuilder.Entity<Genre>().ToTable("genre");
             modelBuilder.Entity<ITunesCollection>().ToTable("iTunesCollection");
             modelBuilder.Entity<ITunesExclusion>().ToTable("iTunesExclusion");
+            modelBuilder.Entity<ITunesLookupLog>().ToTable("iTunesLookupLog");
             modelBuilder.Entity<ITunesTrack>().ToTable("iTunesTrack");
             modelBuilder.Entity<Log>().ToTable("log");
             modelBuilder.Entity<Mix>().ToTable("mix");
@@ -40,6 +42,7 @@ namespace Downgrooves.Persistence
             modelBuilder.Entity<Video>().ToTable("video");
 
             modelBuilder.Entity<Genre>().HasKey("Id");
+            modelBuilder.Entity<ITunesLookupLog>().HasKey("CollectionId");
 
             modelBuilder.Entity<ApiData>().Property("Id").HasColumnName("apiDataId");
             modelBuilder.Entity<Artist>().Property("Id").HasColumnName("artistId");

@@ -8,6 +8,12 @@ namespace Downgrooves.WorkerService.Services.Interfaces
     {
         void ProcessJsonData();
 
+        IEnumerable<ITunesLookupLog> GetLookupLog();
+
+        ITunesLookupLog GetLookupLog(int id);
+
+        ITunesLookupLog AddLookupLog(int id);
+
         ITunesCollection AddCollection(ITunesCollection collection);
 
         IEnumerable<ITunesCollection> AddCollections(IEnumerable<ITunesCollection> collections);
