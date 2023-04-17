@@ -27,12 +27,12 @@ namespace Downgrooves.Data
 
         public Genre? Get(int id)
         {
-            return GetAll().FirstOrDefault(a => a?.Id == id);
+            return GetAll().FirstOrDefault(g => g?.Id == id);
         }
 
         public Genre? Get(string name)
         {
-            return GetAll().FirstOrDefault(a => a?.Name == name);
+            return GetAll().FirstOrDefault(g => g?.Name == name);
         }
     }
 }

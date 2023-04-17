@@ -21,7 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Downgrooves.Data\Downgrooves.Data.csproj" />
     <ProjectReference Include="..\Downgrooves.Domain\Downgrooves.Domain.csproj" />
-    <ProjectReference Include="..\Downgrooves.Persistence\Downgrooves.Persistence.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

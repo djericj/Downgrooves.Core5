@@ -1,36 +1,20 @@
 ﻿using Downgrooves.Domain;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Downgrooves.Service.Interfaces
 {
     public interface IMixService
     {
-        Mix Add(Mix mix);
+        IEnumerable<Mix> GetAll(Expression<Func<Mix, bool>> predicate);
 
-        MixTrack AddTrack(MixTrack mixTrack);
+        IEnumerable<Mix> GetAll();
 
-        IEnumerable<MixTrack> AddTracks(IEnumerable<MixTrack> mixTracks);
+        IEnumerable<Mix> GetByCategory(string category);
 
-        IEnumerable<Mix> GetMixes();
-
-        IEnumerable<Mix> GetMixes(PagingParameters parameters);
-
-        IEnumerable<Mix> GetMixesByCategory(string category);
-
-        IEnumerable<Mix> GetMixesByGenre(string genre);
+        IEnumerable<Mix> GetByGenre(string genre);
 
         Mix GetMix(int id);
-
-        void Remove(int id);
-
-        void RemoveTrack(int id);
-
-        void RemoveTracks(IEnumerable<int> ids);
-
-        Mix Update(Mix mix);
-
-        MixTrack UpdateTrack(MixTrack mixTrack);
-
-        IEnumerable<MixTrack> UpdateTracks(IEnumerable<MixTrack> mixTracks);
     }
 }

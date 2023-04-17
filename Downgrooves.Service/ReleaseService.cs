@@ -1,5 +1,4 @@
 ﻿using Downgrooves.Domain;
-using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,7 @@ namespace Downgrooves.Service
     {
         private readonly ReleaseDao _dao;
 
-        public ReleaseService(IConfiguration configuration, IUnitOfWork unitOfWork) : base(configuration, unitOfWork)
+        public ReleaseService(IConfiguration configuration) : base(configuration)
         {
             var daoFactory = new DaoFactory(_configuration);
 
