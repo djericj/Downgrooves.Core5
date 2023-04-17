@@ -12,11 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{B6833498-EE6F-447F-9DB7-18CDF5B1F763}"
-	ProjectSection(SolutionItems) = preProject
-		Database\downgrooves.db = Database\downgrooves.db
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Downgrooves.WorkerService", "Downgrooves.WorkerService\Downgrooves.WorkerService.csproj", "{E971F24C-7EDF-44BB-BDF7-9F35161D4F50}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Downgrooves.Test", "Downgrooves.Test\Downgrooves.Test.csproj", "{BE7CEDB4-3DBE-4B76-A188-B6ED025A43BB}"
