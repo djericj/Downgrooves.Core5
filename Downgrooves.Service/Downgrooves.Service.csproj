@@ -19,13 +19,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Downgrooves.Data\Downgrooves.Data.csproj" />
     <ProjectReference Include="..\Downgrooves.Domain\Downgrooves.Domain.csproj" />
-    <ProjectReference Include="..\Downgrooves.Framework\Downgrooves.Framework.csproj" />
-    <ProjectReference Include="..\Downgrooves.Persistence\Downgrooves.Persistence.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Configurations>Debug;Release;WebApiOnly</Configurations>
   </PropertyGroup>
 

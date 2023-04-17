@@ -1,0 +1,17 @@
+[
+	{
+		"artistId": 1,
+		"name": "Downgrooves",
+		"description": "Downgrooves is the production duo of Eric Rylos and Mario Perez.  The duo produce a variety of electronic dance music."
+	},
+	{
+		"artistId": 2,
+		"name": "Eric Rylos",
+		"description": "Downgrooves producer Eric Rylos produces ambient & downtempo music under his own name."
+	},
+	{
+		"artistId": 3,
+		"name": "Evotone",
+		"description": "Downgrooves producer Eric Rylos produces organic & minimal under the alias Evotone."
+	}
+]

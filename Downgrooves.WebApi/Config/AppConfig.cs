@@ -5,6 +5,7 @@
         public string[] WebAppUrls { get; set; }
         public string CdnUrl { get; set; }
         public string MediaBasePath { get; set; }
+        public string JsonDataBasePath { get; set; }
         public string ITunesLookupUrl { get; set; }
     }
 }

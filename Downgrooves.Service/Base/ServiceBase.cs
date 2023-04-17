@@ -1,5 +1,4 @@
-﻿using Downgrooves.Persistence.Interfaces;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -8,20 +7,13 @@ namespace Downgrooves.Service.Base
 {
     public abstract class ServiceBase
     {
-        protected readonly IUnitOfWork _unitOfWork;
         protected readonly IConfiguration _configuration;
 
-        public ServiceBase(IConfiguration configuration, IUnitOfWork unitOfWork)
+        public ServiceBase(IConfiguration configuration)
         {
             _configuration = configuration;
-            _unitOfWork = unitOfWork;
         }
-
-        protected int ExecuteSql(string sql)
-        {
-            return _unitOfWork.ExecuteNonQuery(sql);
-        }
-
+        
         protected static string GetEmbeddedResource(string fileName)
         {
             var assembly = Assembly.GetExecutingAssembly();

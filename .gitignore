@@ -386,3 +386,8 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# Custom
+**/last_checked*
+**/Json/iTunes/
+**/Json/Users/

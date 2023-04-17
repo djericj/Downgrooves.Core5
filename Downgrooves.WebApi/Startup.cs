@@ -1,9 +1,6 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using Downgrooves.Persistence;
-using Downgrooves.Persistence.Interfaces;
 using Downgrooves.Service;
 using Downgrooves.Service.Interfaces;
 using Downgrooves.WebApi.Config;
@@ -13,7 +10,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -105,20 +101,8 @@ namespace Downgrooves.WebApi
 
             services.AddSwaggerGenNewtonsoftSupport();
 
-            services.AddDbContext<DowngroovesDbContext>(options =>
-            {
-                options.UseSqlite(Configuration.GetConnectionString("DatabaseConnection"), sqlOptions => sqlOptions.CommandTimeout(120));
-            }
-            );
-
-            services.AddScoped<Func<DowngroovesDbContext>>((provider) => () => provider.GetService<DowngroovesDbContext>());
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            services.AddScoped<IApiDataService, ApiDataService>();
             services.AddScoped<IArtistService, ArtistService>();
-            services.AddScoped<IITunesService, ITunesService>();
             services.AddScoped<IGenreService, GenreService>();
-            services.AddScoped<ILogService, LogService>();
             services.AddScoped<IMixService, MixService>();
             services.AddScoped<IReleaseService, ReleaseService>();
             services.AddScoped<IUserService, UserService>();
@@ -131,12 +115,9 @@ namespace Downgrooves.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var connectionString = Configuration.GetConnectionString("DatabaseConnection");
-            var sqliteDbPath = connectionString.Replace("Data Source=", "");
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(Configuration)
                 .WriteTo.Console(theme: AnsiConsoleTheme.Literate, applyThemeToRedirectedOutput: true)
-                .WriteTo.SQLite(sqliteDbPath, "log")
                 .Enrich.FromLogContext()
                 .Enrich.WithMachineName()
                 .CreateLogger();

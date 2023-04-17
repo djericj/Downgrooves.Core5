@@ -1,5 +1,5 @@
-﻿using Downgrooves.Domain;
-using Downgrooves.Persistence.Interfaces;
+﻿using Downgrooves.Data;
+using Downgrooves.Domain;
 using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -8,13 +8,18 @@ namespace Downgrooves.Service
 {
     public class UserService : ServiceBase, IUserService
     {
-        public UserService(IConfiguration configuration, IUnitOfWork unitOfWork) : base(configuration, unitOfWork)
+        private readonly UserDao _dao;
+
+        public UserService(IConfiguration configuration) : base(configuration)
         {
+            var daoFactory = new DaoFactory(_configuration);
+
+            _dao = daoFactory.Users as UserDao;
         }
 
         public User Authenticate(string userName, string password)
         {
-            return _unitOfWork.Users.Authenticate(userName, password);
+            return _dao.Authenticate(userName, password);
         }
     }
 }

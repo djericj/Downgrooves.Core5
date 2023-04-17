@@ -1,6 +1,5 @@
 ﻿using Downgrooves.Domain;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Downgrooves.Service.Interfaces
 {
@@ -8,6 +7,8 @@ namespace Downgrooves.Service.Interfaces
     {
         IEnumerable<Artist> GetArtists();
 
-        IEnumerable<Artist> GetArtistsAndReleases();
+        Artist GetArtist(int id);
+
+        Artist GetArtist(string name);
     }
 }

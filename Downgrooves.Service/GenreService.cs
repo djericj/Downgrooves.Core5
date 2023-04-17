@@ -1,5 +1,5 @@
-﻿using Downgrooves.Domain;
-using Downgrooves.Persistence.Interfaces;
+﻿using Downgrooves.Data;
+using Downgrooves.Domain;
 using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -9,10 +9,18 @@ namespace Downgrooves.Service
 {
     public class GenreService : ServiceBase, IGenreService
     {
-        public GenreService(IConfiguration configuration, IUnitOfWork unitOfWork) : base(configuration, unitOfWork)
+        private readonly GenreDao _dao;
+
+        public GenreService(IConfiguration configuration) : base(configuration)
         {
+            var daoFactory = new DaoFactory(_configuration);
+
+            _dao = daoFactory.Genres as GenreDao;
         }
 
-        public IEnumerable<Genre> GetGenres() => _unitOfWork.Genres.GetAll();
+        public IEnumerable<Genre> GetGenres()
+        {
+            return _dao.GetAll();
+        }
     }
 }

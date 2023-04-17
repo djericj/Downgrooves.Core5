@@ -9,10 +9,11 @@ namespace Downgrooves.Domain.ITunes
     [Serializable]
     public class ITunesCollection : ITunesItem
     {
-        public string CollectionType { get; set; }
         public string Copyright { get; set; }
 
+        public string ArtworkUrl { get; set; }
+
         [JsonProperty("CollectionId")]
-        public int Id { get; set; } // CollectionId
+        public override int? Id { get; set; }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Downgrooves.Domain;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 
 namespace Downgrooves.WorkerService.Services.Interfaces
 {
@@ -8,12 +7,8 @@ namespace Downgrooves.WorkerService.Services.Interfaces
     {
         JObject Lookup(string url);
 
-        List<ApiData> UpdateDataFromITunesApi(string url, ApiData.ApiDataTypes type, string artist);
+        string LookupSongs(string id);
 
-        ApiData AddApiData(ApiData data);
-
-        IEnumerable<ApiData> GetApiData(ApiData.ApiDataTypes dataType, string artist);
-
-        ApiData UpdateApiData(ApiData data);
+        void GetDataFromITunesApi(string url, string artist, ApiData.ApiDataTypes type);
     }
 }

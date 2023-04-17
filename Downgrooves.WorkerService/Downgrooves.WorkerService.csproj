@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>dotnet-Downgrooves.WorkerService-4A704534-3705-42BE-8672-B3ED0904B2AC</UserSecretsId>
   </PropertyGroup>
 
@@ -21,6 +21,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Downgrooves.Domain\Downgrooves.Domain.csproj" />
-    <ProjectReference Include="..\Downgrooves.Framework\Downgrooves.Framework.csproj" />
   </ItemGroup>
 </Project>

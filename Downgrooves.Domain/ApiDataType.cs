@@ -6,7 +6,8 @@
         {
             iTunesCollection = 1,
             iTunesTrack = 2,
-            YouTubeVideos = 3
+            YouTubeVideos = 3,
+            iTunesLookup = 4
         }
     }
 }

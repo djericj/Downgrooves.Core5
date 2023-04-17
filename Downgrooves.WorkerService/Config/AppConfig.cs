@@ -5,7 +5,7 @@
         public string ApiUrl { get; set; }
         public string Token { get; set; }
         public string ArtworkBasePath { get; set; }
-
+        public string JsonDataBasePath { get; set; }
         public int PollInterval { get; set; }
         public ITunes ITunes { get; set; }
         public YouTube YouTube { get; set; }
@@ -14,8 +14,10 @@
     public class ITunes
     {
         public int PollInterval { get; set; }
-        public string CollectionLookupUrl { get; set; }
-        public string TracksLookupUrl { get; set; }
+        public int LookupInterval { get; set; }
+        public string CollectionSearchUrl { get; set; }
+        public string TracksSearchUrl { get; set; }
+        public string LookupUrl { get; set; }
     }
 
     public class YouTube

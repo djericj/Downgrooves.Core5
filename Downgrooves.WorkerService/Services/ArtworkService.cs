@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
+using Downgrooves.Domain;
 
 namespace Downgrooves.WorkerService.Services
 {
@@ -19,12 +21,12 @@ namespace Downgrooves.WorkerService.Services
             _logger = logger;
         }
 
-        public void DownloadArtwork(IEnumerable<ITunesTrack> tracks)
+        public void DownloadArtwork(IEnumerable<Release> releases)
         {
             try
             {
-                foreach (var item in tracks)
-                    DownloadArtwork(item);
+                foreach (var release in releases)
+                    DownloadArtwork(release);
             }
             catch (Exception ex)
             {
@@ -33,52 +35,17 @@ namespace Downgrooves.WorkerService.Services
             }
         }
 
-        public void DownloadArtwork(IEnumerable<ITunesCollection> collections)
+        private void DownloadArtwork(Release release)
         {
-            try
-            {
-                foreach (var item in collections)
-                    DownloadArtwork(item);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                _logger.LogError(ex.StackTrace);
-            }
-        }
-
-        private void DownloadArtwork(ITunesTrack track)
-        {
-            var fileName = track.Id.ToString();
-            var imagePath = Path.Combine(ArtworkBasePath, "tracks", $"{fileName}.jpg");
+            var imagePath = Path.Combine(ArtworkBasePath, $"{release.Id}.jpg");
             if (!File.Exists(imagePath))
             {
-                using WebClient client = new();
+                using HttpClient client = new();
                 try
                 {
-                    client.DownloadFileTaskAsync(new Uri(track.ArtworkUrl100.Replace("100x100", "500x500")), $"{imagePath}");
-                    _logger.LogInformation($"Downloaded track artwork {imagePath}");
-                    System.Threading.Thread.Sleep(5000); // wait 5 sec to prevent getting 429 Too Many Requests error from iTunes API
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.Message);
-                    _logger.LogError(ex.StackTrace);
-                }
-            }
-        }
-
-        private void DownloadArtwork(ITunesCollection collection)
-        {
-            var fileName = collection.Id.ToString();
-            var imagePath = Path.Combine(ArtworkBasePath, "collections", $"{fileName}.jpg");
-            if (!File.Exists(imagePath))
-            {
-                using WebClient client = new();
-                try
-                {
-                    client.DownloadFileTaskAsync(new Uri(collection.ArtworkUrl100.Replace("100x100", "500x500")), $"{imagePath}");
-                    _logger.LogInformation($"Downloaded collection artwork {imagePath}");
+                    var bytes = client.GetByteArrayAsync(release.ArtworkUrl100.Replace("100x100", "500x500")).Result;
+                    File.WriteAllBytesAsync(imagePath, bytes);
+                    _logger.LogInformation($"Downloaded artwork {imagePath}");
                     System.Threading.Thread.Sleep(5000); // wait 5 sec to prevent getting 429 Too Many Requests error from iTunes API
                 }
                 catch (Exception ex)

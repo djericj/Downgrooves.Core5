@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace Downgrooves.Domain
 {
     /// <summary>
@@ -6,6 +8,7 @@ namespace Downgrooves.Domain
     public class MixTrack
     {
         public string Artist { get; set; }
+        [JsonProperty("TrackId")]
         public int Id { get; set; }
         public string Label { get; set; }
         public int MixId { get; set; }

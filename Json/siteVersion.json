@@ -1,0 +1,4 @@
+[{"siteVersionId":1,"name":"Angular","url":"https://www.downgrooves.com","technology":"Angular 13","active":1},
+{"siteVersionId":2,"name":"React","url":"https://react.downgrooves.com","technology":"React 16","active":1},
+{"siteVersionId":3,"name":"Vue","url":"https://vue.downgrooves.com","technology":"Vue","active":0},
+{"siteVersionId":4,"name":"Blazor","url":"https://blazor.downgrooves.com","technology":"Blazor","active":0}]
