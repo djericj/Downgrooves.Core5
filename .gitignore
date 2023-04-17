@@ -388,5 +388,6 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Custom
-**/last_checked
-user.json
+**/last_checked*
+**/Json/iTunes/
+**/Json/Users/
