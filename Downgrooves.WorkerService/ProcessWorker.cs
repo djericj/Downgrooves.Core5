@@ -47,7 +47,7 @@ namespace Downgrooves.WorkerService
 
                         var lastChecked = GetLastCheckedFile();
 
-                        if (lastChecked > DateTime.MinValue && DateTime.Now > lastChecked.AddDays(1))
+                        if (lastChecked == DateTime.MinValue || DateTime.Now > lastChecked.AddDays(1))
                             GetDataFromITunesApi();
                         else
                         {

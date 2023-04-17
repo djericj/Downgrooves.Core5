@@ -32,7 +32,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                var releases = _releaseService.GetAll(artistName).OrderByDescending(r => r.ReleaseDate);
+                var releases = _releaseService.GetAll(artistName).OrderByDescending(r => r.ReleaseDate).ToList();
                 return Ok(releases.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
