@@ -11,7 +11,7 @@ namespace Downgrooves.Data
 
         public UserDao(IConfiguration configuration) : base(configuration)
         {
-            _users = GetData(Path.Combine(BasePath, "user.json"));
+            _users = GetData(Path.Combine(BasePath, "Users", "user.json"));
         }
         public IQueryable<User> GetData(string filePath)
         {

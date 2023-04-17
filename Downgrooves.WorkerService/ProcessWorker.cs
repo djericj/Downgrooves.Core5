@@ -45,9 +45,18 @@ namespace Downgrooves.WorkerService
                     {
                         _logger.LogInformation($"{nameof(ProcessWorker)} ticked at: {DateTimeOffset.Now}");
 
-                        GetDataFromITunesApi();
+                        var lastChecked = GetLastCheckedFile();
+
+                        if (lastChecked > DateTime.MinValue && DateTime.Now > lastChecked.AddDays(1))
+                            GetDataFromITunesApi();
+                        else
+                        {
+                            _logger.LogInformation($"{nameof(ProcessWorker)} last checked less than 24 hours ago ({lastChecked}).  Skipping.");
+                        }
 
                         _iTunesService.GetData();
+
+                        _iTunesService.GetArtwork();
 
                         WriteLastCheckedFile();
 
@@ -79,6 +88,19 @@ namespace Downgrooves.WorkerService
                 _apiDataService.GetDataFromITunesApi(_appConfig.ITunes.CollectionSearchUrl, artist, ApiData.ApiDataTypes.iTunesCollection);
                 _apiDataService.GetDataFromITunesApi(_appConfig.ITunes.TracksSearchUrl, artist, ApiData.ApiDataTypes.iTunesTrack);
             }
+        }
+
+        private DateTime GetLastCheckedFile()
+        {
+            var lastCheckedFile = new DirectoryInfo(_appConfig.JsonDataBasePath).GetFiles("last_checked*").FirstOrDefault();
+            if (lastCheckedFile is { Exists: true })
+            {
+                if (DateTime.TryParse(File.ReadAllText(lastCheckedFile.FullName), out var lastCheckedDateTime))
+                    return lastCheckedDateTime;
+  
+            }
+            return DateTime.MinValue;
+
         }
 
         private void WriteLastCheckedFile()

@@ -11,6 +11,8 @@ namespace Downgrooves.Domain.ITunes
     {
         public string Copyright { get; set; }
 
+        public string ArtworkUrl { get; set; }
+
         [JsonProperty("CollectionId")]
         public override int? Id { get; set; }
     }

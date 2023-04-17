@@ -1,6 +1,4 @@
-﻿using System;
-using Downgrooves.Domain;
-using Downgrooves.Domain.ITunes;
+﻿using Downgrooves.Domain;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Services.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -34,22 +32,36 @@ namespace Downgrooves.WorkerService.Services
 
         public void GetData()
         {
-            var existingCollections = GetExistingCollections().ToList();
-            var existingTracks = GetExistingTracks().ToList();
             var basePath = _config.Value.JsonDataBasePath;
-            var searchCollections = GetIds(Path.Combine(basePath, "iTunes", "Collections", "Artists"));
-            var searchTracks = GetIds(Path.Combine(basePath, "iTunes", "Tracks", "Artists"));
+            var existingFiles = GetExistingFiles(Path.Combine(basePath, "iTunes"), ".json").ToList();
+            var searchArtistCollections = GetIds(Path.Combine(basePath, "iTunes", "Collections", "Artists"));
+            var searchArtistTracks = GetIds(Path.Combine(basePath, "iTunes", "Tracks", "Artists"));
+            var newArtistCollections = searchArtistCollections.Except(existingFiles.Select(f => f.Replace(".json",""))).ToList();
+            var newArtistTracks = searchArtistTracks.Except(existingFiles.Select(f => f.Replace(".json", ""))).ToList();
 
-            var newCollections = searchCollections.Except(existingCollections).ToList();
-            var newTracks = searchTracks.Except(existingTracks).ToList();
+            if (newArtistCollections.Count == 0 && newArtistTracks.Count == 0)
+            {
+                _logger.LogInformation($"{nameof(ProcessWorker)} no new items.");
+            }
+            else
+            {
+                DownloadData(newArtistCollections, Path.Combine($"{_config.Value.JsonDataBasePath}", "iTunes"));
+                DownloadData(newArtistTracks, Path.Combine($"{_config.Value.JsonDataBasePath}", "iTunes"));
+            }
+        }
 
-            DownloadData(newCollections, Path.Combine($"{_config.Value.JsonDataBasePath}", "iTunes"));
-            DownloadData(newTracks, Path.Combine($"{_config.Value.JsonDataBasePath}", "iTunes"));
+        public void GetArtwork()
+        {
+            _logger.LogInformation($"{nameof(ProcessWorker)} looking for new artwork.");
 
-            _logger.LogInformation($"{nameof(ProcessWorker)} getting any new artwork.");
+            var existingFiles = GetExistingFiles(Path.Combine(_config.Value.JsonDataBasePath, "iTunes"), ".json").ToList();
+            var existingArtwork = GetExistingFiles(_artworkBasePath, ".jpg").ToList();
+            var newArtworkItems = existingFiles.Select(e => e.Replace(".json", "")).Except(existingArtwork.Select(a => a.Replace(".jpg", ""))).ToList();
 
-            DownloadArtwork("collections", existingCollections.Select(x => x[..x.LastIndexOf(".", StringComparison.Ordinal)]).ToList());
-            DownloadArtwork("tracks", existingTracks.Select(x => x[..x.LastIndexOf(".", StringComparison.Ordinal)]).ToList());
+            if (newArtworkItems.Count == 0)
+                _logger.LogInformation($"{nameof(ProcessWorker)} no new artwork.");
+            else
+                DownloadArtwork(newArtworkItems.Select(a => a.Replace(".json","")), _artworkBasePath);
         }
 
         private static IEnumerable<string> GetIds(string path)
@@ -68,23 +80,9 @@ namespace Downgrooves.WorkerService.Services
             return idList;
         }
 
-        #region iTunes JSON
-
-        private IEnumerable<string> GetExistingCollections()
+        private static IEnumerable<string> GetExistingFiles(string filePath, string extension)
         {
-            return GetExistingFiles(Path.Combine($"{_config.Value.JsonDataBasePath}", "iTunes", "Collections"));
-        }
-
-        private IEnumerable<string> GetExistingTracks()
-        {
-            return GetExistingFiles(Path.Combine($"{_config.Value.JsonDataBasePath}", "iTunes", "Tracks"));
-        }
-
-        private static IEnumerable<string> GetExistingFiles(string filePath)
-        {
-            var directoryInfo = new DirectoryInfo(filePath);
-
-            return directoryInfo.GetFiles("*.json").Select(f => f.Name);
+            return new DirectoryInfo(filePath).GetFiles($"*{extension}").Select(f => f.Name);
         }
 
         private void DownloadData(IEnumerable<string> items, string path)
@@ -110,9 +108,9 @@ namespace Downgrooves.WorkerService.Services
             }
         }
 
-        private void DownloadArtwork(string type, IEnumerable<string> ids)
+        private void DownloadArtwork(IEnumerable<string> ids, string path)
         {
-            var imageFiles = GetImageFiles(Path.Combine(_artworkBasePath, type));
+            var imageFiles = GetExistingFiles(path, ".jpg");
             if (ids != null)
             {
                 var collectionFiles = ids.Select(x => $"{x}.jpg");
@@ -122,8 +120,8 @@ namespace Downgrooves.WorkerService.Services
                     var releases = new List<Release>();
                     foreach (var newFile in newFiles)
                     {
-                        var path = Path.Combine(_config.Value.JsonDataBasePath, "iTunes", type, $"{Path.GetFileNameWithoutExtension(newFile)}.json");
-                        var release = _releaseService.GetRelease(path, type);
+                        var basePath = Path.Combine(_config.Value.JsonDataBasePath, "iTunes", $"{Path.GetFileNameWithoutExtension(newFile)}.json");
+                        var release = _releaseService.GetRelease(basePath);
                         releases.Add(release);
                     }
                     _artworkService.DownloadArtwork(releases);
@@ -132,14 +130,5 @@ namespace Downgrooves.WorkerService.Services
                 }
             }
         }
-
-        private static IEnumerable<string> GetImageFiles(string path)
-        {
-            var dir = new DirectoryInfo(path);
-            return dir.GetFiles("*.jpg").ToList().Select(x => x.Name);
-        }
-
-        #endregion iTunes JSON
-       
     }
 }

@@ -27,7 +27,7 @@ namespace Downgrooves.Data.Adapters
                 ArtistId = collection.ArtistId.GetValueOrDefault(),
                 ArtistName = collection.ArtistName,
                 ArtistViewUrl = collection.ArtistViewUrl,
-                ArtworkUrl = collection.ArtworkUrl100,
+                ArtworkUrl = $"{collection.Id}.jpg",
                 BuyUrl = collection.CollectionViewUrl,
                 CollectionId = collection.Id.GetValueOrDefault(),
                 Copyright = collection.Copyright,

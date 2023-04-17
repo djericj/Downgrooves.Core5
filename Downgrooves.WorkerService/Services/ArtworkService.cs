@@ -37,7 +37,7 @@ namespace Downgrooves.WorkerService.Services
 
         private void DownloadArtwork(Release release)
         {
-            var imagePath = Path.Combine(ArtworkBasePath, "Collections", $"{release.Id}.jpg");
+            var imagePath = Path.Combine(ArtworkBasePath, $"{release.Id}.jpg");
             if (!File.Exists(imagePath))
             {
                 using HttpClient client = new();

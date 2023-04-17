@@ -19,10 +19,10 @@ namespace Downgrooves.WorkerService.Services
             _config = config;
         }
 
-        public Release GetRelease(string path, string type)
+        public Release GetRelease(string path)
         {
             var id = Path.GetFileNameWithoutExtension(path);
-            var json = Path.Combine(_config.Value.JsonDataBasePath, "iTunes", type, $"{id}.json");
+            var json = Path.Combine(_config.Value.JsonDataBasePath, "iTunes", $"{id}.json");
             var data = File.ReadAllText(json);
             var obj = JArray.Parse(data);
             var release = JsonConvert.DeserializeObject<Release>(obj.SelectToken("$[?(@.wrapperType =='collection')]")?.ToString() ?? string.Empty);

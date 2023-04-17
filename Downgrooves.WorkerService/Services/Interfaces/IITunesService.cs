@@ -3,5 +3,7 @@
     public interface IITunesService
     {
         void GetData();
+
+        void GetArtwork();
     }
 }
