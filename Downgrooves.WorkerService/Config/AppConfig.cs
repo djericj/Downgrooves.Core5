@@ -5,7 +5,7 @@
         public string ApiUrl { get; set; }
         public string Token { get; set; }
         public string ArtworkBasePath { get; set; }
-
+        public string JsonDataBasePath { get; set; }
         public int PollInterval { get; set; }
         public ITunes ITunes { get; set; }
         public YouTube YouTube { get; set; }

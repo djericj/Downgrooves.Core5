@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Downgrooves.Domain
 {
@@ -13,6 +14,7 @@ namespace Downgrooves.Domain
         public string ArtistName { get; set; }
         public string ArtistViewUrl { get; set; }
         public string ArtworkUrl { get; set; }
+        public string ArtworkUrl100 { get; set; }
         public string BasePath { get; set; }
         public string BuyUrl { get; set; }
         public int CollectionId { get; set; }
@@ -25,7 +27,7 @@ namespace Downgrooves.Domain
         public bool IsOriginal { get; set; }
         public bool IsRemix { get; set; }
         public string PreviewUrl { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string Title { get; set; }
         public ICollection<ReleaseTrack> Tracks { get; set; }

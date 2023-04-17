@@ -1,5 +1,4 @@
 ﻿using Downgrooves.Domain;
-using Downgrooves.Framework.Api;
 using Downgrooves.WorkerService.Config;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -31,22 +30,7 @@ namespace Downgrooves.WorkerService.Services
 
         public string LookupUrl { get; set; }
         public int LookupInterval { get; set; }
-
-        public T Add<T>(string resource, T items)
-        {
-            var response = ApiPost<T>(GetUri(resource), Token, items);
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                if (response.Content != null && response.Content != "[]")
-                {
-                    return JsonConvert.DeserializeObject<T>(response.Content);
-                }
-            }
-            else
-                _logger.LogError($"Error adding items.  {response.Content}");
-            return default;
-        }
-
+        
         public T Get<T>(string resource, Artist artist = null)
         {
             if (artist != null)
@@ -55,42 +39,11 @@ namespace Downgrooves.WorkerService.Services
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 if (response.Content != null && response.Content != "[]")
-                {
                     return JsonConvert.DeserializeObject<T>(response.Content);
-                }
             }
             else
                 _logger.LogError($"Error getting items.  {response.Content}");
-            return default;
-        }
-
-        public T Update<T>(string resource, T items)
-        {
-            var response = ApiPut<T>(GetUri(resource), Token, items);
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                if (response.Content != null && response.Content != "[]")
-                {
-                    return JsonConvert.DeserializeObject<T>(response.Content);
-                }
-            }
-            else
-                _logger.LogError($"Error updating items.  {response.Content}");
-            return default;
-        }
-
-        public T Delete<T>(string resource, T items)
-        {
-            var response = ApiDelete<T>(GetUri(resource), Token, items);
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                if (response.Content != null && response.Content != "[]")
-                {
-                    return JsonConvert.DeserializeObject<T>(response.Content);
-                }
-            }
-            else
-                _logger.LogError($"Error updating items.  {response.Content}");
+            
             return default;
         }
 

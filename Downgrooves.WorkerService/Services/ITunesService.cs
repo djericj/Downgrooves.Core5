@@ -1,4 +1,5 @@
-﻿using Downgrooves.Domain;
+﻿using System;
+using Downgrooves.Domain;
 using Downgrooves.Domain.ITunes;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Services.Interfaces;
@@ -13,164 +14,122 @@ namespace Downgrooves.WorkerService.Services
 {
     public class ITunesService : ApiService, IITunesService
     {
+        private readonly IOptions<AppConfig> _config;
         private readonly ILogger<ITunesService> _logger;
         private readonly IApiDataService _apiDataService;
-        private readonly IArtistService _artistService;
         private readonly IArtworkService _artworkService;
+        private readonly IReleaseService _releaseService;
 
         private readonly string _artworkBasePath;
-        private readonly List<ITunesCollection> _collections;
-        private readonly List<ITunesTrack> _tracks;
 
-        public ITunesService(IOptions<AppConfig> config, ILogger<ITunesService> logger, IApiDataService apiDataService,
-            IArtistService artistService, IArtworkService artworkService) : base(config, logger)
+        public ITunesService(IOptions<AppConfig> config, ILogger<ITunesService> logger, IApiDataService apiDataService, IArtworkService artworkService, IReleaseService releaseService) : base(config, logger)
         {
+            _config = config;   
             _logger = logger;
             _apiDataService = apiDataService;
-            _artistService = artistService;
             _artworkService = artworkService;
+            _releaseService = releaseService;   
             _artworkBasePath = config.Value.ArtworkBasePath;
+        }
 
-            _collections = new List<ITunesCollection>();
-            _tracks = new List<ITunesTrack>();
+        public void GetData()
+        {
+            var existingCollections = GetExistingCollections().ToList();
+            var existingTracks = GetExistingTracks().ToList();
+            var basePath = _config.Value.JsonDataBasePath;
+            var searchCollections = GetIds(Path.Combine(basePath, "iTunes", "Collections", "Artists"));
+            var searchTracks = GetIds(Path.Combine(basePath, "iTunes", "Tracks", "Artists"));
+
+            var newCollections = searchCollections.Except(existingCollections).ToList();
+            var newTracks = searchTracks.Except(existingTracks).ToList();
+
+            DownloadData(newCollections, Path.Combine($"{_config.Value.JsonDataBasePath}", "iTunes"));
+            DownloadData(newTracks, Path.Combine($"{_config.Value.JsonDataBasePath}", "iTunes"));
+
+            _logger.LogInformation($"{nameof(ProcessWorker)} getting any new artwork.");
+
+            DownloadArtwork("collections", existingCollections.Select(x => x[..x.LastIndexOf(".", StringComparison.Ordinal)]).ToList());
+            DownloadArtwork("tracks", existingTracks.Select(x => x[..x.LastIndexOf(".", StringComparison.Ordinal)]).ToList());
+        }
+
+        private static IEnumerable<string> GetIds(string path)
+        {
+            var directory = new DirectoryInfo(path);
+            var idList = new List<string>();
+
+            foreach (var file in directory.GetFiles("*.json"))
+            {
+                var data = File.ReadAllText(file.FullName);
+                var obj = JArray.Parse(data);
+                var ids = obj.SelectTokens("$..collectionId").Select(j => j.Value<string>());
+                idList.AddRange(ids);
+            }
+
+            return idList;
         }
 
         #region iTunes JSON
 
-        public void ProcessJsonData()
+        private IEnumerable<string> GetExistingCollections()
         {
-            Process(_apiDataService.GetApiData());
-
-            var lookupLog = GetLookupLog();
-            var searchCollections = GetCollections();
-            var searchTracks = GetTracks();
-
-            if (lookupLog != null)
-            {
-                searchCollections = searchCollections.Where(x => lookupLog.All(l => l.CollectionId != x.Id)).GroupBy(x => x.Id).Select(g => g.First());
-                searchTracks = searchTracks.Where(x => lookupLog.All(l => l.CollectionId != x.CollectionId)).GroupBy(x => x.CollectionId).Select(g => g.First());
-            }
-
-            foreach (var item in searchCollections)
-            {
-                _logger.LogInformation($"{nameof(ITunesService)} looking up collection {item.Id}.");
-                var data = _apiDataService.LookupSongs(item.Id);
-                JObject jsonData = JObject.Parse(data);
-                var apiData = new ApiData()
-                {
-                    ApiDataType = ApiData.ApiDataTypes.iTunesLookup,
-                    CollectionId = item.Id,
-                    Data = jsonData.SelectToken("$.results").ToString(),
-                    LastUpdated = System.DateTime.Now,
-                    Url = $"{LookupUrl}?id={item.Id}&entity=song",
-                };
-                Process(new List<ApiData>() { apiData });
-                _apiDataService.AddApiData(apiData);
-                AddLookupLog(item.Id);
-                _logger.LogInformation($"{nameof(ITunesService)} waiting {LookupInterval} seconds.");
-                System.Threading.Thread.Sleep(LookupInterval * 1000);
-            }
-
-            foreach (var item in searchTracks)
-            {
-                _logger.LogInformation($"{nameof(ITunesService)} looking up track in collection {item.CollectionId}.");
-                var data = _apiDataService.LookupSongs(item.CollectionId);
-                JObject jsonData = JObject.Parse(data);
-                var apiData = new ApiData()
-                {
-                    ApiDataType = ApiData.ApiDataTypes.iTunesLookup,
-                    CollectionId = item.CollectionId,
-                    Data = jsonData.SelectToken("$.results").ToString(),
-                    LastUpdated = System.DateTime.Now,
-                    Url = $"{LookupUrl}?id={item.Id}&entity=song",
-                };
-                Process(new List<ApiData>() { apiData });
-                _apiDataService.AddApiData(apiData);
-                AddLookupLog(item.CollectionId);
-                _logger.LogInformation($"{nameof(ITunesService)} waiting {LookupInterval} seconds.");
-                System.Threading.Thread.Sleep(LookupInterval * 1000);
-            }
-
-            _logger.LogInformation($"{nameof(ProcessWorker)} getting any new artwork.");
-
-            DownloadCollectionsArtwork();
-            DownloadTracksArtwork();
+            return GetExistingFiles(Path.Combine($"{_config.Value.JsonDataBasePath}", "iTunes", "Collections"));
         }
 
-        private void Process(IEnumerable<ApiData> dataList)
+        private IEnumerable<string> GetExistingTracks()
         {
-            if (dataList == null) return;
+            return GetExistingFiles(Path.Combine($"{_config.Value.JsonDataBasePath}", "iTunes", "Tracks"));
+        }
 
-            var collections = new List<ITunesCollection>();
-            var tracks = new List<ITunesTrack>();
+        private static IEnumerable<string> GetExistingFiles(string filePath)
+        {
+            var directoryInfo = new DirectoryInfo(filePath);
 
-            foreach (var data in dataList)
+            return directoryInfo.GetFiles("*.json").Select(f => f.Name);
+        }
+
+        private void DownloadData(IEnumerable<string> items, string path)
+        {
+            foreach (var item in items)
             {
-                JArray objData = JArray.Parse(data.Data);
+                var filePath = Path.Combine(Path.Combine(path, $"{item}.json"));
 
-                var collectionsJson = objData.SelectTokens("$.[?(@.wrapperType == 'collection')]");
-                foreach (var item in collectionsJson)
+                if (!File.Exists(filePath))
                 {
-                    collections.Add(item.ToObject<ITunesCollection>());
-                }
+                    _logger.LogInformation($"{nameof(ITunesService)} looking up {item}.");
 
-                var tracksJson = objData.SelectTokens("$.[?(@.wrapperType == 'track')]");
-                foreach (var item in tracksJson)
-                {
-                    tracks.Add(item.ToObject<ITunesTrack>());
-                }
-            }
+                    var data = _apiDataService.LookupSongs(item);
+                    var jsonData = JObject.Parse(data);
 
-            if (collections?.Count > 0)
-            {
-                var existingCollections = GetCollections();
-                var newCollections = _collections.Where(c => existingCollections.All(c2 => c2.Id != c.Id));
+                    File.WriteAllText(filePath, jsonData.SelectToken("$.results")!.ToString());
 
-                if (newCollections?.Count() > 0)
-                {
-                    _logger.LogInformation($"{nameof(ITunesService)} processing collections {string.Join(",", newCollections.Select(s => s.Id))}.");
-                    AddCollections(newCollections);
-                }
-            }
+                    _logger.LogInformation($"{nameof(ITunesService)} downloaded {item}.");
 
-            if (tracks?.Count > 0)
-            {
-                var existingTracks = GetTracks();
-                var newTracks = _tracks.Where(c => existingTracks.All(c2 => c2.Id != c.Id)).GroupBy(g => g.Id).Select(s => s.First());
-
-                if (newTracks?.Count() > 0)
-                {
-                    _logger.LogInformation($"{nameof(ITunesService)} processing tracks {string.Join(",", newTracks.Select(s => s.Id))}.");
-                    AddTracks(newTracks);
+                    _logger.LogInformation($"{nameof(ITunesService)} waiting {LookupInterval} seconds.");
+                    System.Threading.Thread.Sleep(LookupInterval * 1000);
                 }
             }
         }
 
-        private void DownloadCollectionsArtwork()
+        private void DownloadArtwork(string type, IEnumerable<string> ids)
         {
-            var imageFiles = GetImageFiles($@"{_artworkBasePath}\collections");
-            var collections = GetCollections();
-            var collectionFiles = collections.Select(x => $"{x.Id}.jpg");
-            var newFiles = collectionFiles.Except(imageFiles).ToList();
-            if (newFiles != null && newFiles.Count > 0)
+            var imageFiles = GetImageFiles(Path.Combine(_artworkBasePath, type));
+            if (ids != null)
             {
-                var download = collections.Where(x => newFiles.Contains($"{x.Id}.jpg"));
-                _artworkService.DownloadArtwork(download);
-                _logger.LogInformation($"Downloaded {newFiles.Count} new artwork files");
-            }
-        }
+                var collectionFiles = ids.Select(x => $"{x}.jpg");
+                var newFiles = collectionFiles.Except(imageFiles).ToList();
+                if (newFiles.Count > 0)
+                {
+                    var releases = new List<Release>();
+                    foreach (var newFile in newFiles)
+                    {
+                        var path = Path.Combine(_config.Value.JsonDataBasePath, "iTunes", type, $"{Path.GetFileNameWithoutExtension(newFile)}.json");
+                        var release = _releaseService.GetRelease(path, type);
+                        releases.Add(release);
+                    }
+                    _artworkService.DownloadArtwork(releases);
 
-        private void DownloadTracksArtwork()
-        {
-            var imageFiles = GetImageFiles($@"{_artworkBasePath}\tracks");
-            var tracks = GetTracks();
-            var trackFiles = tracks.Select(x => $"{x.Id}.jpg");
-            var newFiles = trackFiles.Except(imageFiles).ToList();
-            if (newFiles != null && newFiles.Count > 0)
-            {
-                var download = tracks.Where(x => newFiles.Contains($"{x.Id}.jpg"));
-                _artworkService.DownloadArtwork(download);
-                _logger.LogInformation($"Downloaded {newFiles.Count} new artwork files");
+                    _logger.LogInformation($"Downloaded {newFiles.Count} new artwork files");
+                }
             }
         }
 
@@ -181,113 +140,6 @@ namespace Downgrooves.WorkerService.Services
         }
 
         #endregion iTunes JSON
-
-        #region Downgrooves iTunes API
-
-        public IEnumerable<ITunesLookupLog> GetLookupLog()
-        {
-            return Get<IEnumerable<ITunesLookupLog>>("itunes/lookup");
-        }
-
-        public ITunesLookupLog GetLookupLog(int id)
-        {
-            return Get<ITunesLookupLog>($"itunes/lookup/{id}");
-        }
-
-        public ITunesLookupLog AddLookupLog(int id)
-        {
-            var item = new ITunesLookupLog() { CollectionId = id, LastUpdated = System.DateTime.Now };
-            return Add("itunes/lookup", item);
-        }
-
-        #region Collections
-
-        public ITunesCollection AddCollection(ITunesCollection collection)
-        {
-            return Add("itunes/collection", collection);
-        }
-
-        public IEnumerable<ITunesCollection> AddCollections(IEnumerable<ITunesCollection> collections)
-        {
-            return Add("itunes/collections", collections);
-        }
-
-        public ITunesCollection DeleteCollection(ITunesCollection collection)
-        {
-            return Delete("itunes/collection", collection);
-        }
-
-        public IEnumerable<ITunesCollection> DeleteCollections(IEnumerable<ITunesCollection> collections)
-        {
-            return Delete("itunes/collections", collections);
-        }
-
-        public ITunesCollection GetCollection(Artist artist = null)
-        {
-            return Get<ITunesCollection>("itunes/collection", artist);
-        }
-
-        public IEnumerable<ITunesCollection> GetCollections(Artist artist = null)
-        {
-            return Get<IEnumerable<ITunesCollection>>("itunes/collections", artist);
-        }
-
-        public ITunesCollection UpdateCollection(ITunesCollection collection)
-        {
-            return Update("itunes/collection", collection);
-        }
-
-        public IEnumerable<ITunesCollection> UpdateCollections(IEnumerable<ITunesCollection> collections)
-        {
-            return Update("itunes/collections", collections);
-        }
-
-        #endregion Collections
-
-        #region Tracks
-
-        public ITunesTrack AddTrack(ITunesTrack track)
-        {
-            return Add("itunes/track", track);
-        }
-
-        public IEnumerable<ITunesTrack> AddTracks(IEnumerable<ITunesTrack> tracks)
-        {
-            return Add("itunes/tracks", tracks);
-        }
-
-        public ITunesTrack GetTrack(Artist artist = null)
-        {
-            return Get<ITunesTrack>("itunes/track", artist);
-        }
-
-        public IEnumerable<ITunesTrack> GetTracks(Artist artist = null)
-        {
-            return Get<IEnumerable<ITunesTrack>>("itunes/tracks", artist);
-        }
-
-        public ITunesTrack UpdateTrack(ITunesTrack track)
-        {
-            return Update("itunes/track", track);
-        }
-
-        public IEnumerable<ITunesTrack> UpdateTracks(IEnumerable<ITunesTrack> tracks)
-        {
-            return Update("itunes/tracks", tracks);
-        }
-
-        public ITunesTrack DeleteTrack(ITunesTrack track)
-        {
-            return Delete("itunes/track", track);
-        }
-
-        public IEnumerable<ITunesTrack> DeleteTracks(IEnumerable<ITunesTrack> tracks)
-        {
-            return Delete("itunes/tracks", tracks);
-        }
-
-        #endregion Tracks
-
-        #endregion Downgrooves iTunes API
+       
     }
 }

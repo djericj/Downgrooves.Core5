@@ -1,93 +1,33 @@
-﻿using Downgrooves.Domain;
-using Downgrooves.Domain.ITunes;
-using Downgrooves.Framework.Adapters;
+﻿using System;
+using System.IO;
+using Downgrooves.Domain;
 using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Downgrooves.WorkerService.Services
 {
-    public class ReleaseService : ApiService, IReleaseService
+    public class ReleaseService : IReleaseService
     {
-        private readonly ILogger<ReleaseService> _logger;
-        private readonly IArtistService _artistService;
-        private readonly IITunesService _itunesService;
+        private readonly IOptions<AppConfig> _config;
 
-        private IEnumerable<ITunesCollection> _collections;
-        private IEnumerable<ITunesTrack> _tracks;
-
-        public ReleaseService(IOptions<AppConfig> config,
-            ILogger<ReleaseService> logger,
-            IArtistService artistService,
-            IITunesService itunesService) : base(config, logger)
+        public ReleaseService(IOptions<AppConfig> config, ILogger<ApiService> logger)
         {
-            _logger = logger;
-            _artistService = artistService;
-            _itunesService = itunesService;
+            _config = config;
         }
 
-        public void ProcessReleases()
+        public Release GetRelease(string path, string type)
         {
-            _collections = _itunesService.GetCollections();
-            _tracks = _itunesService.GetTracks();
-
-            var existingReleases = GetReleases();
-
-            var newReleases = _collections.Where(c => existingReleases.All(c2 => c2.CollectionId != c.Id));
-
-            _logger.LogInformation($"{nameof(ReleaseService)} {newReleases?.Count()} NEW releases.");
-
-            var addedReleases = Add(ReleasesAdapter.CreateReleases(newReleases));
-
-            _logger.LogInformation($"{nameof(ReleaseService)} {newReleases?.Count()} ADDED releases.");
-        }
-
-        public Release Add(Release release)
-        {
-            return Add("release", release);
-        }
-
-        public IEnumerable<Release> Add(IEnumerable<Release> releases)
-        {
-            return Add("releases", releases);
-        }
-
-        public ReleaseTrack AddTrack(ReleaseTrack releaseTrack)
-        {
-            return Add("release/track", releaseTrack);
-        }
-
-        public IEnumerable<ReleaseTrack> AddTracks(IEnumerable<ReleaseTrack> releaseTracks)
-        {
-            return Add("release/tracks", releaseTracks);
-        }
-
-        public IEnumerable<Release> GetReleases(string artistName = null)
-        {
-            return Get<IEnumerable<Release>>("releases", new Artist() { Name = artistName });
-        }
-
-        public ReleaseTrack GetReleaseTrack(int id)
-        {
-            return Get<ReleaseTrack>($"/release/track/{id}");
-        }
-
-        public Release Update(Release release)
-        {
-            return Update($"release/{release.Id}", release);
-        }
-
-        public ReleaseTrack UpdateTrack(ReleaseTrack releaseTrack)
-        {
-            return Update($"release/track/{releaseTrack.Id}", releaseTrack);
-        }
-
-        public IEnumerable<ReleaseTrack> UpdateTracks(IEnumerable<ReleaseTrack> releaseTracks)
-        {
-            return Update($"release/tracks", releaseTracks);
+            var id = Path.GetFileNameWithoutExtension(path);
+            var json = Path.Combine(_config.Value.JsonDataBasePath, "iTunes", type, $"{id}.json");
+            var data = File.ReadAllText(json);
+            var obj = JArray.Parse(data);
+            var release = JsonConvert.DeserializeObject<Release>(obj.SelectToken("$[?(@.wrapperType =='collection')]")?.ToString() ?? string.Empty);
+            release.Id = Convert.ToInt32(id);
+            return release;
         }
     }
 }

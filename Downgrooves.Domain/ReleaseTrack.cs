@@ -8,7 +8,7 @@
         public string ArtistName { get; set; }
         public int Id { get; set; }
         public string PreviewUrl { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public int ReleaseId { get; set; }
         public string Title { get; set; }
         public int TrackId { get; set; }

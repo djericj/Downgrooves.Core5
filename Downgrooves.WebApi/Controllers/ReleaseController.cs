@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Downgrooves.WebApi.Controllers
 {
@@ -26,75 +25,13 @@ namespace Downgrooves.WebApi.Controllers
             _releaseService = releaseService;
             _appConfig = config.Value;
         }
-
-        [HttpPost]
-        [Route("/release")]
-        public IActionResult Add(Release release)
+        
+        [HttpGet("/releases/{artistName?}")]
+        public IActionResult GetReleases(string artistName)
         {
             try
             {
-                return Ok(_releaseService.Add(release));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(Add)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpPost]
-        [Route("/releases")]
-        public IActionResult AddRange(IEnumerable<Release> releases)
-        {
-            try
-            {
-                foreach (var release in releases)
-                    _releaseService.Add(release);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(AddRange)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpPost]
-        [Route("/release/track")]
-        public IActionResult AddTrack(ReleaseTrack releaseTrack)
-        {
-            try
-            {
-                return Ok(_releaseService.AddTrack(releaseTrack));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(AddTrack)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpPost]
-        [Route("/release/tracks")]
-        public IActionResult AddTracks(IEnumerable<ReleaseTrack> releaseTracks)
-        {
-            try
-            {
-                return Ok(_releaseService.AddTracks(releaseTracks));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(AddTracks)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpGet]
-        public IActionResult GetReleases([FromQuery] string artistName = null)
-        {
-            try
-            {
-                var releases = _releaseService.GetReleases(artistName);
+                var releases = _releaseService.GetAll(artistName);
                 return Ok(releases.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
@@ -104,177 +41,17 @@ namespace Downgrooves.WebApi.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("paged")]
-        public IActionResult GetReleases([FromQuery] PagingParameters parameters, string artistName = null,
-            int artistId = 0, bool isOriginal = false, bool isRemix = false)
-        {
-            try
-            {
-                var releases = _releaseService.GetReleases(parameters, artistName, artistId, isOriginal, isRemix);
-                return Ok(releases.SetBasePath(_appConfig.CdnUrl).ToList());
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(GetReleases)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpGet]
-        [Route("/release/{id}")]
+        [HttpGet("/release/{id}")]
         public IActionResult GetRelease(int id)
         {
             try
             {
-                var release = _releaseService.GetReleases(x => x.Id == id);
-                return Ok(release.FirstOrDefault().SetBasePath(_appConfig.CdnUrl));
+                var release = _releaseService.Get(id);
+                return Ok(release.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(GetRelease)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpGet]
-        [Route("/release/track/{id}")]
-        public IActionResult GetReleaseTrack(int id)
-        {
-            try
-            {
-                var track = _releaseService.GetReleaseTrack(id);
-                return Ok(track);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(GetReleaseTrack)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpGet]
-        [Route("/release/collection/{collectionId}")]
-        public IActionResult GetCollection(int collectionId)
-        {
-            try
-            {
-                var releases = _releaseService.GetReleases(x => x.CollectionId == collectionId);
-                return Ok(releases?.FirstOrDefault().SetBasePath(_appConfig.CdnUrl));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(GetCollection)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpDelete]
-        [Route("/release/{id}")]
-        public IActionResult Remove(int id)
-        {
-            try
-            {
-                _releaseService.Remove(id);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(Remove)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpDelete]
-        [Route("/releases")]
-        public IActionResult RemoveReleases(int[] ids)
-        {
-            try
-            {
-                foreach (var id in ids)
-                    _releaseService.Remove(id);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(RemoveReleases)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpDelete]
-        [Route("/release/track/{id}")]
-        public IActionResult RemoveTrack(int id)
-        {
-            try
-            {
-                _releaseService.RemoveTrack(id);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(RemoveTrack)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpDelete]
-        [Route("/release/tracks")]
-        public IActionResult RemoveTracks(IEnumerable<int> ids)
-        {
-            try
-            {
-                _releaseService.RemoveTracks(ids);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(RemoveTracks)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpPut]
-        [Route("/release/{id}")]
-        public IActionResult Update(Release release)
-        {
-            try
-            {
-                return Ok(_releaseService.Update(release));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(Update)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpPut]
-        [Route("/release/track/{id}")]
-        public IActionResult UpdateTrack(ReleaseTrack releaseTrack)
-        {
-            try
-            {
-                return Ok(_releaseService.UpdateTrack(releaseTrack));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(UpdateTrack)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
-            }
-        }
-
-        [HttpPut]
-        [Route("/release/tracks")]
-        public IActionResult UpdateTracks(IEnumerable<ReleaseTrack> releaseTracks)
-        {
-            try
-            {
-                return Ok(_releaseService.UpdateTracks(releaseTracks));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(UpdateTracks)} {ex.Message} {ex.StackTrace}");
                 return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
             }
         }

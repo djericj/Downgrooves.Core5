@@ -1,0 +1,23 @@
+[
+  {
+    "wrapperType": "collection",
+    "collectionType": "Album",
+    "artistId": 78422058,
+    "collectionId": 1145002746,
+    "amgArtistId": 730400,
+    "artistName": "Gareth Emery",
+    "collectionName": "Electric for Life Episode 090",
+    "collectionCensoredName": "Electric for Life Episode 090",
+    "artistViewUrl": "https://music.apple.com/us/artist/gareth-emery/78422058?uo=4",
+    "collectionViewUrl": "https://music.apple.com/us/album/electric-for-life-episode-090/1145002746?uo=4",
+    "artworkUrl60": "https://is4-ssl.mzstatic.com/image/thumb/Music71/v4/6c/d6/9f/6cd69feb-ef1e-1f58-0a7d-fe273cc7fd79/8718522108679.png/60x60bb.jpg",
+    "artworkUrl100": "https://is4-ssl.mzstatic.com/image/thumb/Music71/v4/6c/d6/9f/6cd69feb-ef1e-1f58-0a7d-fe273cc7fd79/8718522108679.png/100x100bb.jpg",
+    "collectionExplicitness": "notExplicit",
+    "trackCount": 16,
+    "copyright": "℗ 2016 Garuda under exclusive license to Armada Music B.V.",
+    "country": "USA",
+    "currency": "USD",
+    "releaseDate": "2016-08-16T07:00:00Z",
+    "primaryGenreName": "Dance"
+  }
+]

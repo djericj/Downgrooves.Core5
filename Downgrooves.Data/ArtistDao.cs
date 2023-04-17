@@ -1,30 +1,40 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Data.Interfaces;
+using Downgrooves.Domain;
+using Microsoft.Extensions.Configuration;
 
 namespace Downgrooves.Data
 {
-    internal class ArtistDao : BaseDao
+    public sealed class ArtistDao : BaseDao, IDao<Artist>
     {
-        private readonly List<Artist>? _artists;
+        private readonly IEnumerable<Artist>? _artists;
 
-        public ArtistDao(string filePath) : base(filePath)
+        public ArtistDao(IConfiguration configuration) : base(configuration)
         {
-            _filePath = filePath;
-            _artists = GetData<List<Artist>>();
+            _artists = GetData(Path.Combine(BasePath, "artist.json"));
         }
 
-        public IEnumerable<Artist>? GetArtists()
+        public IQueryable<Artist> GetData(string filePath)
         {
-            return _artists;
+            var artists = Deserialize<IEnumerable<Artist>>(filePath);
+
+            return artists.AsQueryable();
         }
 
-        public Artist? GetArtist(int id)
+        public IEnumerable<Artist?> GetAll()
         {
-            return _artists?.FirstOrDefault(a => a.Id == id);
+            return _artists ?? Array.Empty<Artist>();
         }
 
-        public Artist? GetArtist(string name)
+        public Artist? Get(int id)
         {
-            return _artists?.FirstOrDefault(a => a.Name == name);
+            return GetAll().FirstOrDefault(a => a?.Id == id);
         }
+
+        public Artist? Get(string name)
+        {
+            return GetAll().FirstOrDefault(a => a?.Name == name);
+        }
+
+        
     }
 }
