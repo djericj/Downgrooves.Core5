@@ -1,5 +1,38 @@
 [
-{
-"genreId":1,
-"name":"Deep House"}
+	{
+		"genreId": 1,
+		"name": "Deep House"
+	},
+	{
+		"genreId": 2,
+		"name": "Melodic House"
+	},
+	{
+		"genreId": 3,
+		"name": "Vocal Trance"
+	},
+	{
+		"genreId": 4,
+		"name": "Uplifting Trance"
+	},
+	{
+		"genreId": 5,
+		"name": "Progressive Trance"
+	},
+	{
+		"genreId": 6,
+		"name": "Classic House & Techno"
+	},
+	{
+		"genreId": 7,
+		"name": "Classic Trance"
+	},
+	{
+		"genreId": 8,
+		"name": "Progressive Techno"
+	},
+	{
+		"genreId": 9,
+		"name": "Breaks"
+	}
 ]
