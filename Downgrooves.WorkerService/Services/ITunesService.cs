@@ -30,6 +30,17 @@ namespace Downgrooves.WorkerService.Services
             _artworkBasePath = config.Value.ArtworkBasePath;
         }
 
+        public void CheckFolders()
+        {
+            var basePath = _config.Value.JsonDataBasePath;
+            CheckFolder(basePath);
+            CheckFolder(Path.Combine(basePath, "iTunes"));
+            CheckFolder(Path.Combine(basePath, "iTunes", "Collections", "Artists"));
+            CheckFolder(Path.Combine(basePath, "iTunes", "Tracks", "Artists"));
+        }
+
+        
+
         public void GetData()
         {
             var basePath = _config.Value.JsonDataBasePath;
@@ -129,6 +140,12 @@ namespace Downgrooves.WorkerService.Services
                     _logger.LogInformation($"Downloaded {newFiles.Count} new artwork files");
                 }
             }
+        }
+
+        private void CheckFolder(string path)
+        {
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path!);
         }
     }
 }

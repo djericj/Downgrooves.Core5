@@ -54,6 +54,8 @@ namespace Downgrooves.WorkerService
                             _logger.LogInformation($"{nameof(ProcessWorker)} last checked less than 24 hours ago ({lastChecked}).  Skipping.");
                         }
 
+                        _iTunesService.CheckFolders();
+
                         _iTunesService.GetData();
 
                         _iTunesService.GetArtwork();
