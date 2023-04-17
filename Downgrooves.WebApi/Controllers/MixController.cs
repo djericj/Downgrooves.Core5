@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Downgrooves.WebApi.Controllers
 {
@@ -31,7 +32,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                var mixes = _service.GetAll();
+                var mixes = _service.GetAll().OrderByDescending(m => m.CreateDate);
                 return Ok(mixes.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
@@ -46,7 +47,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                var mixes = _service.GetByCategory(category);
+                var mixes = _service.GetByCategory(category).OrderByDescending(m => m.CreateDate);
                 return Ok(mixes.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
@@ -61,7 +62,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                var mixes = _service.GetByGenre(genre);
+                var mixes = _service.GetByGenre(genre).OrderByDescending(m => m.CreateDate);
                 return Ok(mixes.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)

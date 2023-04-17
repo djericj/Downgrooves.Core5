@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Downgrooves.WebApi.Controllers
 {
@@ -31,7 +32,7 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                var releases = _releaseService.GetAll(artistName);
+                var releases = _releaseService.GetAll(artistName).OrderByDescending(r => r.ReleaseDate);
                 return Ok(releases.SetBasePath(_appConfig.CdnUrl));
             }
             catch (Exception ex)
