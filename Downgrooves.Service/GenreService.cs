@@ -2,7 +2,7 @@
 using Downgrooves.Domain;
 using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 
 namespace Downgrooves.Service
@@ -11,9 +11,9 @@ namespace Downgrooves.Service
     {
         private readonly GenreDao _dao;
 
-        public GenreService(IConfiguration configuration) : base(configuration)
+        public GenreService(IOptions<AppConfig> config) : base(config)
         {
-            var daoFactory = new DaoFactory(_configuration);
+            var daoFactory = new DaoFactory(config);
 
             _dao = daoFactory.Genres as GenreDao;
         }

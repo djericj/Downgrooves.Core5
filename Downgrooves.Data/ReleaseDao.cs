@@ -1,9 +1,9 @@
 ﻿using Downgrooves.Data.Interfaces;
 using Downgrooves.Domain;
 using Downgrooves.Domain.ITunes;
-using Microsoft.Extensions.Configuration;
 using System.Linq.Expressions;
 using Downgrooves.Data.Adapters;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
 namespace Downgrooves.Data
@@ -11,20 +11,28 @@ namespace Downgrooves.Data
     public sealed class ReleaseDao : BaseDao, IDao<Release>
     {
         private readonly IQueryable<Release> _releases;
+        private readonly AppConfig _config;
 
-        public ReleaseDao(IConfiguration configuration) : base(configuration)
+        public ReleaseDao(IOptions<AppConfig> config) : base(config)
         {
+            _config = config.Value;
             _releases = GetData(Path.Combine(BasePath, "iTunes"));
         }
 
         public IQueryable<Release> GetData(string filePath)
         {
+            var excludedIds = _config.Exclusions.CollectionIds;
+            var excludedKeywords = _config.Exclusions.Keywords;
+
             var releases = new DirectoryInfo(filePath)
                 .GetFiles("*.json")
                 .Select(file => GetTrackByCollectionId(file.FullName))
                 .ToList();
 
-            return releases.AsQueryable();
+            return releases
+                .Where(r => !excludedKeywords.Any(x => r.Title.Contains(x)))
+                .Where(r => !excludedIds.Contains(r.Id))
+                .AsQueryable();
         }
 
         public IEnumerable<Release> GetAll()

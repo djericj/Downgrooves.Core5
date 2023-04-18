@@ -1,4 +1,3 @@
-using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Services.Interfaces;
 using Downgrooves.WorkerService.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +7,7 @@ using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using System;
 using System.Diagnostics;
+using AppConfig = Downgrooves.WorkerService.Config.AppConfig;
 
 namespace Downgrooves.WorkerService
 {

@@ -1,19 +1,19 @@
 ﻿using Downgrooves.Data.Interfaces;
 using Downgrooves.Domain;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Downgrooves.Data
 {
     public class DaoFactory
     {
-        public DaoFactory(IConfiguration configuration)
+        public DaoFactory(IOptions<AppConfig> config)
         {
-            Artists = new ArtistDao(configuration);
-            Genres = new GenreDao(configuration);
-            Mixes = new MixDao(configuration);
-            Releases = new ReleaseDao(configuration);
-            Users = new UserDao(configuration);
-            Videos = new VideoDao(configuration);
+            Artists = new ArtistDao(config);
+            Genres = new GenreDao(config);
+            Mixes = new MixDao(config);
+            Releases = new ReleaseDao(config);
+            Users = new UserDao(config);
+            Videos = new VideoDao(config);
         }
 
         public IDao<Artist> Artists { get; set; }

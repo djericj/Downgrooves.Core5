@@ -2,10 +2,9 @@
 using Downgrooves.Domain;
 using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace Downgrooves.Service
@@ -14,9 +13,9 @@ namespace Downgrooves.Service
     {
         private readonly VideoDao _dao;
 
-        public VideoService(IConfiguration configuration) : base(configuration)
+        public VideoService(IOptions<AppConfig> config) : base(config)
         {
-            var daoFactory = new DaoFactory(_configuration);
+            var daoFactory = new DaoFactory(config);
 
             _dao = daoFactory.Videos as VideoDao;
         }

@@ -2,7 +2,7 @@
 using Downgrooves.Domain;
 using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Downgrooves.Service
 {
@@ -10,9 +10,9 @@ namespace Downgrooves.Service
     {
         private readonly UserDao _dao;
 
-        public UserService(IConfiguration configuration) : base(configuration)
+        public UserService(IOptions<AppConfig> config) : base(config)
         {
-            var daoFactory = new DaoFactory(_configuration);
+            var daoFactory = new DaoFactory(config);
 
             _dao = daoFactory.Users as UserDao;
         }

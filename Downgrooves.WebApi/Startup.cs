@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Text;
+using Downgrooves.Domain;
 using Downgrooves.Service;
 using Downgrooves.Service.Interfaces;
-using Downgrooves.WebApi.Config;
 using Downgrooves.WebApi.Policies;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -19,6 +19,7 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
+using Log = Serilog.Log;
 
 namespace Downgrooves.WebApi
 {
@@ -101,6 +102,9 @@ namespace Downgrooves.WebApi
 
             services.AddSwaggerGenNewtonsoftSupport();
 
+            services.AddSingleton(Configuration);
+            services.Configure<AppConfig>(options => Configuration.GetSection(nameof(AppConfig)).Bind(options));
+
             services.AddScoped<IArtistService, ArtistService>();
             services.AddScoped<IGenreService, GenreService>();
             services.AddScoped<IMixService, MixService>();
@@ -108,8 +112,6 @@ namespace Downgrooves.WebApi
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IVideoService, VideoService>();
             services.AddTransient<ITokenService, TokenService>();
-
-            services.Configure<AppConfig>(Configuration.GetSection("AppConfig"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

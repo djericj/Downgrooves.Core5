@@ -1,7 +1,7 @@
 ﻿using Downgrooves.Domain;
-using Microsoft.Extensions.Configuration;
 using Downgrooves.Data.Interfaces;
 using System.Linq.Expressions;
+using Microsoft.Extensions.Options;
 
 namespace Downgrooves.Data
 {
@@ -9,7 +9,7 @@ namespace Downgrooves.Data
     {
         private readonly IQueryable<User> _users;
 
-        public UserDao(IConfiguration configuration) : base(configuration)
+        public UserDao(IOptions<AppConfig> config) : base(config)
         {
             _users = GetData(Path.Combine(BasePath, "Users", "user.json"));
         }

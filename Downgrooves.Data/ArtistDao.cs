@@ -1,6 +1,6 @@
 ﻿using Downgrooves.Data.Interfaces;
 using Downgrooves.Domain;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Downgrooves.Data
 {
@@ -8,7 +8,7 @@ namespace Downgrooves.Data
     {
         private readonly IEnumerable<Artist>? _artists;
 
-        public ArtistDao(IConfiguration configuration) : base(configuration)
+        public ArtistDao(IOptions<AppConfig> config) : base(config)
         {
             _artists = GetData(Path.Combine(BasePath, "artist.json"));
         }

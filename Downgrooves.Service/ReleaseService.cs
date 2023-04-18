@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using Downgrooves.Service.Base;
 using Microsoft.Extensions.Configuration;
 using Downgrooves.Data;
+using Microsoft.Extensions.Options;
 
 namespace Downgrooves.Service
 {
@@ -13,9 +14,9 @@ namespace Downgrooves.Service
     {
         private readonly ReleaseDao _dao;
 
-        public ReleaseService(IConfiguration configuration) : base(configuration)
+        public ReleaseService(IOptions<AppConfig> config) : base(config)
         {
-            var daoFactory = new DaoFactory(_configuration);
+            var daoFactory = new DaoFactory(config);
 
             _dao = daoFactory.Releases as ReleaseDao;
         }

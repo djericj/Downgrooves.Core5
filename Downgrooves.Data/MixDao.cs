@@ -1,6 +1,6 @@
 ﻿using Downgrooves.Data.Interfaces;
 using Downgrooves.Domain;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System.Linq.Expressions;
 
 namespace Downgrooves.Data
@@ -10,7 +10,7 @@ namespace Downgrooves.Data
         private readonly IQueryable<Mix> _mixes;
         private readonly IQueryable<MixTrack> _mixTracks;
 
-        public MixDao(IConfiguration configuration) : base(configuration)
+        public MixDao(IOptions<AppConfig> config) : base(config)
         {
             _mixes = GetData(Path.Combine(BasePath, "mixes.json"));
             _mixTracks = GetMixTracks(Path.Combine(BasePath, "mixTracks.json"));

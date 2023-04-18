@@ -2,8 +2,8 @@
 using Downgrooves.Domain;
 using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
-using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using Microsoft.Extensions.Options;
 
 namespace Downgrooves.Service
 {
@@ -11,9 +11,9 @@ namespace Downgrooves.Service
     {
         private readonly ArtistDao _dao;
 
-        public ArtistService(IConfiguration configuration) : base(configuration)
+        public ArtistService(IOptions<AppConfig> config) : base(config)
         {
-            var daoFactory = new DaoFactory(_configuration);
+            var daoFactory = new DaoFactory(config);
 
             _dao = daoFactory.Artists as ArtistDao;
         }

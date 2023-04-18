@@ -1,14 +1,12 @@
-﻿using Downgrooves.Domain.ITunes;
-using Downgrooves.WorkerService.Config;
-using Downgrooves.WorkerService.Services.Interfaces;
+﻿using Downgrooves.WorkerService.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using Downgrooves.Domain;
+using AppConfig = Downgrooves.WorkerService.Config.AppConfig;
 
 namespace Downgrooves.WorkerService.Services
 {

@@ -1,6 +1,6 @@
 ﻿using Downgrooves.Data.Interfaces;
 using Downgrooves.Domain;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Downgrooves.Data
 {
@@ -8,7 +8,7 @@ namespace Downgrooves.Data
     {
         private readonly IEnumerable<Genre>? _genres;
 
-        public GenreDao(IConfiguration configuration) : base(configuration)
+        public GenreDao(IOptions<AppConfig> config) : base(config)
         {
             _genres = GetData(Path.Combine(BasePath, "genre.json"));
         }

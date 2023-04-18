@@ -1,5 +1,4 @@
 ﻿using Downgrooves.Domain;
-using Downgrooves.WorkerService.Config;
 using Downgrooves.WorkerService.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using AppConfig = Downgrooves.WorkerService.Config.AppConfig;
 
 namespace Downgrooves.WorkerService.Services
 {

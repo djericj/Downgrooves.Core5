@@ -1,10 +1,10 @@
 ﻿using Downgrooves.Domain;
-using Downgrooves.WorkerService.Config;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Net;
+using AppConfig = Downgrooves.WorkerService.Config.AppConfig;
 
 namespace Downgrooves.WorkerService.Services
 {

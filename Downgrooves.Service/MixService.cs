@@ -1,11 +1,11 @@
 ﻿using Downgrooves.Domain;
 using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
-using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using Downgrooves.Data;
 using System.Linq.Expressions;
 using System;
+using Microsoft.Extensions.Options;
 
 namespace Downgrooves.Service
 {
@@ -13,9 +13,9 @@ namespace Downgrooves.Service
     {
         private readonly MixDao _dao;
 
-        public MixService(IConfiguration configuration) : base(configuration)
+        public MixService(IOptions<AppConfig> config) : base(config)
         {
-            var daoFactory = new DaoFactory(_configuration);
+            var daoFactory = new DaoFactory(config);
 
             _dao = daoFactory.Mixes as MixDao;
         }

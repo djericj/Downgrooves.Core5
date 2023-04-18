@@ -1,17 +1,18 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Downgrooves.Domain;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace Downgrooves.Data
 {
     public abstract class BaseDao
     {
-        private readonly IConfiguration _configuration;
+        private readonly AppConfig _config;
 
-        public string BasePath => _configuration["AppConfig:JsonDataBasePath"];
+        public string BasePath => _config.JsonDataBasePath;
 
-        protected BaseDao(IConfiguration configuration)
+        protected BaseDao(IOptions<AppConfig> config)
         {
-            _configuration = configuration;
+            _config = config.Value;
         }
 
         public static T Deserialize<T>(string filePath)

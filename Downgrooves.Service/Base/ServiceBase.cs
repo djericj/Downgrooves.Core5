@@ -1,17 +1,18 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Reflection;
+using Downgrooves.Domain;
+using Microsoft.Extensions.Options;
 
 namespace Downgrooves.Service.Base
 {
     public abstract class ServiceBase
     {
-        protected readonly IConfiguration _configuration;
+        protected readonly AppConfig _config;
 
-        public ServiceBase(IConfiguration configuration)
+        protected ServiceBase(IOptions<AppConfig> config)
         {
-            _configuration = configuration;
+            _config = config.Value;
         }
         
         protected static string GetEmbeddedResource(string fileName)

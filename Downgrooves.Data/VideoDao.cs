@@ -1,6 +1,6 @@
 ﻿using Downgrooves.Data.Interfaces;
 using Downgrooves.Domain;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System.Linq.Expressions;
 
 namespace Downgrooves.Data
@@ -10,7 +10,7 @@ namespace Downgrooves.Data
         private readonly IQueryable<Video> _videos;
         private readonly IQueryable<Thumbnail> _thumbnails;
 
-        public VideoDao(IConfiguration configuration) : base(configuration)
+        public VideoDao(IOptions<AppConfig> config) : base(config)
         {
             _videos = GetData(Path.Combine(BasePath, "video.json"));
             _thumbnails = GetThumbnailData(Path.Combine(BasePath, "thumbnail.json"));
