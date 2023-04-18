@@ -16,7 +16,7 @@ namespace Downgrooves.Data
         public ReleaseDao(IOptions<AppConfig> config) : base(config)
         {
             _config = config.Value;
-            _releases = GetData(Path.Combine(BasePath, "iTunes"));
+            _releases = GetData(Path.Combine(BasePath, "itunes"));
         }
 
         public IQueryable<Release> GetData(string filePath)

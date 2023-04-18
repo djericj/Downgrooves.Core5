@@ -34,7 +34,7 @@ namespace Downgrooves.Data.Adapters
                 Country = collection.Country,
                 Genre = collection.PrimaryGenreName,
                 Id = collection.Id.GetValueOrDefault(),
-                IsOriginal = tracks?.All(t => t.ArtistName.Contains(collection.ArtistName, StringComparison.OrdinalIgnoreCase)) ?? false,
+                IsOriginal = false,
                 IsRemix = tracks?.Any(t => t.Title.Contains(collection.ArtistName, StringComparison.OrdinalIgnoreCase)) ?? false,
                 Price = collection.CollectionPrice.GetValueOrDefault(),
                 ReleaseDate = collection.ReleaseDate.GetValueOrDefault(),
@@ -44,6 +44,13 @@ namespace Downgrooves.Data.Adapters
             };
 
             release.Artist = GetArtist(release);
+            if (release.Artist != null)
+            {
+                release.IsOriginal = release.ArtistName.Contains(release.Artist?.Name!, StringComparison.OrdinalIgnoreCase);
+                if (release.Tracks != null)
+                    release.IsRemix = release.Tracks.Any(t =>
+                        t.Title.Contains(release.Artist?.Name!, StringComparison.OrdinalIgnoreCase));
+            }
 
             return release;
         }
