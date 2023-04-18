@@ -4,7 +4,9 @@ using Downgrooves.WorkerService.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -39,8 +41,6 @@ namespace Downgrooves.WorkerService.Services
             CheckFolder(Path.Combine(basePath, "iTunes", "Tracks", "Artists"));
         }
 
-        
-
         public void GetData()
         {
             var basePath = _config.Value.JsonDataBasePath;
@@ -73,6 +73,60 @@ namespace Downgrooves.WorkerService.Services
                 _logger.LogInformation($"{nameof(ProcessWorker)} no new artwork.");
             else
                 DownloadArtwork(newArtworkItems.Select(a => a.Replace(".json","")), _artworkBasePath);
+        }
+
+        public void GetDataFromITunesApi()
+        {
+            var artists = new[] { "Downgrooves", "Evotone", "Eric Rylos" };
+            var basePath = _config.Value.JsonDataBasePath;
+            var paths = new[]
+            {
+                Path.Combine(basePath, "iTunes", "Collections", "Artists"),
+                Path.Combine(basePath, "iTunes", "Tracks", "Artists")
+            };
+
+            var exists = artists.All(artist => paths.All(path => File.Exists(Path.Combine(path, $"{artist}.json"))));
+
+            var lastChecked = GetLastCheckedFile();
+
+            if (lastChecked == DateTime.MinValue || DateTime.Now > lastChecked.AddDays(1) || !exists)
+            {
+                foreach (var artist in artists)
+                {
+                    _logger.LogInformation($"{nameof(ProcessWorker)} getting {artist}.");
+                    _apiDataService.GetDataFromITunesApi(_config.Value.ITunes.CollectionSearchUrl, artist, ApiData.ApiDataTypes.iTunesCollection);
+                    _apiDataService.GetDataFromITunesApi(_config.Value.ITunes.TracksSearchUrl, artist, ApiData.ApiDataTypes.iTunesTrack);
+                }
+            }
+            else
+            {
+                _logger.LogInformation($"{nameof(ProcessWorker)} last checked less than 24 hours ago ({lastChecked}).  Skipping.");
+            }
+        }
+
+        public DateTime GetLastCheckedFile()
+        {
+            var lastCheckedFile = new DirectoryInfo(_config.Value.JsonDataBasePath).GetFiles("last_checked*").FirstOrDefault();
+            if (lastCheckedFile is { Exists: true })
+            {
+                if (DateTime.TryParse(File.ReadAllText(lastCheckedFile.FullName), out var lastCheckedDateTime))
+                    return lastCheckedDateTime;
+
+            }
+            return DateTime.MinValue;
+
+        }
+
+        public void WriteLastCheckedFile()
+        {
+            var currentDateTime = DateTime.Now;
+            var lastCheckedFilePath = Path.Combine(_config.Value.JsonDataBasePath, $"last_checked_{currentDateTime:yyyy-MM-dd}.txt");
+
+            var lastCheckedFiles = new DirectoryInfo(_config.Value.JsonDataBasePath).GetFiles("last_checked*").Select(f => f.FullName);
+            foreach (var lastCheckedFile in lastCheckedFiles)
+                File.Delete(lastCheckedFile);
+
+            File.WriteAllText(lastCheckedFilePath, currentDateTime.ToString(CultureInfo.InvariantCulture));
         }
 
         private static IEnumerable<string> GetIds(string path)
