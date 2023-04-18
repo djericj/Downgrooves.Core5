@@ -199,7 +199,7 @@ namespace Downgrooves.WorkerService.Services
         private void CheckFolder(string path)
         {
             if (!Directory.Exists(path))
-                Directory.CreateDirectory(path!);
+                Directory.CreateDirectory(path!.ToLower());
         }
     }
 }
