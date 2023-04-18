@@ -22,7 +22,7 @@ namespace Downgrooves.WorkerService.Services
         public Release GetRelease(string path)
         {
             var id = Path.GetFileNameWithoutExtension(path);
-            var json = Path.Combine(_config.Value.JsonDataBasePath, "iTunes", $"{id}.json");
+            var json = Path.Combine(_config.Value.JsonDataBasePath, "itunes", $"{id}.json");
             var data = File.ReadAllText(json);
             var obj = JArray.Parse(data);
             var release = JsonConvert.DeserializeObject<Release>(obj.SelectToken("$[?(@.wrapperType =='collection')]")?.ToString() ?? string.Empty);

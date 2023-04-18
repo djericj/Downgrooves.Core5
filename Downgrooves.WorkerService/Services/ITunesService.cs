@@ -36,17 +36,17 @@ namespace Downgrooves.WorkerService.Services
         {
             var basePath = _config.Value.JsonDataBasePath;
             CheckFolder(basePath);
-            CheckFolder(Path.Combine(basePath, "iTunes"));
-            CheckFolder(Path.Combine(basePath, "iTunes", "Collections", "Artists"));
-            CheckFolder(Path.Combine(basePath, "iTunes", "Tracks", "Artists"));
+            CheckFolder(Path.Combine(basePath, "itunes"));
+            CheckFolder(Path.Combine(basePath, "itunes", "collections", "artists"));
+            CheckFolder(Path.Combine(basePath, "itunes", "tracks", "artists"));
         }
 
         public void GetData()
         {
             var basePath = _config.Value.JsonDataBasePath;
-            var existingFiles = GetExistingFiles(Path.Combine(basePath, "iTunes"), ".json").ToList();
-            var searchArtistCollections = GetIds(Path.Combine(basePath, "iTunes", "Collections", "Artists"));
-            var searchArtistTracks = GetIds(Path.Combine(basePath, "iTunes", "Tracks", "Artists"));
+            var existingFiles = GetExistingFiles(Path.Combine(basePath, "itunes"), ".json").ToList();
+            var searchArtistCollections = GetIds(Path.Combine(basePath, "itunes", "collections", "artists"));
+            var searchArtistTracks = GetIds(Path.Combine(basePath, "itunes", "tracks", "artists"));
             var newArtistCollections = searchArtistCollections.Except(existingFiles.Select(f => f.Replace(".json",""))).ToList();
             var newArtistTracks = searchArtistTracks.Except(existingFiles.Select(f => f.Replace(".json", ""))).ToList();
 
@@ -56,8 +56,8 @@ namespace Downgrooves.WorkerService.Services
             }
             else
             {
-                DownloadData(newArtistCollections, Path.Combine($"{_config.Value.JsonDataBasePath}", "iTunes"));
-                DownloadData(newArtistTracks, Path.Combine($"{_config.Value.JsonDataBasePath}", "iTunes"));
+                DownloadData(newArtistCollections, Path.Combine($"{_config.Value.JsonDataBasePath}", "itunes"));
+                DownloadData(newArtistTracks, Path.Combine($"{_config.Value.JsonDataBasePath}", "itunes"));
             }
         }
 
@@ -65,7 +65,7 @@ namespace Downgrooves.WorkerService.Services
         {
             _logger.LogInformation($"{nameof(ProcessWorker)} looking for new artwork.");
 
-            var existingFiles = GetExistingFiles(Path.Combine(_config.Value.JsonDataBasePath, "iTunes"), ".json").ToList();
+            var existingFiles = GetExistingFiles(Path.Combine(_config.Value.JsonDataBasePath, "itunes"), ".json").ToList();
             var existingArtwork = GetExistingFiles(_artworkBasePath, ".jpg").ToList();
             var newArtworkItems = existingFiles.Select(e => e.Replace(".json", "")).Except(existingArtwork.Select(a => a.Replace(".jpg", ""))).ToList();
 
@@ -81,8 +81,8 @@ namespace Downgrooves.WorkerService.Services
             var basePath = _config.Value.JsonDataBasePath;
             var paths = new[]
             {
-                Path.Combine(basePath, "iTunes", "Collections", "Artists"),
-                Path.Combine(basePath, "iTunes", "Tracks", "Artists")
+                Path.Combine(basePath, "itunes", "collections", "artists"),
+                Path.Combine(basePath, "itunes", "tracks", "artists")
             };
 
             var exists = artists.All(artist => paths.All(path => File.Exists(Path.Combine(path, $"{artist}.json"))));
@@ -185,7 +185,7 @@ namespace Downgrooves.WorkerService.Services
                     var releases = new List<Release>();
                     foreach (var newFile in newFiles)
                     {
-                        var basePath = Path.Combine(_config.Value.JsonDataBasePath, "iTunes", $"{Path.GetFileNameWithoutExtension(newFile)}.json");
+                        var basePath = Path.Combine(_config.Value.JsonDataBasePath, "itunes", $"{Path.GetFileNameWithoutExtension(newFile)}.json");
                         var release = _releaseService.GetRelease(basePath);
                         releases.Add(release);
                     }

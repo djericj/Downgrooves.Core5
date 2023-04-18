@@ -57,8 +57,8 @@ namespace Downgrooves.WorkerService.Services
 
                 _logger.LogInformation($"Found {resultCount} items.");
 
-                var typePath = type == ApiData.ApiDataTypes.iTunesCollection ? "Collections" : "Tracks";
-                var filePath = Path.Combine(_config.Value.JsonDataBasePath, "iTunes", typePath, "Artists", $"{artist.Replace(" ", "_")}{(index > 1 ? index.ToString() : string.Empty)}.json");
+                var typePath = type == ApiData.ApiDataTypes.iTunesCollection ? "collections" : "tracks";
+                var filePath = Path.Combine(_config.Value.JsonDataBasePath, "itunes", typePath, "artists", $"{artist.Replace(" ", "_").ToLower()}{(index > 1 ? index.ToString() : string.Empty)}.json");
                 
                 if (File.Exists(filePath))
                     File.Delete(filePath);
