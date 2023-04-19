@@ -51,15 +51,21 @@ namespace Downgrooves.WebApi
 
             services.AddLogging();
 
-            var urls = Configuration
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "CORS_POLICY",
+                    policy =>
+                    {
+                        var urls = Configuration
                             .GetSection("AppConfig:WebAppUrls")
                             .GetChildren()
                             .Select(x => x.Value.Trim('/', '\\'));
-
-            services.AddCors(policyBuilder =>
-                policyBuilder.AddDefaultPolicy(policy =>
-                    policy.WithOrigins("*").AllowAnyHeader().AllowAnyHeader())
-            );
+                        policy.WithOrigins(urls.ToArray())
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials();
+                    });
+            });
 
             //services.AddCors(options =>
             //{
@@ -158,7 +164,7 @@ namespace Downgrooves.WebApi
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers().RequireCors("CORS_POLICY");
+                endpoints.MapControllers(); //.RequireCors("CORS_POLICY");
             });
         }
     }
