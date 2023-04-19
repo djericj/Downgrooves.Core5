@@ -51,23 +51,33 @@ namespace Downgrooves.WebApi
 
             services.AddLogging();
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy(
-                    name: "CORS_POLICY",
-                    builder =>
-                    {
-                        var urls = Configuration
+            var urls = Configuration
                             .GetSection("AppConfig:WebAppUrls")
                             .GetChildren()
                             .Select(x => x.Value.Trim('/', '\\'));
-                        builder.WithOrigins(urls.ToArray())
-                            .SetIsOriginAllowed((host) => true)
-                            .AllowAnyMethod()
-                            .AllowAnyHeader()
-                            .AllowCredentials();
-                    });
-            });
+
+            services.AddCors(policyBuilder =>
+                policyBuilder.AddDefaultPolicy(policy =>
+                    policy.WithOrigins(urls.ToArray()).AllowAnyHeader().AllowAnyHeader())
+            );
+
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy(
+            //        name: "CORS_POLICY",
+            //        builder =>
+            //        {
+            //            var urls = Configuration
+            //                .GetSection("AppConfig:WebAppUrls")
+            //                .GetChildren()
+            //                .Select(x => x.Value.Trim('/', '\\'));
+            //            builder.WithOrigins(urls.ToArray())
+            //                .SetIsOriginAllowed((host) => true)
+            //                .AllowAnyMethod()
+            //                .AllowAnyHeader()
+            //                .AllowCredentials();
+            //        });
+            //});
 
             services.AddProblemDetails(setup =>
             {
