@@ -58,7 +58,7 @@ namespace Downgrooves.WebApi
 
             services.AddCors(policyBuilder =>
                 policyBuilder.AddDefaultPolicy(policy =>
-                    policy.WithOrigins(urls.ToArray()).AllowAnyHeader().AllowAnyHeader())
+                    policy.WithOrigins("*").AllowAnyHeader().AllowAnyHeader())
             );
 
             //services.AddCors(options =>
