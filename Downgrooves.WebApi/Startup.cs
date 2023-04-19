@@ -62,6 +62,7 @@ namespace Downgrooves.WebApi
                             .GetChildren()
                             .Select(x => x.Value.Trim('/', '\\'));
                         builder.WithOrigins(urls.ToArray())
+                            .SetIsOriginAllowed((host) => true)
                             .AllowAnyMethod()
                             .AllowAnyHeader()
                             .AllowCredentials();
