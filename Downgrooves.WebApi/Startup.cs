@@ -164,7 +164,7 @@ namespace Downgrooves.WebApi
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers(); //.RequireCors("CORS_POLICY");
+                endpoints.MapControllers().RequireCors("CORS_POLICY");
             });
         }
     }
