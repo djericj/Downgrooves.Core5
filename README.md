@@ -1,6 +1,6 @@
 # About this project
 .NET Core 6 WebAPI.  This application provides a REST API interface for reading and writing data.  The data store is pure json data files.
-The API is consumed by the Downgrooves web site at http://www.downgrooves.com as well as the Downgrooves Mobile App.
+The API is consumed by the Downgrooves web site at http://www.downgrooves.com as well as a prototype Downgrooves Mobile App.
 
 # Why no database?
 There used to be a SQLite database as a backing data store.  However, the majority of this site is static data that rarely changes.  The only part of the site that changes regularly is the Releases and Remixes sections.  Both of these sections get data from the iTunes Music API, which returns queries in JSON format.  The WorkerService is responsible for periodically querying the iTunes Music API for specific terms (e.g. artist name) and storing that query data locally as JSON.  The WorkerService then parses the returned query JSON to look for new albums or singles. If one or more are found, the WorkerService then queries for each new album to get the details.  Once again this data is returned from the API as JSON.  New albums' JSON data is then stored on the file system.
