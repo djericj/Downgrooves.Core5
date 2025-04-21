@@ -4,11 +4,13 @@ using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Net;
+using System.Net.Http;
 
 namespace Downgrooves.WorkerService.Services
 {
     public abstract class ApiBase
     {
+        static readonly HttpClient client = new HttpClient();
         private readonly ILogger _logger;
 
         public ApiBase(ILogger logger)
@@ -18,16 +20,19 @@ namespace Downgrooves.WorkerService.Services
 
         public static string GetString(string resource)
         {
-            using var webClient = new WebClient();
-            return webClient.DownloadString(new Uri(resource));
+            using HttpResponseMessage response = client.GetAsync(resource).GetAwaiter().GetResult();
+            response.EnsureSuccessStatusCode();
+            string responseBody = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return responseBody;
         }
 
         public static RestResponse ApiGet(Uri uri, string token)
         {
-            var client = new RestClient(uri.GetLeftPart(UriPartial.Authority))
+            var client = new RestClient(uri.GetLeftPart(UriPartial.Authority), options =>
             {
-                Authenticator = new JwtAuthenticator(token)
-            };
+                options.Authenticator = new JwtAuthenticator(token);
+            });
             var request = new RestRequest(uri);
             var response = client.ExecuteGetAsync(request).GetAwaiter().GetResult();
             return response;
@@ -36,10 +41,10 @@ namespace Downgrooves.WorkerService.Services
         public static RestResponse ApiPost<T>(Uri uri, string token, object value)
         {
             var request = CreateRequest<T>(uri, Method.Post, value);
-            var client = new RestClient(uri.GetLeftPart(UriPartial.Authority))
+            var client = new RestClient(uri.GetLeftPart(UriPartial.Authority), options =>
             {
-                Authenticator = new JwtAuthenticator(token)
-            };
+                options.Authenticator = new JwtAuthenticator(token);
+            });
             var response = client.ExecutePostAsync(request).GetAwaiter().GetResult();
             return response;
         }
@@ -74,10 +79,10 @@ namespace Downgrooves.WorkerService.Services
         {
             var request = CreateRequest<T>(uri, method, value);
             _logger.LogInformation($"Executing request {method} {request.Resource}");
-            var client = new RestClient(uri.GetLeftPart(UriPartial.Authority))
+            var client = new RestClient(uri.GetLeftPart(UriPartial.Authority), options =>
             {
-                Authenticator = new JwtAuthenticator(token)
-            };
+                options.Authenticator = new JwtAuthenticator(token);
+            });
             var response = client.ExecuteAsync<T>(request).GetAwaiter().GetResult();
             return response;
         }
