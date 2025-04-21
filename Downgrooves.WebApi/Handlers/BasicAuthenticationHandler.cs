@@ -14,19 +14,13 @@ using System.Threading.Tasks;
 
 namespace Downgrooves.WebApi.Handlers
 {
-    public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+    public class BasicAuthenticationHandler(
+        IOptionsMonitor<AuthenticationSchemeOptions> options,
+        ILoggerFactory logger,
+        UrlEncoder encoder,
+        IUserService userService) : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder)
     {
-        private readonly IUserService _userService;
-
-        public BasicAuthenticationHandler(
-            IOptionsMonitor<AuthenticationSchemeOptions> options,
-            ILoggerFactory logger,
-            UrlEncoder encoder,
-            IUserService userService)
-            : base(options, logger, encoder)
-        {
-            _userService = userService;
-        }
+        private readonly IUserService _userService = userService;
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
@@ -35,15 +29,15 @@ namespace Downgrooves.WebApi.Handlers
             if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
                 return AuthenticateResult.NoResult();
 
-            if (!Request.Headers.ContainsKey("Authorization"))
+            if (!Request.Headers.TryGetValue("Authorization", out Microsoft.Extensions.Primitives.StringValues value))
                 return AuthenticateResult.Fail("Missing Authorization Header");
 
             User user = null;
             try
             {
-                var authHeader = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
+                var authHeader = AuthenticationHeaderValue.Parse(value);
                 var credentialBytes = Convert.FromBase64String(authHeader.Parameter);
-                var credentials = Encoding.UTF8.GetString(credentialBytes).Split(new[] { ':' }, 2);
+                var credentials = Encoding.UTF8.GetString(credentialBytes).Split([':'], 2);
                 var username = credentials[0];
                 var password = credentials[1];
                 user = await Task.Run(() => _userService.Authenticate(username, password));
@@ -69,7 +63,7 @@ namespace Downgrooves.WebApi.Handlers
 
         protected override Task HandleChallengeAsync(AuthenticationProperties properties)
         {
-            Response.Headers["WWW-Authenticate"] = "Basic realm=\"\", charset=\"UTF-8\"";
+            Response.Headers.WWWAuthenticate = "Basic realm=\"\", charset=\"UTF-8\"";
             return base.HandleChallengeAsync(properties);
         }
     }
