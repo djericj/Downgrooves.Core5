@@ -23,22 +23,15 @@ using Log = Serilog.Log;
 
 namespace Downgrooves.WebApi
 {
-    public class Startup
+    public class Startup(IWebHostEnvironment env)
     {
-        public IWebHostEnvironment WebHostEnvironment { get; set; }
+        public IWebHostEnvironment WebHostEnvironment { get; set; } = env;
 
-        public Startup(IWebHostEnvironment env)
-        {
-            // Config the app to read values from appsettings base on current environment value.
-            Configuration = new ConfigurationBuilder()
+        public IConfiguration Configuration { get; } = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile("appsettings.json", false, true)
                 .AddUserSecrets("88b85228-82be-4b94-97c7-b18068f8e5fc")
                 .AddEnvironmentVariables().Build();
-            WebHostEnvironment = env;
-        }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -60,7 +53,7 @@ namespace Downgrooves.WebApi
                             .GetSection("AppConfig:WebAppUrls")
                             .GetChildren()
                             .Select(x => x.Value.Trim('/', '\\'));
-                        policy.WithOrigins(urls.ToArray())
+                        policy.WithOrigins([.. urls])
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .AllowCredentials();

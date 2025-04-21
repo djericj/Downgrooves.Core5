@@ -46,7 +46,7 @@ namespace Downgrooves.Test
 
             // Assert
 
-            Assert.IsInstanceOfType(output, typeof(OkObjectResult));
+            Assert.IsInstanceOfType<OkObjectResult>(output);
             Assert.AreEqual(2, result.Count());
         }
 
@@ -67,11 +67,11 @@ namespace Downgrooves.Test
 
             // Assert
 
-            Assert.IsInstanceOfType(output, typeof(OkObjectResult));
-            Assert.IsInstanceOfType(((OkObjectResult)output).Value, typeof(Release));
+            Assert.IsInstanceOfType<OkObjectResult>(output);
+            Assert.IsInstanceOfType<Release>(((OkObjectResult)output).Value);
         }
         
-        private static IEnumerable<Release> GetTestReleases()
+        private static List<Release> GetTestReleases()
         {
             var releases = new List<Release>
             {
@@ -91,7 +91,7 @@ namespace Downgrooves.Test
             return releases;
         }
 
-        private static IEnumerable<ReleaseTrack> GetTestTracks()
+        private static List<ReleaseTrack> GetTestTracks()
         {
             var tracks = new List<ReleaseTrack>
             {

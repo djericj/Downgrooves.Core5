@@ -27,7 +27,7 @@ namespace Downgrooves.Data
 
         public List<User> GetAll(Expression<Func<User, bool>> predicate)
         {
-            return _users.Where(predicate).ToList();
+            return [.. _users.Where(predicate)];
         }
 
         public User? Get(int id)

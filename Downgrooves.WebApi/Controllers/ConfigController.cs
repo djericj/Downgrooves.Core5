@@ -6,16 +6,10 @@ namespace Downgrooves.WebApi.Controllers
 {
     [ApiController]
     [Route("config")]
-    public class ConfigController : ControllerBase
+    public class ConfigController(IHostEnvironment env, ILogger<ConfigController> logger) : ControllerBase
     {
-        private readonly ILogger<ConfigController> _logger;
-        private readonly IHostEnvironment _env;
-
-        public ConfigController(IHostEnvironment env, ILogger<ConfigController> logger)
-        {
-            _env = env;
-            _logger = logger;
-        }
+        private readonly ILogger<ConfigController> _logger = logger;
+        private readonly IHostEnvironment _env = env;
 
         [HttpGet]
         [Route("env")]

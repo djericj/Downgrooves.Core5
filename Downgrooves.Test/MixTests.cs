@@ -43,7 +43,7 @@ namespace Downgrooves.Test
 
             // Assert
 
-            Assert.IsInstanceOfType(output, typeof(OkObjectResult));
+            Assert.IsInstanceOfType<OkObjectResult>(output);
             Assert.AreEqual(2, result.Count());
         }
 
@@ -63,7 +63,7 @@ namespace Downgrooves.Test
 
             // Assert
 
-            Assert.IsInstanceOfType(output, typeof(OkObjectResult));
+            Assert.IsInstanceOfType<OkObjectResult>(output);
             Assert.AreEqual(2, result.Count());
         }
 
@@ -83,7 +83,7 @@ namespace Downgrooves.Test
 
             // Assert
 
-            Assert.IsInstanceOfType(output, typeof(OkObjectResult));
+            Assert.IsInstanceOfType<OkObjectResult>(output);
             Assert.AreEqual(2, result.Count());
         }
 
@@ -101,15 +101,15 @@ namespace Downgrooves.Test
 
             // Assert
 
-            Assert.IsInstanceOfType(output, typeof(OkObjectResult));
-            Assert.IsInstanceOfType(((OkObjectResult)output).Value, typeof(Mix));
+            Assert.IsInstanceOfType<OkObjectResult>(output);
+            Assert.IsInstanceOfType<Mix>(((OkObjectResult)output).Value);
         }
 
-        private static IEnumerable<Mix> GetTestMixes()
+        private static List<Mix> GetTestMixes()
         {
             var mixes = new List<Mix>
             {
-                new Mix()
+                new()
                 {
                     CreateDate = new DateTime(2016, 7, 1),
                     Id = 1,
@@ -117,7 +117,7 @@ namespace Downgrooves.Test
                     Category = "Test",
                     Genre = new Genre() { Name = "Test" }
                 },
-                new Mix()
+                new()
                 {
                     CreateDate = new DateTime(2016, 7, 1),
                     Id = 2,
@@ -129,17 +129,17 @@ namespace Downgrooves.Test
             return mixes;
         }
 
-        private static IEnumerable<MixTrack> GetTestTracks()
+        private static List<MixTrack> GetTestTracks()
         {
             var tracks = new List<MixTrack>
             {
-                new MixTrack()
+                new()
                 {
                     Number = 1,
                     Id = 1,
                     Title = "Test One"
                 },
-                new MixTrack()
+                new()
                 {
                     Number = 2,
                     Id = 2,
