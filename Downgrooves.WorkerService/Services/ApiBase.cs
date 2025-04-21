@@ -4,11 +4,13 @@ using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Net;
+using System.Net.Http;
 
 namespace Downgrooves.WorkerService.Services
 {
     public abstract class ApiBase
     {
+        static readonly HttpClient client = new HttpClient();
         private readonly ILogger _logger;
 
         public ApiBase(ILogger logger)
@@ -18,8 +20,11 @@ namespace Downgrooves.WorkerService.Services
 
         public static string GetString(string resource)
         {
-            using var webClient = new WebClient();
-            return webClient.DownloadString(new Uri(resource));
+            using HttpResponseMessage response = client.GetAsync(resource).GetAwaiter().GetResult();
+            response.EnsureSuccessStatusCode();
+            string responseBody = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return responseBody;
         }
 
         public static RestResponse ApiGet(Uri uri, string token)
