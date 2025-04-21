@@ -17,7 +17,7 @@ trigger:
 pool: 
   name: Default
   demands:
-  - agent.name -equals NEPTUNE
+  - agent.name -equals build-agent
 
 variables:
   buildPlatform: 'Any CPU'
