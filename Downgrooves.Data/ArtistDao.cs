@@ -1,4 +1,5 @@
 ﻿using Downgrooves.Data.Interfaces;
+using Downgrooves.Data.Types;
 using Downgrooves.Domain;
 using Microsoft.Extensions.Options;
 
@@ -10,7 +11,7 @@ namespace Downgrooves.Data
 
         public ArtistDao(IOptions<AppConfig> config) : base(config)
         {
-            _artists = GetData(Path.Combine(BasePath, "artist.json"));
+            _artists = GetData(Path.Combine(BasePath, DataFileNames.Artist));
         }
 
         public IQueryable<Artist> GetData(string filePath)

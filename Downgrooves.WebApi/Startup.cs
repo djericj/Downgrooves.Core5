@@ -60,24 +60,6 @@ namespace Downgrooves.WebApi
                     });
             });
 
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy(
-            //        name: "CORS_POLICY",
-            //        builder =>
-            //        {
-            //            var urls = Configuration
-            //                .GetSection("AppConfig:WebAppUrls")
-            //                .GetChildren()
-            //                .Select(x => x.Value.Trim('/', '\\'));
-            //            builder.WithOrigins(urls.ToArray())
-            //                .SetIsOriginAllowed((host) => true)
-            //                .AllowAnyMethod()
-            //                .AllowAnyHeader()
-            //                .AllowCredentials();
-            //        });
-            //});
-
             services.AddProblemDetails(setup =>
             {
                 setup.IncludeExceptionDetails = (ctx, env) => WebHostEnvironment.IsDevelopment();

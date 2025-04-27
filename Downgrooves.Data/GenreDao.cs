@@ -1,4 +1,5 @@
 ﻿using Downgrooves.Data.Interfaces;
+using Downgrooves.Data.Types;
 using Downgrooves.Domain;
 using Microsoft.Extensions.Options;
 
@@ -10,7 +11,7 @@ namespace Downgrooves.Data
 
         public GenreDao(IOptions<AppConfig> config) : base(config)
         {
-            _genres = GetData(Path.Combine(BasePath, "genre.json"));
+            _genres = GetData(Path.Combine(BasePath, DataFileNames.Genre));
         }
 
         public IQueryable<Genre> GetData(string filePath)
