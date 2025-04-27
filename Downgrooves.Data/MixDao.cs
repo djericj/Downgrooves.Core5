@@ -1,4 +1,5 @@
 ﻿using Downgrooves.Data.Interfaces;
+using Downgrooves.Data.Types;
 using Downgrooves.Domain;
 using Microsoft.Extensions.Options;
 using System.Linq.Expressions;
@@ -12,8 +13,8 @@ namespace Downgrooves.Data
 
         public MixDao(IOptions<AppConfig> config) : base(config)
         {
-            _mixes = GetData(Path.Combine(BasePath, "mixes.json"));
-            _mixTracks = GetMixTracks(Path.Combine(BasePath, "mixTracks.json"));
+            _mixes = GetData(Path.Combine(BasePath, DataFileNames.Mixes));
+            _mixTracks = GetMixTracks(Path.Combine(BasePath, DataFileNames.MixTracks));
         }
 
         public IQueryable<Mix> GetData(string filePath)

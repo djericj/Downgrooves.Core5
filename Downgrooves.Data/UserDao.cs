@@ -2,6 +2,7 @@
 using Downgrooves.Data.Interfaces;
 using System.Linq.Expressions;
 using Microsoft.Extensions.Options;
+using Downgrooves.Data.Types;
 
 namespace Downgrooves.Data
 {
@@ -11,7 +12,7 @@ namespace Downgrooves.Data
 
         public UserDao(IOptions<AppConfig> config) : base(config)
         {
-            _users = GetData(Path.Combine(BasePath, "users", "user.json"));
+            _users = GetData(Path.Combine(BasePath, FolderNames.Users, DataFileNames.User));
         }
         public IQueryable<User> GetData(string filePath)
         {

@@ -1,4 +1,5 @@
 ﻿using Downgrooves.Data.Interfaces;
+using Downgrooves.Data.Types;
 using Downgrooves.Domain;
 using Microsoft.Extensions.Options;
 using System.Linq.Expressions;
@@ -12,8 +13,8 @@ namespace Downgrooves.Data
 
         public VideoDao(IOptions<AppConfig> config) : base(config)
         {
-            _videos = GetData(Path.Combine(BasePath, "video.json"));
-            _thumbnails = GetThumbnailData(Path.Combine(BasePath, "thumbnail.json"));
+            _videos = GetData(Path.Combine(BasePath, DataFileNames.Video));
+            _thumbnails = GetThumbnailData(Path.Combine(BasePath, DataFileNames.Thumbnail));
         }
 
         public IQueryable<Video> GetData(string filePath)

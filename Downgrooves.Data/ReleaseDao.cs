@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using Downgrooves.Data.Adapters;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
+using Downgrooves.Data.Types;
 
 namespace Downgrooves.Data
 {
@@ -16,7 +17,7 @@ namespace Downgrooves.Data
         public ReleaseDao(IOptions<AppConfig> config) : base(config)
         {
             _config = config.Value;
-            _releases = GetData(Path.Combine(BasePath, "itunes"));
+            _releases = GetData(Path.Combine(BasePath, FolderNames.ITunes));
         }
 
         public IQueryable<Release> GetData(string filePath)

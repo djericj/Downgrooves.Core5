@@ -1,4 +1,5 @@
-﻿using Downgrooves.Domain;
+﻿using Downgrooves.Data.Types;
+using Downgrooves.Domain;
 using Downgrooves.Domain.ITunes;
 
 namespace Downgrooves.Data.Adapters
@@ -27,7 +28,7 @@ namespace Downgrooves.Data.Adapters
                 ArtistId = collection.ArtistId.GetValueOrDefault(),
                 ArtistName = collection.ArtistName,
                 ArtistViewUrl = collection.ArtistViewUrl,
-                ArtworkUrl = $"{collection.Id}.jpg",
+                ArtworkUrl = $"{collection.Id}.{FileTypes.Jpg}",
                 BuyUrl = collection.CollectionViewUrl,
                 CollectionId = collection.Id.GetValueOrDefault(),
                 Copyright = collection.Copyright,
@@ -176,22 +177,22 @@ namespace Downgrooves.Data.Adapters
         {
             return new List<Artist>
             {
-                new() { Id = 1, Name = "Downgrooves" },
-                new() { Id = 2, Name = "Eric Rylos" },
-                new() { Id = 3, Name = "Evotone" }
+                new() { Id = 1, Name = ArtistNames.Downgrooves },
+                new() { Id = 2, Name = ArtistNames.EricRylos },
+                new() { Id = 3, Name = ArtistNames.Evotone }
             };
         }
 
         public static Artist? GetArtist(string artistName)
         {
-            if (string.Compare(artistName, "Downgrooves", StringComparison.OrdinalIgnoreCase) == 0)
-                return new Artist { Id = 1, Name = "Downgrooves" };
+            if (string.Compare(artistName, ArtistNames.Downgrooves, StringComparison.OrdinalIgnoreCase) == 0)
+                return new Artist { Id = 1, Name = ArtistNames.Downgrooves };
 
-            if (string.Compare(artistName, "Eric Rylos", StringComparison.OrdinalIgnoreCase) == 0)
-                return new Artist { Id = 2, Name = "Eric Rylos" };
+            if (string.Compare(artistName, ArtistNames.EricRylos, StringComparison.OrdinalIgnoreCase) == 0)
+                return new Artist { Id = 2, Name = ArtistNames.EricRylos };
 
-            if (string.Compare(artistName, "Evotone", StringComparison.OrdinalIgnoreCase) == 0)
-                return new Artist { Id = 3, Name = "Evotone" };
+            if (string.Compare(artistName, ArtistNames.Evotone, StringComparison.OrdinalIgnoreCase) == 0)
+                return new Artist { Id = 3, Name = ArtistNames.Evotone };
 
             return null;
         }
