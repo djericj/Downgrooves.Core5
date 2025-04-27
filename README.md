@@ -8,9 +8,6 @@ There used to be a SQLite database as a backing data store.  However, the majori
 In the end, a database proved to be unnecessary for such a simple dataset.  It proved to be much more error prone and difficult to parse the JSON files and attempt to insert/update/delete records from the database for new and updates data.  It was an unnecessary abstraction.  
 
 # About Downgrooves
-Downgrooves.com is my personal music project website.  As a DJ and music producer for over 25 years, I have ammased an extensive collection of original music, dj sets and performance YouTube videos.  
-This site collects all those resources into a single space.
+Downgrooves.com is my personal music project website.  As a DJ and music producer for over 25 years, I have ammased an extensive collection of original music, dj sets and performance YouTube videos. This site collects all those resources into a single space.
 
-The original source for the Angular web site that consumes this API can be found at my GitHub at github.com/djericj/Downgrooves.Angular
-
-This site and it's companion project are full participants in the Software Development Lifecycle on Azure DevOps.  Through Azure DevOps, the site is configured with complete build pipelines and releases to a local Development server and an AWS-hosted Production environment.  Both environments are Linux-based hosts for optimum performance and low cost of hosting.
+The original source for the Angular web site that consumes this API can be found at my GitHub at github.com/djericj/Downgrooves.Angular.  This site and it's companion project are full participants in the Software Development Lifecycle on Azure DevOps.  Through Azure DevOps, the site is configured with complete build pipelines and releases to a local Development server and an AWS-hosted Production environment.  Both environments are Linux-based hosts for optimum performance and low cost of hosting.
