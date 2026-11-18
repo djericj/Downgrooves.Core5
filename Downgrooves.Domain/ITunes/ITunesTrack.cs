@@ -9,12 +9,12 @@ namespace Downgrooves.Domain.ITunes
     [Serializable]
     public class ITunesTrack : ITunesItem
     {
-        public int? CollectionId { get; set; }
+        public long? CollectionId { get; set; }
         public int? DiscCount { get; set; }
         public int? DiscNumber { get; set; }
 
         [JsonProperty("TrackId")]
-        public override int? Id { get; set; } // TrackId
+        public override long? Id { get; set; } // TrackId
 
         public string IsStreamable { get; set; }
         public string Kind { get; set; }

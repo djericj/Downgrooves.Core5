@@ -58,6 +58,11 @@ namespace Downgrooves.Data
 
         public Release Get(int id)
         {
+            return Get((long)id);
+        }
+
+        public Release Get(long id)
+        {
             return GetAll().FirstOrDefault(r => r.Id == id)!;
         }
         private static Release GetTrackByCollectionId(string filePath)

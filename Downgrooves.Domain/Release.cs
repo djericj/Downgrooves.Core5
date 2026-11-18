@@ -10,20 +10,20 @@ namespace Downgrooves.Domain
     public class Release
     {
         public Artist Artist { get; set; }
-        public int ArtistId { get; set; }
+        public long ArtistId { get; set; }
         public string ArtistName { get; set; }
         public string ArtistViewUrl { get; set; }
         public string ArtworkUrl { get; set; }
         public string ArtworkUrl100 { get; set; }
         public string BasePath { get; set; }
         public string BuyUrl { get; set; }
-        public int CollectionId { get; set; }
+        public long CollectionId { get; set; }
         public string Copyright { get; set; }
         public string Country { get; set; }
         public int DiscCount { get; set; }
         public int DiscNumber { get; set; }
         public string Genre { get; set; }
-        public int Id { get; set; }
+        public long Id { get; set; }
         public bool IsOriginal { get; set; }
         public bool IsRemix { get; set; }
         public string PreviewUrl { get; set; }

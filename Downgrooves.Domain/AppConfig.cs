@@ -12,7 +12,7 @@
 
     public class Exclusions
     {
-        public int[] CollectionIds { get; set; }
+        public long[] CollectionIds { get; set; }
         public string[] Keywords { get; set; }
     }
 }

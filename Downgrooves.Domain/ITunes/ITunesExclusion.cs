@@ -5,7 +5,7 @@
     /// </summary>
     public class ITunesExclusion
     {
-        public int? CollectionId { get; set; }
-        public int? TrackId { get; set; }
+        public long? CollectionId { get; set; }
+        public long? TrackId { get; set; }
     }
 }

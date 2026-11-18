@@ -7,7 +7,7 @@ namespace Downgrooves.Domain.ITunes
     /// </summary>
     public class ITunesLookupResultItem
     {
-        public int? ArtistId { get; set; }
+        public long? ArtistId { get; set; }
         public string ArtistName { get; set; }
         public string ArtistViewUrl { get; set; }
         public string ArtworkUrl100 { get; set; }
@@ -15,7 +15,7 @@ namespace Downgrooves.Domain.ITunes
         public string ArtworkUrl60 { get; set; }
         public string CollectionCensoredName { get; set; }
         public string CollectionExplicitness { get; set; }
-        public int? CollectionId { get; set; }
+        public long? CollectionId { get; set; }
         public string CollectionName { get; set; }
         public decimal? CollectionPrice { get; set; }
         public string CollectionType { get; set; }
@@ -33,7 +33,7 @@ namespace Downgrooves.Domain.ITunes
         public string TrackCensoredName { get; set; }
         public int? TrackCount { get; set; }
         public string TrackExplicitness { get; set; }
-        public int? TrackId { get; set; }
+        public long? TrackId { get; set; }
         public string TrackName { get; set; }
         public int? TrackNumber { get; set; }
         public decimal? TrackPrice { get; set; }

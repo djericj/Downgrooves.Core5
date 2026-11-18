@@ -42,7 +42,7 @@ namespace Downgrooves.WebApi.Controllers
         }
 
         [HttpGet("/release/{id}")]
-        public IActionResult GetRelease(int id)
+        public IActionResult GetRelease(long id)
         {
             try
             {

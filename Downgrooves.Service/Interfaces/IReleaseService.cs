@@ -11,6 +11,6 @@ namespace Downgrooves.Service.Interfaces
 
         IEnumerable<Release> GetAll(string artistName = null);
 
-        Release Get(int id);
+        Release Get(long id);
     }
 }

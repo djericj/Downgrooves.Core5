@@ -9,7 +9,7 @@ namespace Downgrooves.Domain
     {
         public ApiDataTypes ApiDataType { get; set; }
         public string Artist { get; set; }
-        public int CollectionId { get; set; }
+        public long CollectionId { get; set; }
         public string Data { get; set; }
         public int Id { get; set; }
         public bool IsChanged { get; set; }

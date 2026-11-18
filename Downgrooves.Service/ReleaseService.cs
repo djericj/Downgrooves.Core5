@@ -30,7 +30,7 @@ namespace Downgrooves.Service
             return artistName != null ? GetAll(a => a.Artist != null && string.Compare(a.Artist.Name, artistName, StringComparison.OrdinalIgnoreCase) == 0) : GetAll(a => a.Id > 0);
         }
 
-        public Release Get(int id)
+        public Release Get(long id)
         {
             return _dao.Get(id);
         }

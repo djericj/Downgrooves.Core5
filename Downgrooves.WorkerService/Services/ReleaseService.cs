@@ -26,7 +26,7 @@ namespace Downgrooves.WorkerService.Services
             var data = File.ReadAllText(json);
             var obj = JArray.Parse(data);
             var release = JsonConvert.DeserializeObject<Release>(obj.SelectToken("$[?(@.wrapperType =='collection')]")?.ToString() ?? string.Empty);
-            release.Id = Convert.ToInt32(id);
+            release.Id = Convert.ToInt64(id);
             return release;
         }
     }

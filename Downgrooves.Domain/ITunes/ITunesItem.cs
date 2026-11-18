@@ -7,7 +7,7 @@ namespace Downgrooves.Domain.ITunes
     /// </summary>
     public abstract class ITunesItem
     {
-        public int? ArtistId { get; set; }
+        public long? ArtistId { get; set; }
         public string ArtistName { get; set; }
         public string CollectionCensoredName { get; set; }
         public string ArtistViewUrl { get; set; }
@@ -18,7 +18,7 @@ namespace Downgrooves.Domain.ITunes
         public string CollectionExplicitness { get; set; }
         public string Country { get; set; }
         public string Currency { get; set; }
-        public virtual int? Id { get; set; }
+        public virtual long? Id { get; set; }
         public DateTime? ReleaseDate { get; set; }
         public string PrimaryGenreName { get; set; }
         public int? TrackCount { get; set; }
