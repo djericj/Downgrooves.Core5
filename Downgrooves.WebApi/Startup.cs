@@ -99,6 +99,7 @@ namespace Downgrooves.WebApi
 
             services.AddScoped<IArtistService, ArtistService>();
             services.AddScoped<IGenreService, GenreService>();
+            services.AddScoped<IHealthService, HealthService>();
             services.AddScoped<IMixService, MixService>();
             services.AddScoped<IReleaseService, ReleaseService>();
             services.AddScoped<IUserService, UserService>();
