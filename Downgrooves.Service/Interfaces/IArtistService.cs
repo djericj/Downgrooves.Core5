@@ -7,7 +7,7 @@ namespace Downgrooves.Service.Interfaces
     {
         IEnumerable<Artist> GetArtists();
 
-        Artist GetArtist(int id);
+        Artist GetArtist(long id);
 
         Artist GetArtist(string name);
     }

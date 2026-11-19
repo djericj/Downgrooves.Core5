@@ -57,6 +57,7 @@ namespace Downgrooves.WorkerService
                 {
                     _logger.LogError(ex.Message);
                     _logger.LogError(ex.StackTrace);
+                    Environment.ExitCode = 1;
                     throw;
                 }
                 finally

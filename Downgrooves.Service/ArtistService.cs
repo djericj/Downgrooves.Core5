@@ -23,7 +23,7 @@ namespace Downgrooves.Service
             return _dao.GetAll();
         }
 
-        public Artist GetArtist(int id)
+        public Artist GetArtist(long id)
         {
             return _dao.Get(id);
         }

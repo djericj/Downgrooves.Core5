@@ -33,7 +33,7 @@ namespace Downgrooves.WorkerService
                 .UseSystemd()
                 .Build()
                 .Run();
-                return 0;
+                return Environment.ExitCode;
             }
             catch (Exception ex)
             {

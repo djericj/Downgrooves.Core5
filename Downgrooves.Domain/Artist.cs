@@ -8,7 +8,7 @@ namespace Downgrooves.Domain
     public class Artist
     {
         public string Description { get; set; }
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; }
         public ICollection<Release> Releases { get; set; }
     }

@@ -28,6 +28,11 @@ namespace Downgrooves.Data
 
         public Artist? Get(int id)
         {
+            return Get((long)id);
+        }
+
+        public Artist? Get(long id)
+        {
             return GetAll().FirstOrDefault(a => a?.Id == id);
         }
 
