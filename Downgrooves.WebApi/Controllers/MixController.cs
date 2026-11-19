@@ -37,7 +37,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(MixController)}.{nameof(GetMixes)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, new { error = "An unexpected error occurred." });
             }
         }
 
@@ -52,7 +52,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(MixController)}.{nameof(GetMixesByCategory)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, new { error = "An unexpected error occurred." });
             }
         }
 
@@ -67,7 +67,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(MixController)}.{nameof(GetMixesByGenre)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, new { error = "An unexpected error occurred." });
             }
         }
 
@@ -82,7 +82,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(MixController)}.{nameof(GetMix)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, new { error = "An unexpected error occurred." });
             }
         }
     }

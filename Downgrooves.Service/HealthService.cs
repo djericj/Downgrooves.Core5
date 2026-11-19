@@ -3,6 +3,7 @@ using Downgrooves.Domain;
 using Downgrooves.Service.Base;
 using Downgrooves.Service.Interfaces;
 using Microsoft.Extensions.Options;
+using System.Linq;
 
 namespace Downgrooves.Service
 {
@@ -23,12 +24,12 @@ namespace Downgrooves.Service
             _releaseDao = daoFactory.Releases as ReleaseDao;
         }
 
-        public void GetHealth()
+        public HealthReport GetHealth() => new()
         {
-            var artists = _artistDao.GetAll();
-            var genres = _genreDao.GetAll();
-            var mixes = _mixDao.GetAll();
-            var releases = _releaseDao.GetAll();
-        }
+            Artists = _artistDao.GetAll().Count(),
+            Genres = _genreDao.GetAll().Count(),
+            Mixes = _mixDao.GetAll().Count(),
+            Releases = _releaseDao.GetAll().Count(),
+        };
     }
 }

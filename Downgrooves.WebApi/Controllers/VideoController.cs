@@ -36,7 +36,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.{nameof(GetVideo)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, new { error = "An unexpected error occurred." });
             }
         }
 
@@ -51,7 +51,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(VideoController)}.{nameof(GetVideos)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, new { error = "An unexpected error occurred." });
             }
         }
     }

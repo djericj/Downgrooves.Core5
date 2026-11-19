@@ -1,8 +1,8 @@
-﻿using Downgrooves.Domain;
+﻿using System;
+using System.Collections.Generic;
 using Downgrooves.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Downgrooves.WebApi.Controllers
 {
@@ -10,10 +10,12 @@ namespace Downgrooves.WebApi.Controllers
     [Route("health")]
     public class HealthController : ControllerBase
     {
+        private readonly ILogger<HealthController> _logger;
         private readonly IHealthService _service;
 
-        public HealthController(IOptions<AppConfig> config, ILogger<ArtistController> logger, IHealthService service)
-        { 
+        public HealthController(ILogger<HealthController> logger, IHealthService service)
+        {
+            _logger = logger;
             _service = service;
         }
 
@@ -22,12 +24,36 @@ namespace Downgrooves.WebApi.Controllers
         {
             try
             {
-                _service.GetHealth();
-                return Ok(new { status = "healthy" });
+                var report = _service.GetHealth();
+
+                var empty = new List<string>();
+                if (report.Artists == 0) empty.Add("artists");
+                if (report.Genres == 0) empty.Add("genres");
+                if (report.Mixes == 0) empty.Add("mixes");
+                if (report.Releases == 0) empty.Add("releases");
+
+                var body = new
+                {
+                    status = empty.Count == 0 ? "healthy" : "unhealthy",
+                    reason = empty.Count == 0 ? null : $"No data for: {string.Join(", ", empty)}",
+                    artists = report.Artists,
+                    genres = report.Genres,
+                    mixes = report.Mixes,
+                    releases = report.Releases,
+                };
+
+                if (empty.Count > 0)
+                {
+                    _logger.LogWarning("Health check unhealthy: {Reason}", body.reason);
+                    return StatusCode(503, body);
+                }
+
+                return Ok(body);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                return StatusCode(503, $"{ex.Message} StackTrace: {ex.StackTrace}");
+                _logger.LogError(ex, "Health check failed");
+                return StatusCode(503, new { status = "unhealthy", reason = "Failed to load data" });
             }
         }
     }

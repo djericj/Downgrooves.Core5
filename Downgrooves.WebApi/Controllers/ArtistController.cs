@@ -31,7 +31,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (System.Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ArtistController)}.{nameof(GetArtists)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, new { error = "An unexpected error occurred." });
             }
         }
     }

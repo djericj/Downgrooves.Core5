@@ -1,7 +1,9 @@
-﻿namespace Downgrooves.Service.Interfaces
+﻿using Downgrooves.Domain;
+
+namespace Downgrooves.Service.Interfaces
 {
     public interface IHealthService
     {
-        void GetHealth();
+        HealthReport GetHealth();
     }
 }

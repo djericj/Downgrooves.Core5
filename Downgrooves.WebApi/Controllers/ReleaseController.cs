@@ -37,7 +37,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(GetReleases)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, new { error = "An unexpected error occurred." });
             }
         }
 
@@ -52,7 +52,7 @@ namespace Downgrooves.WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception in {nameof(ReleaseController)}.{nameof(GetRelease)} {ex.Message} {ex.StackTrace}");
-                return StatusCode(500, $"{ex.Message} StackTrace: {ex.StackTrace}");
+                return StatusCode(500, new { error = "An unexpected error occurred." });
             }
         }
     }
